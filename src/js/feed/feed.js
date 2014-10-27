@@ -3,10 +3,7 @@
  */
 angular.module('maximumCrm')
     .controller('FeedCtrl', [
-        '$scope',
-        '$rootScope',
-        '$routeParams',
-        '$location',
+        '$scope', '$rootScope', '$routeParams', '$location',
 
         function ($scope, $rootScope, $routeParams, $location) {
 
