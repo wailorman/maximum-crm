@@ -1,0 +1,47 @@
+
+
+.group-info-container td.periodicity{
+    padding: 0;
+}
+.group-info-container .periodicity td,button {
+    font-size: 8pt;
+    vertical-align: middle;
+    text-align: center;
+}
+.group-info-container .periodicity td:nth-child(even) {
+    background-color: rgba(3, 10, 168, 0.03);
+}
+
+.group-info-container .periodicity td:nth-child(odd) {
+    background-color: rgba(0, 255, 51, 0.05);
+}
+
+
+.group-info-container td.members{
+    padding: 0;
+}
+.group-info-container .members td,button {
+    /*font-size: 8pt;*/
+    vertical-align: middle;
+}
+.group-info-container .members td {
+    background-color: rgba(0, 255, 51, 0.05);
+    text-align: left;
+}
+.group-info-container th {
+    text-align: center;
+    vertical-align: middle;
+    border-top: none;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+
+/*
+.group-info-container .accordion-title {
+    padding: 5px 0;
+}*/
+
+/*.group-info-container .collapse-button {
+
+}*/

@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h3 class="modal-title">Поиск тренеров</h3>
+</div>
+<div class="modal-body">
+    <div class="">
+        <input ng-model="searchStr" placeholder="Поиск" type="text" class="form-control">
+    </div>
+
+    <div class="scroll">
+        <table class="table">
+            <!-- Строка. При клике на неё ставится галочка -->
+            <tr class="coach-row"
+                ng-repeat="(number, coach) in coaches | filter:searchStr | limitTo:showLimit"
+                ng-class="{'selected': coach.selected}"
+                ng-click="selectCoach(number)">
+
+                <td>
+                    <i class="fa fa-xs" ng-class="{'fa-check': coach.selected}"></i>
+                    {{ coach.name }}
+                </td>
+            </tr>
+
+            <!-- Кнопка Подгрузить ещё. Показывается только при необходимости -->
+            <tr ng-show=" showLimit <= coaches.length ">
+                <td class="text-center preload">
+
+                    <!-- подгрузить еще -->
+                    <button ng-click="incrementLimit()"
+                            class="btn btn-default">
+                        <i class="fa fa-lg fa-refresh"></i>
+                        Подгрузить ещё
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Отмена</button>
+</div>

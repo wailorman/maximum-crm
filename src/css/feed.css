@@ -1,0 +1,39 @@
+.feed-element {
+    padding: 20px 10px;
+    /*min-width: 265px;*/
+    border: 1px solid rgb(226, 226, 226);
+    /*margin: -1px 0px 0px -1px;*/
+}
+
+.feed-element.active {
+    background-color: #A3FF86;
+}
+.feed-element.next {
+    background-color: #E1FFD8;
+}
+
+.feed-element .lesson-section-id-desc {
+    font-size: 8pt;
+    font-weight: normal;
+    color: #9a9a9a;
+}
+.feed-element .lesson-section-id {
+    font-size: 14pt;
+    font-weight: bold;
+}
+.feed-element .lesson-hall {
+    font-style: normal;
+    font-size: 10pt;
+}
+.feed-element .lesson-time {
+    font-size: 9pt;
+    text-align: right;
+}
+.feed-element .go-to-lesson {
+    font-size: 20pt;
+}
+
+.feed-container .panel-body {
+    padding: 0;
+}
+

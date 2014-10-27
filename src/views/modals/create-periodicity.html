@@ -1,0 +1,84 @@
+<div class="modal-header">
+    <h3 class="modal-title">Добавление переодичности занятий</h3>
+</div>
+<div class="modal-body">
+    <table class="table">
+        <tr>
+            <td class="title">День недели</td>
+            <td class="value">
+                <select ng-model="newPeriodicity.dayOfTheWeek" class="selectpicker">
+                    <option value="ПН">ПН</option>
+                    <option value="ВТ">ВТ</option>
+                    <option value="СР">СР</option>
+                    <option value="ЧТ">ЧТ</option>
+                    <option value="ПТ">ПТ</option>
+                    <option value="СБ">СБ</option>
+                    <option value="ВС">ВС</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="title">Время</td>
+            <td class="value">
+                <div class="form-inline">
+                    <input type="time" ng-model="newPeriodicity.time.start" class="form-control input-sm"
+                           maxlength="5" size="10" placeholder="начало"/>
+                    <input type="time" ng-model="newPeriodicity.time.end" class="form-control input-sm"
+                           maxlength="5" size="10" placeholder="окончание"/>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="title">Зал</td>
+            <td class="value">
+
+                <!-- Элемент зала -->
+                <div class="btn-group btn-group-sm" ng-show="(newPeriodicity.hall !== null)">
+
+                    <!-- Кнопка удаления зала -->
+                    <button ng-click="removeHall()" class="btn btn-sm btn-danger"><i
+                            class="fa fa-sm fa-times"></i></button>
+
+                    <button class="btn btn-sm btn-default">
+                        {{ newPeriodicity.hall.name }}
+                    </button>
+
+                </div>
+
+                <!-- Кнопка добавления зала -->
+                <button ng-show="(newPeriodicity.hall === null)" ng-click="openFindHallsModal()" class="btn btn-sm btn-success">
+                    Выбрать
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td class="title">Тренеры</td>
+            <td class="value">
+
+                <!-- Элемент тренера -->
+                <div class="btn-group btn-group-sm" ng-show="(newPeriodicity.coach !== null)">
+
+                    <!-- Кнопка удаления тренера -->
+                    <button ng-click="removeCoach()" class="btn btn-sm btn-danger"><i
+                            class="fa fa-sm fa-times"></i></button>
+
+                    <button class="btn btn-sm btn-default">
+                        {{ newPeriodicity.coach.name }}
+                    </button>
+
+                </div>
+
+                <!-- Кнопка добавления тренера -->
+                <button ng-show="(newPeriodicity.coach === null)" ng-click="openFindCoachesModal()" class="btn btn-sm btn-success">
+                    Выбрать
+                </button>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="modal-footer">
+
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Отмена</button>
+
+</div>

@@ -1,0 +1,109 @@
+<div class="
+    col-xs-12
+    col-sm-12
+    col-md-offset-2 col-md-8
+    col-lg-offset-3 col-lg-6
+    feed-container"
+     ng-controller="FeedCtrl" >
+
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            12.05.2014
+            <div class="pull-right">
+                <button class="btn btn-default btn-xs">Другая дата</button>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div
+                    ng-class="getClass(iterator)"
+                    ng-repeat="(iterator, lesson) in lessons"
+                    ng-click=""
+
+                    class="feed-element col-xs-12">
+
+                <div class="pull-left">
+                    <div class="lesson-section-id">
+                        <!--<span class="lesson-section-id-desc">группа </span>-->
+                        {{ lesson.sectionID }}
+                    </div>
+                    <div class="lesson-hall">{{ lesson.hallName }}</div>
+                </div>
+                <div class="pull-right">
+                    <div class="lesson-time">
+                        {{ lesson.startTime + ' - ' + lesson.endTime }}
+                        <div class="go-to-lesson"><i class="fa fa-angle-right"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<!--
+<div class="
+    col-xs-12
+    col-sm-offset-2 col-sm-8
+    col-md-offset-2 col-md-8
+    col-lg-offset-3 col-lg-6
+    lesson-info-container"
+     ng-controller="lessonInfoCtrl">
+
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            LOOOOOL
+            <div class="pull-right">
+                <button class="btn btn-default btn-xs">Изменить</button>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table info-container">
+                <tr>
+                    <td class="title">Время проведения</td>
+                    <td class="value">15:00 - 16:00</td>
+                </tr>
+
+                <tr>
+                    <td class="title">Дата проведения</td>
+                    <td class="value">24.01.2015</td>
+                </tr>
+
+                <tr>
+                    <td class="title">Тренер</td>
+                    <td class="value">
+                        Пупкин Василий Иванович
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="title">Зал</td>
+                    <td class="value">Ирландский</td>
+                </tr>
+
+                <tr>
+                    <td class="title">Группа</td>
+                    <td class="value">Дети 12</td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <button class="btn btn-primary">Счета</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary">Журнал</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+
+
+</div>-->

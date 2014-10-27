@@ -1,0 +1,71 @@
+.scroll {
+    padding-top: 10px;
+    overflow: auto;
+    height: 300px;
+}
+
+.preload i {
+    color: #007f00;
+}
+
+.coach-row {
+    cursor: pointer;
+}
+
+.coach-row.selected {
+    background-color: rgba(255, 255, 0, 0.14);
+}
+
+.coach-row i {
+    color: rgba(0, 0, 0, 0.36);
+    margin-right: 10px;
+    width: 14px;
+}
+
+
+
+
+.group-edit-container td.periodicity{
+    padding: 0;
+}
+.group-edit-container .periodicity td,button {
+    font-size: 8pt;
+    vertical-align: middle;
+    text-align: center;
+}
+.group-edit-container .periodicity td:nth-child(even) {
+    background-color: rgba(3, 10, 168, 0.03);
+}
+
+.group-edit-container .periodicity td:nth-child(odd) {
+    background-color: rgba(0, 255, 51, 0.05);
+}
+
+
+.group-edit-container td.members{
+    padding: 0;
+}
+.group-edit-container .members td,button {
+    /*font-size: 8pt;*/
+    vertical-align: middle;
+}
+.group-edit-container .members td {
+    background-color: rgba(0, 255, 51, 0.05);
+    /*text-align: left;*/
+}
+.group-edit-container th {
+    text-align: center;
+    vertical-align: middle;
+    border-top: none;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+
+tr.new-periodicity td{
+    background-color: rgba(0, 255, 51, 0.05);
+}
+
+.new-periodicity {
+    background-color: rgb(173, 255, 189);
+}

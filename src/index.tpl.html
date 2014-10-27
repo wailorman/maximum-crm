@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width">
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+
+    <title>Maximum CRM</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <link href="css/sb-admin-2.css" rel="stylesheet">
+    <link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="css/ng-tags-input.min.css" />
+    <link rel="stylesheet" href="css/ng-tags-input.bootstrap.min.css" />
+
+    <link rel="icon" sizes="128x128" href="/css/images/app-icon.png">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700,500&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+
+    <link rel="stylesheet" href="/css/my.css"/>
+
+    <link rel="stylesheet" href="/css/modules/feed.css"/>
+
+    <link rel="stylesheet" href="/css/modules/lesson/lesson-info.css"/>
+    <link rel="stylesheet" href="/css/modules/lesson/lesson-edit.css"/>
+    <link rel="stylesheet" href="/css/modules/lesson/lesson-new.css"/>
+    <link rel="stylesheet" href="/css/modules/lesson/lessons-list.css"/>
+
+    <link rel="stylesheet" href="/css/modules/group/group-info.css"/>
+    <link rel="stylesheet" href="/css/modules/group/group-edit.css"/>
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/bower/jquery-1.11.0.js"></script>
+    <script src="/js/bower/bootstrap.min.js"></script>
+
+    <script src="/js/bower/angular.min.js"></script>
+    <script src="/js/bower/angular-route.min.js"></script>
+    <script src="/js/bower/ui-bootstrap-tpls-0.11.2.js"></script>
+
+    <script src="/js/app.js"></script>
+
+    <script src="/js/modules/modals/modals.js"></script>
+    <script src="/js/modules/modals/create-periodicity.js"></script>
+    <script src="/js/modules/modals/find-coaches.js"></script>
+    <script src="/js/modules/modals/find-halls.js"></script>
+    <script src="/js/modules/modals/find-members.js"></script>
+    <script src="/js/modules/modals/filter-groups.js"></script>
+
+
+    <script src="/js/modules/feed.js"></script>
+
+
+    <script src="/js/modules/lesson/lesson-info.js"></script>
+    <script src="/js/modules/lesson/lesson-edit.js"></script>
+    <script src="/js/modules/lesson/lesson-new.js"></script>
+    <script src="/js/modules/lesson/lessons-list.js"></script>
+
+    <script src="/js/modules/group/group-info.js"></script>
+    <script src="/js/modules/group/group-edit.js"></script>
+    <script src="/js/modules/group/group-create.js"></script>
+    <script src="/js/modules/group/groups-list.js"></script>
+
+</head>
+
+<body ng-app="maximumCrm">
+
+
+
+
+<div id="wrapper" ng-controller="NavigationCtrl">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span class="navbar-brand offset hidden-xs"></span>
+                <span class="module-name navbar-brand">
+                    <div class="back">
+                        <button class="btn btn-warning"><i class="fa fa-lg fa-angle-left"></i></button>
+                    </div>
+                    {{ curPageName }}
+                </span>
+        </div>
+
+
+
+        <div ng-class="{true: 'hide-side-bar'}[hideSideBar===true]" class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+
+                <!--МЕНЮ-->
+
+                <ul class="nav" id="side-menu">
+                    <li class="user-side-bar">
+                        <i class="fa fa-user"></i> &nbsp; {{ user.name }} &nbsp;
+                        <!--Настройки-->
+                        <button class="btn btn-default btn-sm"><i class="fa fa-cog"></i></button>
+                        <!--Скрыть sidebar-->
+                        <button
+
+                                ng-click="toggleHideSideBar()"
+                                class="btn btn-danger btn-sm pull-right hidden-xs">
+                            <i class="fa" ng-class="getHideSideBarButtonClass()"></i>
+                        </button>
+                    </li>
+                    <li class="logout-button">
+                        <button class="btn btn-sm btn-default">
+                            Выход из аккаунта
+                        </button>
+                    </li>
+                    <li
+                            ng-repeat="(iterator, module) in modules">
+                        <a href="#{{ module.href }}"><i class="fa fa-chevron-right"></i> {{ module.desc }}</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- Page Content -->
+    <div class="page-wrapper" ng-class="{true: 'hide-side-bar-wrapper'}[hideSideBar===true]">
+        <div class="row">
+
+
+
+            <div id="main" class="page-content">
+                <ng-view></ng-view>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
+

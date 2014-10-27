@@ -1,0 +1,53 @@
+<div class="
+    lessons-list-container"
+     ng-controller="LessonsListCtrl">
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+
+            <button class="btn btn-info btn-sm">Создать</button>
+            <button class="btn btn-info btn-sm">Фильтровать</button>
+
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <tr>
+                        <th><input type="checkbox" ng-click="toggleCheckAll()"></th>
+                        <th>Группа</th>
+                        <th>Тренер</th>
+                        <th>Зал</th>
+                        <th>Время</th>
+                        <th colspan="2">Дата</th>
+                    </tr>
+                    <tr ng-repeat="lesson in lessons" ng-class="{'selected': lesson.checked}">
+                        <td><input ng-model="lesson.checked" type="checkbox"></td>
+                        <td>
+                            <div>
+                                <button class="btn btn-xs btn-default btn-margined">
+                                    {{ lesson.group.name }}
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-xs btn-default btn-margined" ng-repeat="coach in lesson.coaches">
+                                {{ coach.name }}
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-xs btn-default btn-margined">
+                                {{ lesson.hall.name }}
+                            </button>
+                        </td>
+                        <td>{{ lesson.time.startTime }} - {{ lesson.time.endTime }}</td>
+                        <td>{{ lesson.time.date }}</td>
+                        <td>
+                            <button class="btn btn-warning btn-xs">подробнее</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
