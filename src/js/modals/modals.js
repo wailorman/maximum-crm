@@ -19,21 +19,21 @@ function openAcceptDeletingModal($modal, callback) {
 
 
 
-function AcceptDeleteModalCtrl($scope, $rootScope, $modal, $http, $modalInstance) {
 
-
-    $scope.ok = function () {
-        $modalInstance.close(true);
-    };
-    $scope.cancel = function () {
-        $modalInstance.close();
-    };
-
-}
 
 
 angular.module('maximumCrm')
     .controller('AcceptDeleteModalCtrl', ['$scope', '$rootScope', '$modal', '$http', '$modalInstance',
-        AcceptDeleteModalCtrl()]);
+        function ($scope, $rootScope, $modal, $http, $modalInstance) {
+
+
+            $scope.ok = function () {
+                $modalInstance.close(true);
+            };
+            $scope.cancel = function () {
+                $modalInstance.close();
+            };
+
+        }]);
 
 

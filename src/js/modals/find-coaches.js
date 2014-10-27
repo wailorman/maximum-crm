@@ -1,5 +1,3 @@
-'use strict';
-
 function openFindCoachesModal($modal, multiplie, callback, arrayToPush) {
     return function () {
         var modalInstance = $modal.open({
@@ -36,60 +34,60 @@ function openFindCoachesModal($modal, multiplie, callback, arrayToPush) {
 }
 
 
-function FindCoachesModalCtrl($scope, $rootScope, $modal, $http, $modalInstance, multiplie) {
-    // Получаем список тренеров
-    $http.get('/backend/coaches.json')
-        .success(function (data) {
-            $scope.coaches = data;
-        });
 
-
-    $scope.searchStr = '';
-
-
-    // ЛИМИТЫ
-
-    var limitStep = 20; // шаг подгрузки строк
-    $scope.showLimit = 30; // лимит отображаемых строк
-    $scope.incrementLimit = function () { // подгрузить еще строк
-        $scope.showLimit += limitStep;
-    };
-
-
-    // ВЫДЕЛЕНИЕ
-
-    $scope.selectCoach = function (number) {
-        if (multiplie === true) {
-            if ($scope.coaches[number].selected !== true) {
-                $scope.coaches[number].selected = true;
-            } else {
-                $scope.coaches[number].selected = false;
-            }
-        } else {
-            for (var i = 0; $scope.coaches[i] !== undefined; i++) {
-                $scope.coaches[i].selected = false;
-            }
-
-            $scope.coaches[number].selected = true;
-        }
-    };
-
-    $scope.ok = function () {
-        var newCoaches = [];
-        for (var i = 0; $scope.coaches[i] !== undefined; i++) {
-            if ($scope.coaches[i].selected === true) {
-                delete $scope.coaches[i].selected; // убираем парамер selected, чтобы он не уходил в бекенд
-                newCoaches.push($scope.coaches[i]);
-            }
-        }
-
-        $modalInstance.close(newCoaches);
-    };
-    $scope.cancel = function () {
-        $modalInstance.close();
-    };
-}
 
 angular.module('maximumCrm')
     .controller('FindCoachesModalCtrl', ['$scope', '$rootScope', '$modal', '$http', '$modalInstance', 'multiplie',
-        FindCoachesModalCtrl()]);
+        function ($scope, $rootScope, $modal, $http, $modalInstance, multiplie) {
+            // Получаем список тренеров
+            $http.get('/backend/coaches.json')
+                .success(function (data) {
+                    $scope.coaches = data;
+                });
+
+
+            $scope.searchStr = '';
+
+
+            // ЛИМИТЫ
+
+            var limitStep = 20; // шаг подгрузки строк
+            $scope.showLimit = 30; // лимит отображаемых строк
+            $scope.incrementLimit = function () { // подгрузить еще строк
+                $scope.showLimit += limitStep;
+            };
+
+
+            // ВЫДЕЛЕНИЕ
+
+            $scope.selectCoach = function (number) {
+                if (multiplie === true) {
+                    if ($scope.coaches[number].selected !== true) {
+                        $scope.coaches[number].selected = true;
+                    } else {
+                        $scope.coaches[number].selected = false;
+                    }
+                } else {
+                    for (var i = 0; $scope.coaches[i] !== undefined; i++) {
+                        $scope.coaches[i].selected = false;
+                    }
+
+                    $scope.coaches[number].selected = true;
+                }
+            };
+
+            $scope.ok = function () {
+                var newCoaches = [];
+                for (var i = 0; $scope.coaches[i] !== undefined; i++) {
+                    if ($scope.coaches[i].selected === true) {
+                        delete $scope.coaches[i].selected; // убираем парамер selected, чтобы он не уходил в бекенд
+                        newCoaches.push($scope.coaches[i]);
+                    }
+                }
+
+                $modalInstance.close(newCoaches);
+            };
+            $scope.cancel = function () {
+                $modalInstance.close();
+            };
+        }]);
