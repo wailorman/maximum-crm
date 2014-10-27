@@ -20,7 +20,6 @@ function isObjectAlreadyExistsInArray(obj, array) {
 
 var crm = angular.module('maximumCrm', [
     'ngRoute',
-    'ngTagsInput',
     'ui.bootstrap'
 
     //'maximumCrm.feed'
@@ -38,45 +37,45 @@ var crm = angular.module('maximumCrm', [
         $routeProvider
 
             .when('/feed', {
-                templateUrl: '/views/modules/feed.html',
+                templateUrl: 'views/feed/feed.html',
                 controller: 'FeedCtrl'
             })
 
             // LESSON
 
             .when('/lessonInfo', {
-                templateUrl: '/views/modules/lesson/lesson-info.html',
+                templateUrl: 'views/lesson/lesson-info.html',
                 controller: 'LessonInfoCtrl'
             })
             .when('/lessonEdit', {
-                templateUrl: '/views/modules/lesson/lesson-edit.html',
+                templateUrl: 'views/lesson/lesson-edit.html',
                 controller: 'EditLessonCtrl'
             })
             .when('/lessonNew', {
-                templateUrl: '/views/modules/lesson/lesson-new.html',
+                templateUrl: 'views/lesson/lesson-new.html',
                 controller: 'NewLessonCtrl'
             })
             .when('/lessonsList', {
-                templateUrl: '/views/modules/lesson/lessons-list.html',
+                templateUrl: 'views/lesson/lessons-list.html',
                 controller: 'LessonsListCtrl'
             })
 
             // GROUP
 
             .when('/groupInfo', {
-                templateUrl: '/views/modules/group/group-info.html',
+                templateUrl: 'views/group/group-info.html',
                 controller: 'GroupInfoCtrl'
             })
             .when('/groupEdit', {
-                templateUrl: '/views/modules/group/group-edit.html',
+                templateUrl: 'views/group/group-edit.html',
                 controller: 'GroupEditCtrl'
             })
             .when('/groupCreate', {
-                templateUrl: '/views/modules/group/group-create.html',
+                templateUrl: 'views/group/group-create.html',
                 controller: 'GroupCreateCtrl'
             })
             .when('/groupsList', {
-                templateUrl: '/views/modules/group/groups-list.html',
+                templateUrl: 'views/group/groups-list.html',
                 controller: 'GroupsListCtrl'
             });
     }])
@@ -144,9 +143,11 @@ var crm = angular.module('maximumCrm', [
                 return $scope.hideSideBar ? 'fa-arrow-right' : 'fa-arrow-left';
             };
 
+            $scope.sidebarVisible = true;
 
-            $scope.toggleHideSideBar = function () {
-                $scope.hideSideBar = $scope.hideSideBar ? false : true;
+
+            $scope.toggleVisibleSideBar = function () {
+                $scope.sidebarVisible = !$scope.sidebarVisible;
             };
 
             $rootScope.href = function(href){

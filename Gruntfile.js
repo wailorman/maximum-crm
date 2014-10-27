@@ -80,7 +80,7 @@ module.exports = function (grunt) {
         },
         htmlbuild: {
             dev: {
-                src: 'src/index.tpl.html',
+                src: 'src/index.html',
                 dest: 'build/index.html',
                 options: {
                     scripts: {

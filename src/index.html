@@ -15,15 +15,15 @@
     <title>Maximum CRM</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
-    <link href="css/sb-admin-2.css" rel="stylesheet">
-    <link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">-->
+    <!--<link href="css/sb-admin-2.css" rel="stylesheet">-->
+    <!--<link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">-->
 
-    <link rel="stylesheet" href="css/ng-tags-input.min.css" />
-    <link rel="stylesheet" href="css/ng-tags-input.bootstrap.min.css" />
+    <!--<link rel="stylesheet" href="css/ng-tags-input.min.css" />-->
+    <!--<link rel="stylesheet" href="css/ng-tags-input.bootstrap.min.css" />-->
 
-    <link rel="icon" sizes="128x128" href="/css/images/app-icon.png">
+    <link rel="icon" sizes="128x128" href="css/images/app-icon.png">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700,500&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
     <!--[if lt IE 9]>
@@ -63,17 +63,23 @@
 
     <link rel="stylesheet" href="css/my.css"/>
 
-    <link rel="stylesheet" href="css/modules/feed.css"/>
+    <link rel="stylesheet" href="css/feed/feed.css"/>
 
-    <link rel="stylesheet" href="css/modules/lesson/lesson-info.css"/>
-    <link rel="stylesheet" href="css/modules/lesson/lesson-edit.css"/>
-    <link rel="stylesheet" href="css/modules/lesson/lesson-new.css"/>
-    <link rel="stylesheet" href="css/modules/lesson/lessons-list.css"/>
+    <link rel="stylesheet" href="css/lesson/lesson-info.css"/>
+    <link rel="stylesheet" href="css/lesson/lesson-edit.css"/>
+    <link rel="stylesheet" href="css/lesson/lesson-new.css"/>
+    <link rel="stylesheet" href="css/lesson/lessons-list.css"/>
 
-    <link rel="stylesheet" href="css/modules/group/group-info.css"/>
-    <link rel="stylesheet" href="css/modules/group/group-edit.css"/>
+    <link rel="stylesheet" href="css/group/group-info.css"/>
+    <link rel="stylesheet" href="css/group/group-edit.css"/>
 
 
+
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css.map"/>
+
+    <link rel="stylesheet" href="css/sb-admin-2.css"/>
+    <script src="js/sb-admin-2.js"></script>
 
     <script src="../bower_components/jquery/dist/jquery.min.js"></script>
     <script src="../bower_components/jquery/dist/jquery.min.map"></script>
@@ -83,11 +89,11 @@
     <script src="../bower_components/angular/angular.min.js"></script>
     <script src="../bower_components/angular/angular.min.js.map"></script>
 
-    <script src="../bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
-    <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-
     <script src="../bower_components/angular-route/angular-route.min.js"></script>
     <script src="../bower_components/angular-route/angular-route.min.js.map"></script>
+
+    <script src="../bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
 
 
@@ -143,7 +149,7 @@
 
 
 
-        <div ng-class="{true: 'hide-side-bar'}[hideSideBar===true]" class="navbar-default sidebar" role="navigation">
+        <div ng-class="{'hide-side-bar': !sidebarVisible}" class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
 
                 <!--МЕНЮ-->
@@ -156,9 +162,9 @@
                         <!--Скрыть sidebar-->
                         <button
 
-                                ng-click="toggleHideSideBar()"
+                                ng-click="toggleVisibleSideBar()"
                                 class="btn btn-danger btn-sm pull-right hidden-xs">
-                            <i class="fa" ng-class="getHideSideBarButtonClass()"></i>
+                            <i class="fa" ng-class="{'fa-arrow-left': sidebarVisible, 'fa-arrow-right': !sidebarVisible}"></i>
                         </button>
                     </li>
                     <li class="logout-button">
@@ -180,11 +186,8 @@
 
 
     <!-- Page Content -->
-    <div class="page-wrapper" ng-class="{true: 'hide-side-bar-wrapper'}[hideSideBar===true]">
+    <div class="page-wrapper" ng-class="{'hide-side-bar-wrapper': !sidebarVisible}">
         <div class="row">
-
-
-
             <div id="main" class="page-content">
                 <ng-view></ng-view>
             </div>
