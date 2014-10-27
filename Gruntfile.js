@@ -79,15 +79,33 @@ module.exports = function (grunt) {
             }
         },
         htmlbuild: {
-            dist: {
-                src: 'dev.html',
-                dest: 'index.html',
+            dev: {
+                src: 'src/index.tpl.html',
+                dest: 'build/index.html',
                 options: {
                     scripts: {
-                        built: 'libs/built.js'
+                        built: 'libs/built.js',
+                        angular: [
+                            'bower_components/angular/angular.min.js',
+                            'bower_components/angular/angular.min.js.map',
+                            'bower_components/angular-bootstrap/ui-bootstrap.min.js',
+                            'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+                            'bower_components/angular-mocks/angular-mocks.js',
+                            'bower_components/angular-mocks/angular-route.min.js',
+                            'bower_components/angular-mocks/angular-route.min.js.map'
+                        ],
+                        bootstrap: 'bower_components/bootstrap/dist/js/bootstrap.min.js',
+                        jquery: [
+                            'bower_components/jquery/dist/jquery.min.js',
+                            'bower_components/jquery/dist/jquery/jquery.min.map'
+                        ]
                     },
                     styles: {
-                        built: 'libs/built.min.css'
+                        built: 'libs/built.min.css',
+                        bootstrap: [
+                            'bower_components/bootstrap/dist/css/bootstrap.min.css',
+                            'bower_components/bootstrap/dist/css/bootstrap.css.map'
+                        ]
                     }
                 }
             }
@@ -100,10 +118,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-html-build');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-auto-install');
-
-
-
-
 
 
     grunt.registerTask('default', ['ngtemplates', 'concat', 'cssmin', 'uglify', 'htmlbuild']);
