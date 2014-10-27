@@ -1,6 +1,6 @@
 angular.module('maximumCrm')
     .controller('NewLessonCtrl', ['$scope', '$rootScope', '$http',
-        function NewLessonCtrl($scope, $rootScope, $http) {
+        function ($scope, $rootScope, $http) {
 
             $rootScope.curPageName = 'Создание занятия';
 

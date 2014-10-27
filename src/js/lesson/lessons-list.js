@@ -1,6 +1,6 @@
 angular.module('maximumCrm')
     .controller('LessonsListCtrl', ['$scope', '$rootScope', '$http',
-        function LessonsListCtrl($scope, $rootScope, $http) {
+        function ($scope, $rootScope, $http) {
 
             $rootScope.curPageName = 'Список занятий';
 

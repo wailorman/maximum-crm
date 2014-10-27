@@ -1,5 +1,3 @@
-'use strict';
-
 function openCreatePeriodicityModal($modal, callback, arrayToPush) {
     return function () {
         var modalInstance = $modal.open({
