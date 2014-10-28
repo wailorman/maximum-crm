@@ -133,7 +133,7 @@ td.value .btn-margined,
 
 #page-wrapper {
     padding: 0 15px;
-    min-height: 0;
+    min-height: 500px;
     background: none;
 }
 .panel {

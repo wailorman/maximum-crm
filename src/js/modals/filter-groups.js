@@ -3,7 +3,7 @@
 function openFilterGroupModal($modal, callback, arrayToPush) {
     return function () {
         var modalInstance = $modal.open({
-            templateUrl: '/views/modules/modals/filter-groups.html',
+            templateUrl: 'views/modals/filter-groups.html',
             controller: 'FilterGroupsModalCtrl'
         });
         /*modalInstance.result.then(function (newCoaches) {

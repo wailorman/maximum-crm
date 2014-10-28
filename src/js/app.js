@@ -101,42 +101,57 @@ var crm = angular.module('maximumCrm', [
 
             $rootScope.modules = [
                 {
-                    desc: 'Лента',
-                    href: '/feed'
+                    desc: 'Занятия',
+                    href: '/lessonsList',
+                    nextLevel: [
+                        {
+                            desc: 'Список занятий',
+                            href: '/lessonsList'
+                        },
+                        {
+                            desc: 'Лента',
+                            href: '/feed'
+                        },
+                        {
+                            desc: 'Информация о занятии',
+                            href: '/lessonInfo'
+                        },
+                        {
+                            desc: 'Изменение занятия',
+                            href: '/lessonEdit'
+                        },
+                        {
+                            desc: 'Создание занятия',
+                            href: '/lessonNew'
+                        }
+                    ]
                 },
                 {
-                    desc: 'Информация о занятии',
-                    href: '/lessonInfo'
-                },
-                {
-                    desc: 'Изменение занятия',
-                    href: '/lessonEdit'
-                },
-                {
-                    desc: 'Создание занятия',
-                    href: '/lessonNew'
-                },
-                {
-                    desc: 'Список занятий',
-                    href: '/lessonsList'
-                },
-                {
-                    desc: 'Информация о группе',
-                    href: '/groupInfo'
-                },
-                {
-                    desc: 'Изменение группы',
-                    href: '/groupEdit'
-                },
-                {
-                    desc: 'Создание группы',
-                    href: '/groupCreate'
-                },
-                {
-                    desc: 'Список групп',
-                    href: '/groupsList'
+                    desc: 'Группы',
+                    nextLevel: [
+                        {
+                            desc: 'Список групп',
+                            href: '/groupsList'
+                        },
+                        {
+                            desc: 'Информация о группе',
+                            href: '/groupInfo'
+                        },
+                        {
+                            desc: 'Изменение группы',
+                            href: '/groupEdit'
+                        },
+                        {
+                            desc: 'Создание группы',
+                            href: '/groupNew'
+                        }
+                    ]
                 }
             ];
+
+            $rootScope.secondLevelMenuVisible = function ( module ) {
+                return (module.nextLevel !== undefined);
+            };
 
             // скрытие sidebar
             $scope.getHideSideBarButtonClass = function () {

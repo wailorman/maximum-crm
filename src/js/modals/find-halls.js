@@ -1,7 +1,7 @@
 function openFindHallsModal($modal, multiplie, callback, arrayToPush) {
     return function () {
         var modalInstance = $modal.open({
-            templateUrl: '/views/modules/modals/find-halls.html',
+            templateUrl: 'views/modals/find-halls.html',
             controller: 'FindHallsModalCtrl',
             resolve: {
                 multiplie: function () {

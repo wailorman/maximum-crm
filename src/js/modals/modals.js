@@ -4,7 +4,7 @@
 function openAcceptDeletingModal($modal, callback) {
 //    return function () {
     var modalInstance = $modal.open({
-        templateUrl: '/views/modules/modals/accept-delete.html',
+        templateUrl: 'views/modals/accept-delete.html',
         controller: 'AcceptDeleteModalCtrl',
         size: 'sm'
     });

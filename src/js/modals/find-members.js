@@ -1,7 +1,7 @@
 function openFindMembersModal($modal, multiplie, callback, arrayToPush) {
     return function () {
         var modalInstance = $modal.open({
-            templateUrl: '/views/modules/modals/find-members.html',
+            templateUrl: 'views/modals/find-members.html',
             controller: 'FindMembersModalCtrl',
             resolve: {
                 multiplie: function () {

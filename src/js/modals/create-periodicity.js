@@ -1,7 +1,7 @@
 function openCreatePeriodicityModal($modal, callback, arrayToPush) {
     return function () {
         var modalInstance = $modal.open({
-            templateUrl: '/views/modules/modals/create-periodicity.html',
+            templateUrl: 'views/modals/create-periodicity.html',
             controller: 'CreatePeriodicityModalCtrl'
         });
         modalInstance.result.then(function (newPeriodicity) {

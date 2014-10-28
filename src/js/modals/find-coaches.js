@@ -1,7 +1,7 @@
 function openFindCoachesModal($modal, multiplie, callback, arrayToPush) {
     return function () {
         var modalInstance = $modal.open({
-            templateUrl: '/views/modules/modals/find-coaches.html',
+            templateUrl: 'views/modals/find-coaches.html',
             controller: 'FindCoachesModalCtrl',
             resolve: {
                 multiplie: function () {
