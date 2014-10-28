@@ -73,8 +73,12 @@ module.exports = function (grunt) {
         },
         copy: {
             main: {
-                file: [
-                    { expand: true, src: ['bower_components/'], dest: '' }
+                files: [
+                    {
+                        expand: true,
+                        src: 'bower_components/**',
+                        dest: 'build/bower_components/'
+                    }
                 ]
             }
         }
