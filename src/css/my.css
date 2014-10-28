@@ -51,11 +51,7 @@ a.no-href.logout {
     padding: 10px 10px 10px 30px;
 }
 
-.hide-side-bar {margin-left: -195px;}
-.not-hide-side-bar {margin-left: 0px;}
 
-.hide-side-bar-wrapper {margin: 0 0 0 55px;}
-.not-hide-side-bar-wrapper {margin: 0 0 0 250px;}
 
 
 
@@ -183,4 +179,10 @@ td.value .btn-margined,
 
 tr.selected{
     background-color: rgba(255, 255, 0, 0.14);
+}
+
+.hide-side-bar {margin-left: -195px;}
+
+.hide-side-bar-wrapper {
+    margin: 0 0 0 55px !important
 }
