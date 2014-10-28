@@ -118,56 +118,62 @@
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <!--<a class="navbar-brand" href="index.html"></a>-->
-        <span class="navbar-brand offset hidden-xs"></span>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <!--<a class="navbar-brand" href="index.html"></a>-->
+            <div class="navbar-brand offset hidden-xs" ng-click="toggleVisibleSideBar()"
+                 ng-class="{'min': !sidebarVisible}">
+                <!--<button ng-click="toggleVisibleSideBar()" class="btn btn-block no-background hidden-xs">-->
+                <i class="fa" ng-class="{'fa-step-backward': sidebarVisible, 'fa-step-forward': !sidebarVisible}"></i>
+                <!--</button>-->
+            </div>
                 <span class="module-name navbar-brand">
                     <div class="back">
                         <button class="btn btn-warning"><i class="fa fa-lg fa-angle-left"></i></button>
                     </div>
                     {{ curPageName }}
                 </span>
-    </div>
-    <!-- /.navbar-header -->
-
-
-    <div ng-class="{'hide-side-bar': !sidebarVisible}" class="navbar-default navbar-static-side" role="navigation">
-        <div class="sidebar-collapse">
-            <ul class="nav" id="side-menu">
-                <li class="user-side-bar">
-                    <i class="fa fa-user"></i> &nbsp; {{ user.name }} &nbsp;
-                    <!--Настройки-->
-                    <button class="btn btn-default btn-sm"><i class="fa fa-cog"></i></button>
-                    <!--Скрыть sidebar-->
-                    <button ng-click="toggleVisibleSideBar()" class="btn btn-danger btn-sm pull-right hidden-xs">
-                        <i class="fa" ng-class="{'fa-arrow-left': sidebarVisible, 'fa-arrow-right': !sidebarVisible}"></i>
-                    </button>
-                </li>
-                <li class="logout-button">
-                    <button class="btn btn-sm btn-default">
-                        Выход из аккаунта
-                    </button>
-                </li>
-                <li ng-repeat="module in modules">
-                    <a href=><i class="fa fa-chevron-right"></i> {{ module.desc }}</a>
-                    <ul class="nav nav-second-level">
-                        <li ng-repeat="(iterator, module) in module.nextLevel">
-                            <a href="#{{ module.href }}"><i class="fa fa-chevron-right"></i> {{ module.desc }}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <!-- /#side-menu -->
         </div>
-        <!-- /.sidebar-collapse -->
-    </div>
-    <!-- /.navbar-static-side -->
+        <!-- /.navbar-header -->
+
+
+        <div ng-class="{'hide-side-bar': !sidebarVisible}" class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="user-side-bar">
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-default">
+                                {{ user.name }}
+                            </button>
+                            <!--Настройки-->
+                            <button class="btn btn-default">
+                                <i class="fa fa-cog"></i>
+                            </button>
+                            <!-- выход -->
+                            <button class="btn btn-default">
+                                <i class="fa fa-sign-out"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li ng-repeat="module in modules">
+                        <a href=><i class="fa fa-chevron-right"></i> {{ module.desc }}</a>
+                        <ul class="nav nav-second-level">
+                            <li ng-repeat="(iterator, module) in module.nextLevel">
+                                <a href="#{{ module.href }}"><i class="fa fa-chevron-right"></i> {{ module.desc }}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- /#side-menu -->
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
     </nav>
 
 
@@ -183,8 +189,6 @@
 
 
 </div>
-
-
 
 
 </body>

@@ -48,15 +48,24 @@ a.no-href.logout {
 }
 
 .user-side-bar {
-    padding: 10px 10px 10px 30px;
+    padding: 10px;
 }
 
 
 
 
-
 .navbar-brand.offset {
+    display: inline-block;
     width: 250px;
+    padding: 15px 10px;
+    background: none;
+    border: none;
+    text-align: center;
+    color: gray;
+    cursor: pointer;
+}
+.navbar-brand.offset.min {
+    width: 56px;
 }
 
 .module-name .back {
