@@ -24,7 +24,8 @@
     <!--<link rel="stylesheet" href="css/ng-tags-input.bootstrap.min.css" />-->
 
     <link rel="icon" sizes="128x128" href="css/images/app-icon.png">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700,500&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700,500&subset=latin,cyrillic' rel='stylesheet'
+          type='text/css'>
 
     <!--[if lt IE 9]>
     <script src="../bower_components/html5shiv/dist/html5shiv.min.js"></script>
@@ -32,7 +33,6 @@
     <![endif]-->
 
     <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css"/>
-
 
 
     <!-- js -->
@@ -50,9 +50,6 @@
     <!-- /build -->
 
 
-
-
-
     <!-- css -->
 
     <!-- bootstrap -->
@@ -60,9 +57,6 @@
     <!-- /build -->
 
     <!-- build: remove -->
-
-
-
 
 
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css"/>
@@ -78,7 +72,6 @@
     <script src="../bower_components/angular-route/angular-route.min.js"></script>
     <script src="../bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
     <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-
 
 
     <link rel="stylesheet" href="css/my.css"/>
@@ -119,68 +112,138 @@
 <body ng-app="maximumCrm">
 
 
-
-
 <div id="wrapper" ng-controller="NavigationCtrl">
 
     <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <span class="navbar-brand offset hidden-xs"></span>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <!--<a class="navbar-brand" href="index.html"></a>-->
+        <span class="navbar-brand offset hidden-xs"></span>
                 <span class="module-name navbar-brand">
                     <div class="back">
                         <button class="btn btn-warning"><i class="fa fa-lg fa-angle-left"></i></button>
                     </div>
                     {{ curPageName }}
                 </span>
+    </div>
+    <!-- /.navbar-header -->
+
+
+    <div class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="sidebar-search">
+                    <div class="input-group custom-search-form">
+                        <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                    </div>
+                    <!-- /input-group -->
+                </li>
+                <li>
+                    <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="flot.html">Flot Charts</a>
+                        </li>
+                        <li>
+                            <a href="morris.html">Morris.js Charts</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                <li>
+                    <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
+                </li>
+                <li>
+                    <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="panels-wells.html">Panels and Wells</a>
+                        </li>
+                        <li>
+                            <a href="buttons.html">Buttons</a>
+                        </li>
+                        <li>
+                            <a href="notifications.html">Notifications</a>
+                        </li>
+                        <li>
+                            <a href="typography.html">Typography</a>
+                        </li>
+                        <li>
+                            <a href="grid.html">Grid</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="#">Second Level Item</a>
+                        </li>
+                        <li>
+                            <a href="#">Second Level Item</a>
+                        </li>
+                        <li>
+                            <a href="#">Third Level <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li>
+                                    <a href="#">Third Level Item</a>
+                                </li>
+                                <li>
+                                    <a href="#">Third Level Item</a>
+                                </li>
+                                <li>
+                                    <a href="#">Third Level Item</a>
+                                </li>
+                                <li>
+                                    <a href="#">Third Level Item</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-third-level -->
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="blank.html">Blank Page</a>
+                        </li>
+                        <li>
+                            <a href="login.html">Login Page</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+            </ul>
+            <!-- /#side-menu -->
         </div>
-
-
-
-        <div ng-class="{'hide-side-bar': !sidebarVisible}" class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-
-                <!--МЕНЮ-->
-
-                <ul class="nav" id="side-menu">
-                    <li class="user-side-bar">
-                        <i class="fa fa-user"></i> &nbsp; {{ user.name }} &nbsp;
-                        <!--Настройки-->
-                        <button class="btn btn-default btn-sm"><i class="fa fa-cog"></i></button>
-                        <!--Скрыть sidebar-->
-                        <button
-
-                                ng-click="toggleVisibleSideBar()"
-                                class="btn btn-danger btn-sm pull-right hidden-xs">
-                            <i class="fa" ng-class="{'fa-arrow-left': sidebarVisible, 'fa-arrow-right': !sidebarVisible}"></i>
-                        </button>
-                    </li>
-                    <li class="logout-button">
-                        <button class="btn btn-sm btn-default">
-                            Выход из аккаунта
-                        </button>
-                    </li>
-                    <li
-                            ng-repeat="(iterator, module) in modules">
-                        <a href="#{{ module.href }}"><i class="fa fa-chevron-right"></i> {{ module.desc }}</a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-
+        <!-- /.sidebar-collapse -->
+    </div>
+    <!-- /.navbar-static-side -->
     </nav>
 
 
-
     <!-- Page Content -->
-    <div class="page-wrapper" ng-class="{'hide-side-bar-wrapper': !sidebarVisible}">
+    <div id="page-wrapper" ng-class="{'hide-side-bar-wrapper': !sidebarVisible}">
         <div class="row">
             <div id="main" class="page-content">
                 <ng-view></ng-view>
@@ -193,13 +256,8 @@
 </div>
 
 
-
-
-
 <script src="../bower_components/metisMenu/dist/jquery.metisMenu.js"></script>
 <script src="../bower_components/sb-admin-v2/js/sb-admin.js"></script>
-
-
 
 
 </body>
