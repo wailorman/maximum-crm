@@ -89,13 +89,14 @@ angular.module('maximumCrm')
             };
 
             $scope.isAnybodySelected = false;
-            $scope.$watchCollection('groups', function () {
+            $scope.$watch('groups', function () {
+                $scope.isAnybodySelected = false;
                 for ( var i=0; $scope.groups[i] !== undefined; i++ ){
                     if ( $scope.groups[i].checked === true ){
                         $scope.isAnybodySelected = true;
                     }
                 }
-            });
+            }, true);
 
             $scope.openFilterGroupsModal = openFilterGroupModal($modal);
 

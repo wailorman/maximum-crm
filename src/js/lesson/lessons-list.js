@@ -1,6 +1,6 @@
 angular.module('maximumCrm')
-    .controller('LessonsListCtrl', ['$scope', '$rootScope', '$http',
-        function ($scope, $rootScope, $http) {
+    .controller('LessonsListCtrl', ['$scope', '$rootScope', '$http', '$modal',
+        function ($scope, $rootScope, $http, $modal) {
 
             $rootScope.curPageName = 'Список занятий';
 
@@ -94,4 +94,6 @@ angular.module('maximumCrm')
                     }
                 }
             };
+
+            $scope.openFilterLessonsModal = openFilterLessonsModal($modal);
         }]);

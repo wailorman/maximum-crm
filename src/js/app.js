@@ -51,9 +51,9 @@ var crm = angular.module('maximumCrm', [
                 templateUrl: 'views/lesson/lesson-edit.html',
                 controller: 'EditLessonCtrl'
             })
-            .when('/lessonNew', {
-                templateUrl: 'views/lesson/lesson-new.html',
-                controller: 'NewLessonCtrl'
+            .when('/lessonCreate', {
+                templateUrl: 'views/lesson/lesson-create.html',
+                controller: 'LessonCreateCtrl'
             })
             .when('/lessonsList', {
                 templateUrl: 'views/lesson/lessons-list.html',
@@ -122,7 +122,7 @@ var crm = angular.module('maximumCrm', [
                         },
                         {
                             desc: 'Создание занятия',
-                            href: '/lessonNew'
+                            href: '/lessonCreate'
                         }
                     ]
                 },
@@ -143,7 +143,7 @@ var crm = angular.module('maximumCrm', [
                         },
                         {
                             desc: 'Создание группы',
-                            href: '/groupNew'
+                            href: '/groupCreate'
                         }
                     ]
                 }

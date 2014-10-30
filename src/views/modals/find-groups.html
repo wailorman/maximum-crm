@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h3 class="modal-title">Поиск групп</h3>
+</div>
+<div class="modal-body">
+    <div class="">
+        <input ng-model="searchStr" placeholder="Поиск" type="text" class="form-control">
+    </div>
+
+    <div class="scroll">
+        <table class="table">
+            <!-- Строка. При клике на неё ставится галочка -->
+            <tr class="coach-row"
+                ng-repeat="(number, group) in groups | filter:searchStr | limitTo:showLimit"
+                ng-class="{'selected': group.selected}"
+                ng-click="selectGroup(number)">
+
+                <td>
+                    <i class="fa fa-xs" ng-class="{'fa-check': group.selected}"></i>
+                    {{ group.name }}
+                </td>
+            </tr>
+
+            <!-- Кнопка Подгрузить ещё. Показывается только при необходимости -->
+            <tr ng-show=" showLimit <= groups.length ">
+                <td class="text-center preload">
+
+                    <!-- подгрузить еще -->
+                    <button ng-click="incrementLimit()"
+                            class="btn btn-default">
+                        <i class="fa fa-lg fa-refresh"></i>
+                        Подгрузить ещё
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Отмена</button>
+</div>

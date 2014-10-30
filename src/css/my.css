@@ -140,6 +140,7 @@ td.value .btn-margined,
     padding: 0 15px;
     min-height: 500px;
     background: none;
+    transition: margin 500ms;
 }
 .panel {
     /*margin: -5px;*/
@@ -194,4 +195,12 @@ tr.selected{
 
 .hide-side-bar-wrapper {
     margin: 0 0 0 55px !important
+}
+
+.navbar-default {
+    transition: margin 500ms;
+}
+
+.navbar-brand {
+    transition: width 500ms;
 }
