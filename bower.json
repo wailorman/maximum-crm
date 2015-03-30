@@ -1,25 +1,7 @@
 {
   "name": "maximum-crm",
-  "version": "0.2.1",
-  "description": "maximum-crm",
-  "author": "wailorman <wailorman@gmail.com>",
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "bootstrap": "~3.2.0",
-    "angular": "~1.3.0",
-    "angular-mocks": "~1.3.0",
-    "angular-route": "~1.3.0",
-    "angular-bootstrap": "~0.11.2",
-    "font-awesome": "~4.2.0",
-    "sb-admin-v2": "~0.1.0",
-    "html5shiv": "~3.7.2",
-    "respond": "~1.4.2"
+  "private": "true",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.0.0-rc.2"
   }
 }
