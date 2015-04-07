@@ -1,0 +1,14 @@
+<ion-view view-title="Тренеры">
+    <ion-nav-buttons side="right">
+        <button class="button button-clear icon ion-android-add">
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-list>
+            <ion-item collection-repeat="item in items"
+                    href="#/coaches/{{ item._id }}">
+                {{ item.name }}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
