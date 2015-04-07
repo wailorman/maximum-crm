@@ -2,26 +2,27 @@ angular.module( 'starter.coaches', [] )
     .config( function ( $stateProvider ) {
 
         $stateProvider
-            //.state( 'app.coaches.view', {
-            //    url: "/coaches/:id",
-            //    resolve: {
-            //        additionalStateParams: function () {
-            //            return {
-            //                listType: 'coaches'
-            //            };
-            //        }
-            //    },
-            //    views: {
-            //        'menuContent': {
-            //            templateUrl: "templates/coaches/coaches-view.html",
-            //            controller: 'ViewCtrl'
-            //        }
-            //    }
-            //} )
             .state( 'coaches', {
                 url: '/coaches',
                 abstract: true,
-                templateUrl: "templates/menu.html"
+                templateUrl: "templates/menu.html",
+                controller: 'AppCtrl'
+            } )
+            .state( 'coaches.create', {
+                url: "/new",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/coaches/coaches-create.html",
+                        controller: 'CreateCtrl'
+                    }
+                },
+                resolve: {
+                    additionalStateParams: function () {
+                        return {
+                            createType: 'coach'
+                        };
+                    }
+                }
             } )
             .state( 'coaches.list', {
                 url: '',
@@ -40,7 +41,7 @@ angular.module( 'starter.coaches', [] )
                 }
             } )
             .state( 'coaches.view', {
-                url: "/:id",
+                url: "/{id}",
                 views: {
                     'menuContent': {
                         templateUrl: "templates/coaches/coaches-view.html",
@@ -53,7 +54,23 @@ angular.module( 'starter.coaches', [] )
                             viewType: 'coach'
                         };
                     }
+                }
+            } )
+            .state( 'coaches.edit', {
+                url: "/{id}/edit",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/coaches/coaches-edit.html",
+                        controller: 'EditCtrl'
+                    }
                 },
+                resolve: {
+                    additionalStateParams: function () {
+                        return {
+                            editType: 'coach'
+                        };
+                    }
+                }
             } );
 
     } );

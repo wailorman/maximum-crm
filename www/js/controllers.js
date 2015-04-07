@@ -53,16 +53,18 @@ angular.module( 'starter.controllers', [] )
 
     .controller( 'ListCtrl', function ( $scope, $state, additionalStateParams, Api ) {
 
-        function loadList () {
+        function loadList() {
 
-            var listType = additionalStateParams.listType;
-
-            switch ( listType ){
+            switch (additionalStateParams.listType) {
                 case 'coaches':
-                    Api.Coaches.query().$promise
-                        .then( function ( array ) {
-                            $scope.items = array;
-                        } );
+                    $scope.refresh = function () {
+                        Api.Coaches.query().$promise
+                            .then( function ( array ) {
+                                $scope.items = array;
+                                $scope.$broadcast( 'scroll.refreshComplete' );
+                            } );
+                    };
+                    $scope.refresh();
                     break;
             }
 
@@ -75,35 +77,108 @@ angular.module( 'starter.controllers', [] )
 
         loadList();
 
-        console.log( '234sssssssssreee' );
+        console.log( 'list controller' );
 
     } )
 
-    .controller( 'ViewCtrl', function ( $scope, $state, $stateParams, additionalStateParams, Api ) {
+    .controller( 'ViewCtrl', function ( $rootScope, $scope, $stateParams, additionalStateParams, Api ) {
 
-        //function loadView () {
-        //
-        //    var viewType = additionalStateParams.viewType;
-        //
-        //    switch ( viewType ) {
-        //        case 'coach':
-        //            Api.Coaches.get( {id: $stateParams.id} ).$promise
-        //                .then( function ( data ) {
-        //                    $scope.data = data;
-        //                } );
-        //            break;
-        //    }
-        //
-        //}
-        //
-        //$scope.viewType = additionalStateParams.viewType;
-        //$scope.data = {};
-        //
-        ////////////////////
-        //
-        //loadView();
+        function loadView() {
 
-        console.log( '234reee' );
+            switch (additionalStateParams.viewType) {
+                case 'coach':
+                    $scope.refresh = function () {
+                        Api.Coaches.get( {id: $stateParams.id} ).$promise
+                            .then( function ( data ) {
+                                $scope.data = data;
+                                $scope.$broadcast( 'scroll.refreshComplete' );
+                            } );
+                    };
+                    $scope.refresh();
+                    break;
+            }
 
+        }
+
+        /////////////////
+
+        $scope.viewType = additionalStateParams.viewType;
+
+        //////////////////
+
+        loadView();
+
+        console.log( 'view controller' );
+
+
+    } )
+    .controller( 'EditCtrl', function ( $rootScope, $scope, $state,
+                                        $stateParams, additionalStateParams, Api ) {
+
+        function loadEdit() {
+
+            switch (additionalStateParams.editType) {
+                case 'coach':
+                    Api.Coaches.get( {id: $stateParams.id} ).$promise
+                        .then( function ( data ) {
+                            // copy original data to watch changes
+                            $scope.originalResource = new Api.Coaches;
+                            angular.copy( data, $scope.originalResource );
+                            $scope.data = data;
+                        } );
+
+                    break;
+            }
+
+        }
+
+        /////////////////
+
+        $scope.applyChanges = function () {
+            $scope.data.$update( {id: $scope.data._id} )
+                .then( function () {
+                    $state.go( 'coaches.view', {id: $scope.data._id} );
+                } );
+        };
+
+        $scope.remove = function () {
+
+        };
+
+        $scope.editType = additionalStateParams.editType;
+
+        ////////////////
+
+        loadEdit();
+
+    } )
+    .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api ) {
+
+
+
+            //switch (additionalStateParams.createType) {
+            //    case 'coach':
+                    $scope.data = new Api.Coaches;
+                    //break;
+            //}
+
+
+
+        function create() {
+            switch (additionalStateParams.createType) {
+                case 'coach':
+                    $scope.data.$create()
+                        .then( function () {
+                            $state.go( 'coaches.list' );
+                        });
+                    break;
+            }
+        }
+
+        ////////////////
+
+        $scope.create = create;
+
+        ////////////////
 
     } );
