@@ -112,7 +112,7 @@ angular.module( 'starter.controllers', [] )
 
 
     } )
-    .controller( 'EditCtrl', function ( $rootScope, $scope, $state,
+    .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup,
                                         $stateParams, additionalStateParams, Api ) {
 
         function loadEdit() {
@@ -142,7 +142,21 @@ angular.module( 'starter.controllers', [] )
         };
 
         $scope.remove = function () {
-
+            var acceptRemove = $ionicPopup.show({
+                title: 'Вы уверены?',
+                //subTitle: 'Вы действительно хотите удалить тренера?',
+                buttons: [
+                    { text: 'Нет' },
+                    {
+                        text: '<b>Да</b>',
+                        type: 'button-positive',
+                        onTap: function () {
+                            $scope.data.$remove( {id: $scope.data._id} );
+                            $state.go( 'coaches.list' );
+                        }
+                    }
+                ]
+            });
         };
 
         $scope.editType = additionalStateParams.editType;
