@@ -1,0 +1,24 @@
+<ion-view cache-view="false">
+    <ion-nav-title>Редактирование</ion-nav-title>
+    <ion-nav-buttons side="right">
+        <button class="button button-clear icon ion-android-done"
+                ng-click="applyChanges()">
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-list>
+            <ion-item class="item-input"
+                      ng-class="{'changed-field': data.name != originalResource.name}">
+                <span class="input-label">Название</span>
+                <input type="text"
+                       ng-model="data.name"/>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+    <ion-footer-bar align-title="center" class="bar-assertive">
+
+        <div class="title" ng-click="remove()">Удалить зал</div>
+
+    </ion-footer-bar>
+</ion-view>
