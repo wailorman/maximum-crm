@@ -112,6 +112,7 @@ angular.module( 'starter.controllers', [] )
 
     } )
     .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup,
+                                        $ionicViewService,
                                         $stateParams, additionalStateParams, Api ) {
 
         /** @namespace $scope.data._id */
@@ -161,7 +162,7 @@ angular.module( 'starter.controllers', [] )
                         type: 'button-positive',
                         onTap: function () {
                             $scope.data.$remove( { id: $scope.data._id } );
-
+                            $ionicViewService.nextViewOptions({ disableBack: true });
                             $state.go( rootState() + '.list' );
                         }
                     }
@@ -176,22 +177,29 @@ angular.module( 'starter.controllers', [] )
         $scope.load();
 
     } )
-    .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api ) {
+    .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api,
+                                          $ionicViewService ) {
 
 
+        var rootState = function () {
+            return $state.current.name.match( /\w+/ )[ 0 ];
+        };
 
-        $scope.data = new Api.Coaches;
+        if (additionalStateParams.createType === 'coach') {
+            $scope.data = new Api.Coaches;
+        } else if (additionalStateParams.createType === 'hall') {
+            $scope.data = new Api.Halls;
+        }
 
 
         function create() {
-            switch (additionalStateParams.createType) {
-                case 'coach':
-                    $scope.data.$create()
-                        .then( function () {
-                            $state.go( 'coaches.list' );
-                        } );
-                    break;
-            }
+
+            $scope.data.$create()
+                .then( function () {
+                    $ionicViewService.nextViewOptions({ disableBack: true });
+                    $state.go( rootState() + '.list' );
+                } );
+
         }
 
         ////////////////
