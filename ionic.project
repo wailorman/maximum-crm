@@ -1,4 +1,11 @@
 {
   "name": "maximum-crm2",
-  "app_id": "f5322c00"
+  "app_id": "f5322c00",
+  "browsers": [
+    {
+      "platform": "android",
+      "browser": "crosswalk",
+      "version": "12.41.296.5"
+    }
+  ]
 }

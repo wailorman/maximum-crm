@@ -7,10 +7,12 @@
 angular.module( 'starter', [
     'ionic',
     'ngResource',
+    //'ngCacheBuster',
 
     'starter.api',
     'starter.controllers',
-    'starter.coaches'
+    'starter.coaches',
+    'starter.halls'
 ] )
 
     .run( function ( $ionicPlatform ) {
@@ -108,5 +110,5 @@ angular.module( 'starter', [
                 }
             } );
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise( '/browse' );
+        $urlRouterProvider.otherwise( '/coaches' );
     } );
