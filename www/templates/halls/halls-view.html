@@ -2,7 +2,7 @@
     <ion-nav-title>{{ data.name }}</ion-nav-title>
     <ion-nav-buttons side="right">
         <!-- edit button -->
-        <a ng-href="#/coaches/{{ data._id }}/edit">
+        <a ng-href="#/halls/{{ data._id }}/edit">
             <button class="button button-clear icon ion-android-create">
             </button>
         </a>
@@ -14,7 +14,7 @@
         </ion-refresher>
         <ion-list>
             <ion-item class="item-input">
-                <span class="input-label">Имя</span>
+                <span class="input-label">Название</span>
                 {{ data.name }}
             </ion-item>
         </ion-list>
