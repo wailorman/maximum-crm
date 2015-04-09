@@ -12,7 +12,8 @@ angular.module( 'starter', [
     'starter.api',
     'starter.controllers',
     'starter.coaches',
-    'starter.halls'
+    'starter.halls',
+    'starter.groups'
 ] )
 
     .run( function ( $ionicPlatform ) {

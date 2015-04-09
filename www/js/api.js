@@ -17,6 +17,13 @@ angular.module( 'starter.api', [] )
                 'update': { method: 'PUT' },
                 'create': { method: 'POST' },
                 'remove': { method: 'DELETE' }
+            } ),
+            Groups: $resource( apiUrl + '/groups/:id', null, {
+                'get': { method: 'GET' },
+                'query': { method: 'GET', isArray: true },
+                'update': { method: 'PUT' },
+                'create': { method: 'POST' },
+                'remove': { method: 'DELETE' }
             } )
         };
 
