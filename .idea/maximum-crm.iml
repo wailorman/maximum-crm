@@ -14,5 +14,6 @@
     <orderEntry type="library" name="async-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="sugar-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="cordova-ionic-DefinitelyTyped" level="application" />
+    <orderEntry type="library" name="maximum-crm node_modules" level="project" />
   </component>
 </module>
