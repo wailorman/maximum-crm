@@ -61,6 +61,8 @@ angular.module( 'starter.controllers', [] )
                 Api.Coaches.query().$promise.then( receiveData );
             } else if (listType === 'halls') {
                 Api.Halls.query().$promise.then( receiveData );
+            } else if (listType === 'groups') {
+                Api.Groups.query().$promise.then( receiveData );
             }
 
             function receiveData( array ) {
@@ -92,6 +94,8 @@ angular.module( 'starter.controllers', [] )
                 Api.Coaches.get( { id: $stateParams.id } ).$promise.then( receiveData );
             } else if (viewType === 'hall') {
                 Api.Halls.get( { id: $stateParams.id } ).$promise.then( receiveData );
+            } else if (viewType === 'group') {
+                Api.Groups.get( { id: $stateParams.id } ).$promise.then( receiveData );
             }
 
             function receiveData( data ) {
@@ -125,9 +129,10 @@ angular.module( 'starter.controllers', [] )
 
             if (editType === 'coach') {
                 Api.Coaches.get( { id: $stateParams.id } ).$promise.then( receiveData );
-
             } else if (editType === 'hall') {
                 Api.Halls.get( { id: $stateParams.id } ).$promise.then( receiveData );
+            } else if (editType === 'group') {
+                Api.Groups.get( { id: $stateParams.id } ).$promise.then( receiveData );
             }
 
             function receiveData( data ) {
@@ -189,6 +194,8 @@ angular.module( 'starter.controllers', [] )
             $scope.data = new Api.Coaches;
         } else if (additionalStateParams.createType === 'hall') {
             $scope.data = new Api.Halls;
+        } else if (additionalStateParams.createType === 'group') {
+            $scope.data = new Api.Groups;
         }
 
 
