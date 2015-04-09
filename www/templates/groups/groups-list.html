@@ -1,0 +1,20 @@
+<ion-view view-title="Группы" cache-view="false">
+    <ion-nav-buttons side="right">
+        <a href="#/groups/new">
+            <button class="button button-clear icon ion-android-add">
+            </button>
+        </a>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-refresher
+                pulling-text="Обновить..."
+                on-refresh="refresh()">
+        </ion-refresher>
+        <ion-list>
+            <ion-item collection-repeat="item in items"
+                      href="#/groups/{{ item._id }}">
+                {{ item.name }}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
