@@ -166,6 +166,7 @@ angular.module( 'starter.controllers', [] )
                 .then( function () {
                     $ionicLoading.hide();
 
+                    $ionicHistory.clearCache();
                     $state.go( rootState() + '.view', { id: $scope.data._id } );
                 } );
         };
@@ -180,6 +181,8 @@ angular.module( 'starter.controllers', [] )
                         type: 'button-positive',
                         onTap: function () {
                             $scope.data.$remove( { id: $scope.data._id } );
+
+                            $ionicHistory.clearCache();
                             $ionicHistory.nextViewOptions( { historyRoot: true } );
                             $state.go( rootState() + '.list' );
                         }
@@ -219,6 +222,7 @@ angular.module( 'starter.controllers', [] )
                 .then( function () {
                     $ionicLoading.hide();
 
+                    $ionicHistory.clearCache();
                     $ionicHistory.nextViewOptions( { historyRoot: true } );
                     $state.go( rootState() + '.list' );
                 } );
