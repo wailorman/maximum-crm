@@ -53,17 +53,11 @@ angular.module( 'starter.controllers', [] )
 
             var resourceType = additionalStateParams.resourceType;
 
-            $ionicLoading.show( {
-                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
-                delay: 300
-            } );
-
             Api[ resourceType ].query().$promise
                 .then( function ( array ) {
                     $scope.items = array;
                 } )
                 .finally( function () {
-                    $ionicLoading.hide();
                     $scope.$broadcast( 'scroll.refreshComplete' );
                 } );
 
