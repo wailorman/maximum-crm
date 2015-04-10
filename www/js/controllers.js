@@ -51,26 +51,25 @@ angular.module( 'starter.controllers', [] )
 
     } )
 
-    .controller( 'ListCtrl', function ( $scope, $state, additionalStateParams, Api ) {
+    .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, additionalStateParams, Api ) {
 
         $scope.refresh = function () {
 
-            var listType = additionalStateParams.listType;
+            var resourceType = additionalStateParams.resourceType;
 
-            if (listType === 'coaches') {
-                Api.Coaches.query().$promise.then( receiveData );
-            } else if (listType === 'halls') {
-                Api.Halls.query().$promise.then( receiveData );
-            } else if (listType === 'groups') {
-                Api.Groups.query().$promise.then( receiveData );
-            } else if (listType === 'clients') {
-                Api.Clients.query().$promise.then( receiveData );
-            }
+            $ionicLoading.show( {
+                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
+                delay: 300
+            } );
 
-            function receiveData( array ) {
-                $scope.items = array;
-                $scope.$broadcast( 'scroll.refreshComplete' );
-            }
+            Api[ resourceType ].query().$promise
+                .then( function ( array ) {
+                    $ionicLoading.hide();
+
+                    $scope.items = array;
+                    $scope.$broadcast( 'scroll.refreshComplete' );
+                } );
+
 
         };
 
@@ -85,27 +84,27 @@ angular.module( 'starter.controllers', [] )
 
     } )
 
-    .controller( 'ViewCtrl', function ( $rootScope, $scope, $stateParams, additionalStateParams, Api ) {
+    .controller( 'ViewCtrl', function ( $rootScope, $scope, $stateParams, $ionicLoading,
+                                        additionalStateParams, Api ) {
 
 
         $scope.refresh = function () {
 
-            var viewType = additionalStateParams.viewType;
+            var resourceType = additionalStateParams.resourceType;
 
-            if (viewType === 'coach') {
-                Api.Coaches.get( { id: $stateParams.id } ).$promise.then( receiveData );
-            } else if (viewType === 'hall') {
-                Api.Halls.get( { id: $stateParams.id } ).$promise.then( receiveData );
-            } else if (viewType === 'group') {
-                Api.Groups.get( { id: $stateParams.id } ).$promise.then( receiveData );
-            } else if (viewType === 'client') {
-                Api.Clients.get( { id: $stateParams.id } ).$promise.then( receiveData );
-            }
+            $ionicLoading.show( {
+                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
+                delay: 300
+            } );
 
-            function receiveData( data ) {
-                $scope.data = data;
-                $scope.$broadcast( 'scroll.refreshComplete' );
-            }
+            Api[ resourceType ].get( { id: $stateParams.id } ).$promise
+                .then( function ( data ) {
+                    $ionicLoading.hide();
+
+                    $scope.data = data;
+                    $scope.$broadcast( 'scroll.refreshComplete' );
+                } );
+
 
         };
 
@@ -119,7 +118,7 @@ angular.module( 'starter.controllers', [] )
 
 
     } )
-    .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup,
+    .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, $ionicLoading,
                                         $ionicHistory,
                                         $stateParams, additionalStateParams, Api ) {
 
@@ -129,24 +128,24 @@ angular.module( 'starter.controllers', [] )
 
         $scope.load = function () {
 
-            var editType = additionalStateParams.editType;
+            var resourceType = additionalStateParams.resourceType;
 
-            if (editType === 'coach') {
-                Api.Coaches.get( { id: $stateParams.id } ).$promise.then( receiveData );
-            } else if (editType === 'hall') {
-                Api.Halls.get( { id: $stateParams.id } ).$promise.then( receiveData );
-            } else if (editType === 'group') {
-                Api.Groups.get( { id: $stateParams.id } ).$promise.then( receiveData );
-            } else if (editType === 'client') {
-                Api.Clients.get( { id: $stateParams.id } ).$promise.then( receiveData );
-            }
+            $ionicLoading.show( {
+                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
+                delay: 300
+            } );
 
-            function receiveData( data ) {
-                // copy original data to watch changes
-                $scope.originalResource = new Api.Coaches;
-                angular.copy( data, $scope.originalResource ); // @todo rename to originalData
-                $scope.data = data;
-            }
+            Api[ resourceType ].get( { id: $stateParams.id } ).$promise
+                .then( function ( data ) {
+                    $ionicLoading.hide();
+
+                    // copy original data to watch changes
+                    $scope.originalResource = new Api.Coaches;
+                    angular.copy( data, $scope.originalResource ); // @todo rename to originalData
+                    $scope.data = data;
+                }
+            );
+
 
         };
 
@@ -157,8 +156,16 @@ angular.module( 'starter.controllers', [] )
         };
 
         $scope.applyChanges = function () {
+
+            $ionicLoading.show( {
+                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
+                delay: 300
+            } );
+
             $scope.data.$update( { id: $scope.data._id } )
                 .then( function () {
+                    $ionicLoading.hide();
+
                     $state.go( rootState() + '.view', { id: $scope.data._id } );
                 } );
         };
@@ -173,7 +180,7 @@ angular.module( 'starter.controllers', [] )
                         type: 'button-positive',
                         onTap: function () {
                             $scope.data.$remove( { id: $scope.data._id } );
-                            $ionicHistory.nextViewOptions({ historyRoot: true });
+                            $ionicHistory.nextViewOptions( { historyRoot: true } );
                             $state.go( rootState() + '.list' );
                         }
                     }
@@ -188,39 +195,34 @@ angular.module( 'starter.controllers', [] )
         $scope.load();
 
     } )
-    .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api,
+    .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api, $ionicLoading,
                                           $ionicHistory ) {
-
 
         var rootState = function () {
             return $state.current.name.match( /\w+/ )[ 0 ];
         };
 
-        if (additionalStateParams.createType === 'coach') {
-            $scope.data = new Api.Coaches;
-        } else if (additionalStateParams.createType === 'hall') {
-            $scope.data = new Api.Halls;
-        } else if (additionalStateParams.createType === 'group') {
-            $scope.data = new Api.Groups;
-        } else if (additionalStateParams.createType === 'client') {
-            $scope.data = new Api.Clients;
-        }
+        var resourceType = additionalStateParams.resourceType;
 
+        $scope.data = new Api[ resourceType ];
 
-        function create() {
+        ////////////////
+
+        $scope.create = function () {
+
+            $ionicLoading.show( {
+                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
+                delay: 300
+            } );
 
             $scope.data.$create()
                 .then( function () {
-                    $ionicHistory.nextViewOptions({ historyRoot: true });
+                    $ionicLoading.hide();
+
+                    $ionicHistory.nextViewOptions( { historyRoot: true } );
                     $state.go( rootState() + '.list' );
                 } );
 
-        }
-
-        ////////////////
-
-        $scope.create = create;
-
-        ////////////////
+        };
 
     } );
