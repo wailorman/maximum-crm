@@ -47,10 +47,6 @@ angular.module( 'starter.controllers', [] )
     .controller( 'PlaylistCtrl', function ( $scope, $stateParams ) {
     } )
 
-    .service( 'List', function ( Api ) {
-
-    } )
-
     .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, additionalStateParams, Api ) {
 
         $scope.refresh = function () {
@@ -64,9 +60,10 @@ angular.module( 'starter.controllers', [] )
 
             Api[ resourceType ].query().$promise
                 .then( function ( array ) {
-                    $ionicLoading.hide();
-
                     $scope.items = array;
+                } )
+                .finally( function () {
+                    $ionicLoading.hide();
                     $scope.$broadcast( 'scroll.refreshComplete' );
                 } );
 
@@ -99,9 +96,10 @@ angular.module( 'starter.controllers', [] )
 
             Api[ resourceType ].get( { id: $stateParams.id } ).$promise
                 .then( function ( data ) {
-                    $ionicLoading.hide();
-
                     $scope.data = data;
+                } )
+                .finally( function () {
+                    $ionicLoading.hide();
                     $scope.$broadcast( 'scroll.refreshComplete' );
                 } );
 
@@ -137,14 +135,14 @@ angular.module( 'starter.controllers', [] )
 
             Api[ resourceType ].get( { id: $stateParams.id } ).$promise
                 .then( function ( data ) {
-                    $ionicLoading.hide();
-
                     // copy original data to watch changes
                     $scope.originalResource = new Api.Coaches;
                     angular.copy( data, $scope.originalResource ); // @todo rename to originalData
                     $scope.data = data;
-                }
-            );
+                } )
+                .finally( function () {
+                    $ionicLoading.hide();
+                } );
 
 
         };
@@ -164,10 +162,11 @@ angular.module( 'starter.controllers', [] )
 
             $scope.data.$update( { id: $scope.data._id } )
                 .then( function () {
-                    $ionicLoading.hide();
-
                     $ionicHistory.clearCache();
                     $state.go( rootState() + '.view', { id: $scope.data._id } );
+                } )
+                .finally( function () {
+                    $ionicLoading.hide();
                 } );
         };
 
@@ -220,12 +219,13 @@ angular.module( 'starter.controllers', [] )
 
             $scope.data.$create()
                 .then( function () {
-                    $ionicLoading.hide();
-
                     $ionicHistory.clearCache();
                     $ionicHistory.nextViewOptions( { historyRoot: true } );
                     $state.go( rootState() + '.list' );
-                } );
+                } )
+                .finally( function () {
+                    $ionicLoading.hide();
+                });
 
         };
 
