@@ -7,7 +7,6 @@
 angular.module( 'starter', [
     'ionic',
     'ngResource',
-    //'ngCacheBuster',
 
     'starter.api',
     'starter.controllers',
@@ -124,40 +123,6 @@ angular.module( 'starter', [
                     }
                 }
             } )
-
-            //.state( 'app.coaches', {
-            //    url: "/coaches",
-            //    resolve: {
-            //        additionalStateParams: function () {
-            //            return {
-            //                listType: 'coaches'
-            //            };
-            //        }
-            //    },
-            //    views: {
-            //        'menuContent': {
-            //            templateUrl: "templates/lists/coaches.html",
-            //            controller: 'ListCtrl'
-            //        }
-            //    }
-            //} )
-
-            //.state( 'coaches.view', {
-            //    url: "/coaches/{id}",
-            //    resolve: {
-            //        additionalStateParams: function () {
-            //            return {
-            //                listType: 'coaches'
-            //            };
-            //        }
-            //    },
-            //    views: {
-            //        'menuContent': {
-            //            templateUrl: "templates/coaches/coaches-view.html",
-            //            controller: 'ViewCtrl'
-            //        }
-            //    }
-            //} )
 
             .state( 'app.single', {
                 url: "/playlists/:playlistId",
