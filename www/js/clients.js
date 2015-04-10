@@ -19,24 +19,24 @@ angular.module( 'starter.clients', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            createType: 'client'
+                            resourceType: 'Clients'
                         };
                     }
                 }
             } )
             .state( 'clients.list', {
                 url: '',
-                resolve: {
-                    additionalStateParams: function () {
-                        return {
-                            listType: 'clients'
-                        };
-                    }
-                },
                 views: {
                     'menuContent': {
                         templateUrl: "templates/clients/clients-list.html",
                         controller: 'ListCtrl'
+                    }
+                },
+                resolve: {
+                    additionalStateParams: function () {
+                        return {
+                            resourceType: 'Clients'
+                        };
                     }
                 }
             } )
@@ -51,7 +51,7 @@ angular.module( 'starter.clients', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            viewType: 'client'
+                            resourceType: 'Clients'
                         };
                     }
                 }
@@ -67,7 +67,7 @@ angular.module( 'starter.clients', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            editType: 'client'
+                            resourceType: 'Clients'
                         };
                     }
                 }

@@ -19,24 +19,24 @@ angular.module( 'starter.groups', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            createType: 'group'
+                            resourceType: 'Groups'
                         };
                     }
                 }
             } )
             .state( 'groups.list', {
                 url: '',
-                resolve: {
-                    additionalStateParams: function () {
-                        return {
-                            listType: 'groups'
-                        };
-                    }
-                },
                 views: {
                     'menuContent': {
                         templateUrl: "templates/groups/groups-list.html",
                         controller: 'ListCtrl'
+                    }
+                },
+                resolve: {
+                    additionalStateParams: function () {
+                        return {
+                            resourceType: 'Groups'
+                        };
                     }
                 }
             } )
@@ -51,7 +51,7 @@ angular.module( 'starter.groups', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            viewType: 'group'
+                            resourceType: 'Groups'
                         };
                     }
                 }
@@ -67,7 +67,7 @@ angular.module( 'starter.groups', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            editType: 'group'
+                            resourceType: 'Groups'
                         };
                     }
                 }

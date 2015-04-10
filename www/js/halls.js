@@ -19,24 +19,24 @@ angular.module( 'starter.halls', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            createType: 'hall'
+                            resourceType: 'Halls'
                         };
                     }
                 }
             } )
             .state( 'halls.list', {
                 url: '',
-                resolve: {
-                    additionalStateParams: function () {
-                        return {
-                            listType: 'halls'
-                        };
-                    }
-                },
                 views: {
                     'menuContent': {
                         templateUrl: "templates/halls/halls-list.html",
                         controller: 'ListCtrl'
+                    }
+                },
+                resolve: {
+                    additionalStateParams: function () {
+                        return {
+                            resourceType: 'Halls'
+                        };
                     }
                 }
             } )
@@ -51,7 +51,7 @@ angular.module( 'starter.halls', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            viewType: 'hall'
+                            resourceType: 'Halls'
                         };
                     }
                 }
@@ -67,7 +67,7 @@ angular.module( 'starter.halls', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            editType: 'hall'
+                            resourceType: 'Halls'
                         };
                     }
                 }

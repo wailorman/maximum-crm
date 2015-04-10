@@ -19,24 +19,24 @@ angular.module( 'starter.coaches', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            createType: 'coach'
+                            resourceType: 'Coaches'
                         };
                     }
                 }
             } )
             .state( 'coaches.list', {
                 url: '',
-                resolve: {
-                    additionalStateParams: function () {
-                        return {
-                            listType: 'coaches'
-                        };
-                    }
-                },
                 views: {
                     'menuContent': {
                         templateUrl: "templates/coaches/coaches-list.html",
                         controller: 'ListCtrl'
+                    }
+                },
+                resolve: {
+                    additionalStateParams: function () {
+                        return {
+                            resourceType: 'Coaches'
+                        };
                     }
                 }
             } )
@@ -51,7 +51,7 @@ angular.module( 'starter.coaches', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            viewType: 'coach'
+                            resourceType: 'Coaches'
                         };
                     }
                 }
@@ -67,7 +67,7 @@ angular.module( 'starter.coaches', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            editType: 'coach'
+                            resourceType: 'Coaches'
                         };
                     }
                 }
