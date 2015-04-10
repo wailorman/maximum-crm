@@ -13,7 +13,8 @@ angular.module( 'starter', [
     'starter.controllers',
     'starter.coaches',
     'starter.halls',
-    'starter.groups'
+    'starter.groups',
+    'starter.clients'
 ] )
 
     .run( function ( $ionicPlatform ) {

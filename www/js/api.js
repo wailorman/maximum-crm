@@ -24,6 +24,13 @@ angular.module( 'starter.api', [] )
                 'update': { method: 'PUT' },
                 'create': { method: 'POST' },
                 'remove': { method: 'DELETE' }
+            } ),
+            Clients: $resource( apiUrl + '/clients/:id', null, {
+                'get': { method: 'GET' },
+                'query': { method: 'GET', isArray: true },
+                'update': { method: 'PUT' },
+                'create': { method: 'POST' },
+                'remove': { method: 'DELETE' }
             } )
         };
 

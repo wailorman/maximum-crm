@@ -1,0 +1,18 @@
+<ion-view cache-view="false">
+    <ion-nav-title>Новый клиент</ion-nav-title>
+    <ion-nav-buttons side="right">
+        <button class="button button-clear icon ion-android-done"
+                ng-click="create()">
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-list>
+            <ion-item class="item-input">
+                <span class="input-label">Имя</span>
+                <input type="text"
+                       ng-model="data.name"/>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+</ion-view>

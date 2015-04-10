@@ -63,6 +63,8 @@ angular.module( 'starter.controllers', [] )
                 Api.Halls.query().$promise.then( receiveData );
             } else if (listType === 'groups') {
                 Api.Groups.query().$promise.then( receiveData );
+            } else if (listType === 'clients') {
+                Api.Clients.query().$promise.then( receiveData );
             }
 
             function receiveData( array ) {
@@ -96,6 +98,8 @@ angular.module( 'starter.controllers', [] )
                 Api.Halls.get( { id: $stateParams.id } ).$promise.then( receiveData );
             } else if (viewType === 'group') {
                 Api.Groups.get( { id: $stateParams.id } ).$promise.then( receiveData );
+            } else if (viewType === 'client') {
+                Api.Clients.get( { id: $stateParams.id } ).$promise.then( receiveData );
             }
 
             function receiveData( data ) {
@@ -133,6 +137,8 @@ angular.module( 'starter.controllers', [] )
                 Api.Halls.get( { id: $stateParams.id } ).$promise.then( receiveData );
             } else if (editType === 'group') {
                 Api.Groups.get( { id: $stateParams.id } ).$promise.then( receiveData );
+            } else if (editType === 'client') {
+                Api.Clients.get( { id: $stateParams.id } ).$promise.then( receiveData );
             }
 
             function receiveData( data ) {
@@ -196,6 +202,8 @@ angular.module( 'starter.controllers', [] )
             $scope.data = new Api.Halls;
         } else if (additionalStateParams.createType === 'group') {
             $scope.data = new Api.Groups;
+        } else if (additionalStateParams.createType === 'client') {
+            $scope.data = new Api.Clients;
         }
 
 
