@@ -1,0 +1,20 @@
+<div class="modal">
+    <ion-header-bar>
+
+            <button class="button button-icon button-clear ion-android-arrow-back"
+                    ng-click="close()"></button>
+
+        <h1 class="title">{{ title }}</h1>
+    </ion-header-bar>
+    <ion-content>
+        <ion-list>
+            <ion-item>
+                <input placeholder="Поиск..." type="text" ng-model="searchFilter.name"/>
+            </ion-item>
+            <ion-item   ng-repeat="item in items | filter: searchFilter"
+                        ng-click="choose(item)">
+                {{ item.name }}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</div>

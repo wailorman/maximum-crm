@@ -111,7 +111,7 @@ angular.module( 'starter.controllers', [] )
 
     } )
     .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, $ionicLoading,
-                                        $ionicHistory,
+                                        $ionicHistory, SearchModal, $log,
                                         $stateParams, additionalStateParams, Api ) {
 
         /** @namespace $scope.data._id */
@@ -139,6 +139,16 @@ angular.module( 'starter.controllers', [] )
                 } );
 
 
+        };
+
+        ///////////////
+
+        $scope.openModal = function () {
+            SearchModal.open().then(function (_id) {
+
+                $log.debug( 'Ive choosed this id: ' + _id );
+
+            } );
         };
 
         /////////////////

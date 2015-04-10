@@ -32,6 +32,63 @@ angular.module( 'starter', [
         } );
     } )
 
+    .service( 'SearchModal', function ( $rootScope, $ionicModal, $q, $log, Api ) {
+
+        var scope = $rootScope.$new();
+
+        scope.searchFilter = {};
+
+        scope.$watch( scope.searchFilter, function () {
+            scope.$applyAsync();
+        } );
+
+        this.open = function ( parameters ) {
+            var deferred = $q.defer();
+
+            // initialize modal
+            $ionicModal.fromTemplateUrl( 'templates/search-modal.html', {
+                scope: scope,
+                animation: 'slide-in-up'
+            } ).then( function ( modal ) {
+
+                modal.show();
+
+                // generate title
+                scope.title = "Найти группу";
+
+                // generate list
+                Api.Groups.query().$promise
+                    .then( function ( array ) {
+                        scope.items = array;
+                    } )
+                    .catch( function ( err ) {
+                        $log.error( err );
+                        deferred.reject();
+                    } );
+
+                scope.close = function () {
+                    modal.remove();
+                };
+
+                scope.choose = function ( item ) {
+                    if (!item) modal.remove();
+
+                    if (!item.hasOwnProperty( '_id' ))
+                        $log.error( "Item hasn't _id property" );
+
+                    else
+                        deferred.resolve( item._id );
+
+                    modal.remove();
+                };
+
+            } );
+
+            return deferred.promise;
+        };
+
+    } )
+
     .config( function ( $stateProvider, $urlRouterProvider ) {
 
         $stateProvider
