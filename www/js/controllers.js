@@ -120,7 +120,7 @@ angular.module( 'starter.controllers', [] )
 
     } )
     .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup,
-                                        $ionicViewService,
+                                        $ionicHistory,
                                         $stateParams, additionalStateParams, Api ) {
 
         /** @namespace $scope.data._id */
@@ -173,7 +173,7 @@ angular.module( 'starter.controllers', [] )
                         type: 'button-positive',
                         onTap: function () {
                             $scope.data.$remove( { id: $scope.data._id } );
-                            $ionicViewService.nextViewOptions({ disableBack: true });
+                            $ionicHistory.nextViewOptions({ historyRoot: true });
                             $state.go( rootState() + '.list' );
                         }
                     }
@@ -189,7 +189,7 @@ angular.module( 'starter.controllers', [] )
 
     } )
     .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api,
-                                          $ionicViewService ) {
+                                          $ionicHistory ) {
 
 
         var rootState = function () {
@@ -211,7 +211,7 @@ angular.module( 'starter.controllers', [] )
 
             $scope.data.$create()
                 .then( function () {
-                    $ionicViewService.nextViewOptions({ disableBack: true });
+                    $ionicHistory.nextViewOptions({ historyRoot: true });
                     $state.go( rootState() + '.list' );
                 } );
 
