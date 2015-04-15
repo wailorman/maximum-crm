@@ -88,7 +88,7 @@ angular.module( 'starter.controllers', [] )
                 delay: 300
             } );
 
-            Api[ resourceType ].get( { id: $stateParams.id } ).$promise
+            Api[ resourceType ].$get( { id: $stateParams.id } ).$promise
                 .then( function ( data ) {
                     $scope.data = data;
                 } )
@@ -111,7 +111,7 @@ angular.module( 'starter.controllers', [] )
 
     } )
     .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, $ionicLoading,
-                                        $ionicHistory, SearchModal, $log,
+                                        $ionicHistory, SearchModal, $log, $resource,
                                         $stateParams, additionalStateParams, Api ) {
 
         /** @namespace $scope.data._id */
@@ -130,7 +130,7 @@ angular.module( 'starter.controllers', [] )
             Api[ resourceType ].get( { id: $stateParams.id } ).$promise
                 .then( function ( data ) {
                     // copy original data to watch changes
-                    $scope.originalResource = new Api.Coaches;
+                    $scope.originalResource = {};
                     angular.copy( data, $scope.originalResource ); // @todo rename to originalData
                     $scope.data = data;
                 } )
