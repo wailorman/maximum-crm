@@ -1,9 +1,17 @@
 angular.module( 'starter.api', [] )
-    .factory( 'Api', function ( $resource, $q, $log, $cacheFactory ) {
+    .service( 'ResourceCache', function ( $cacheFactory ) {
+
+        var rc = this,
+            resourceCache = $cacheFactory( 'resources' );
+
+        rc.put = function ( key, value ) { return resourceCache.put( key, value ); };
+
+        rc.get = function ( key ) { return resourceCache.get( key ); };
+
+    } )
+    .factory( 'Api', function ( $resource, $q, $log, ResourceCache ) {
 
         var apiUrl = 'http://api.max-crm.wailorman.ru:21080';
-
-        var cache = $cacheFactory( 'resources' );
 
         var resources = {
             Groups: $resource( apiUrl + '/groups/:id', null, {
@@ -41,10 +49,10 @@ angular.module( 'starter.api', [] )
             Halls: resources.Halls,
             Coaches: resources.Coaches,
             Clients: {
-                $get: function ( params ) {
+                get: function ( params ) {
                     var deferred = $q.defer();
 
-                    resources.Clients.get( { id: params.id } )
+                    resources.Clients.get( params ).$promise
                         .catch( deferred.reject )
                         .then( function ( data ) {
 
@@ -58,12 +66,12 @@ angular.module( 'starter.api', [] )
                                 data.consists,
                                 function ( groupId, ecb ) {
 
-                                    resources.Groups.get( { id: groupId } )
+                                    resources.Groups.get( { id: groupId } ).$promise
                                         .then( function ( data ) {
-                                            cache.put( 'groups/' + data._id, data );
+                                            ResourceCache.put( 'groups/' + data._id, data );
                                         } )
                                         .catch( function ( err ) {
-                                            $log.error( "Can't join group " + groupId + ": " + err.statusCode + " " + err.message );
+                                            $log.error( "Can't join group " + groupId + ": " + err.statusText );
                                         } )
                                         .finally( function () {
                                             ecb();
@@ -77,31 +85,21 @@ angular.module( 'starter.api', [] )
 
                         } );
 
-                    return deferred.promise;
+                    return { $promise: deferred.promise };
                 },
-                $query: function ( params ) {
+                query: function ( params ) {
                     return resources.Clients.query( params );
                 },
-                $update: function ( params ) {
+                update: function ( params ) {
                     return resources.Clients.update( params );
                 },
-                $create: function () {
+                create: function () {
                     return resources.Clients.create( params );
                 },
-                $remove: function () {
+                remove: function () {
                     return resources.Clients.remove( params );
                 }
             }
-
-            /*function (  ) {
-             $resource( apiUrl + '/clients/:id', null, {
-             'get': { method: 'GET' },
-             'query': { method: 'GET', isArray: true },
-             'update': { method: 'PUT' },
-             'create': { method: 'POST' },
-             'remove': { method: 'DELETE' }
-             });
-             }*/
         };
 
     } );

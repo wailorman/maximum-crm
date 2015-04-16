@@ -17,6 +17,16 @@
                 <span class="input-label">Имя</span>
                 {{ data.name }}
             </ion-item>
+            <ion-item class="item-input" ng-show="data.consists">
+                <span class="input-label">Состоит в группах</span>
+
+                <div class="margined-buttons">
+                    <button class="button button-outline button-stable"
+                            ng-repeat="groupId in data.consists">
+                        {{ ResourceCache.get( 'groups/'+groupId ).name }}
+                    </button>
+                </div>
+            </ion-item>
         </ion-list>
     </ion-content>
 </ion-view>

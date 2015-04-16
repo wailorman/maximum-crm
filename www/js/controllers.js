@@ -47,7 +47,7 @@ angular.module( 'starter.controllers', [] )
     .controller( 'PlaylistCtrl', function ( $scope, $stateParams ) {
     } )
 
-    .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, additionalStateParams, Api ) {
+    .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, ResourceCache, additionalStateParams, Api ) {
 
         $scope.refresh = function () {
 
@@ -75,9 +75,10 @@ angular.module( 'starter.controllers', [] )
 
     } )
 
-    .controller( 'ViewCtrl', function ( $rootScope, $scope, $stateParams, $ionicLoading,
+    .controller( 'ViewCtrl', function ( $rootScope, $scope, $stateParams, $ionicLoading, ResourceCache,
                                         additionalStateParams, Api ) {
 
+        $scope.ResourceCache = ResourceCache;
 
         $scope.refresh = function () {
 
@@ -88,7 +89,7 @@ angular.module( 'starter.controllers', [] )
                 delay: 300
             } );
 
-            Api[ resourceType ].$get( { id: $stateParams.id } ).$promise
+            Api[ resourceType ].get( { id: $stateParams.id } ).$promise
                 .then( function ( data ) {
                     $scope.data = data;
                 } )
@@ -110,7 +111,7 @@ angular.module( 'starter.controllers', [] )
 
 
     } )
-    .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, $ionicLoading,
+    .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, $ionicLoading, ResourceCache,
                                         $ionicHistory, SearchModal, $log, $resource,
                                         $stateParams, additionalStateParams, Api ) {
 
@@ -201,7 +202,7 @@ angular.module( 'starter.controllers', [] )
         $scope.load();
 
     } )
-    .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api, $ionicLoading,
+    .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api, $ionicLoading, ResourceCache,
                                           $ionicHistory ) {
 
         var rootState = function () {
