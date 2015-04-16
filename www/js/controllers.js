@@ -47,7 +47,7 @@ angular.module( 'starter.controllers', [] )
     .controller( 'PlaylistCtrl', function ( $scope, $stateParams ) {
     } )
 
-    .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, additionalStateParams, Api ) {
+    .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, ResourceCache, additionalStateParams, Api ) {
 
         $scope.refresh = function () {
 
@@ -75,9 +75,10 @@ angular.module( 'starter.controllers', [] )
 
     } )
 
-    .controller( 'ViewCtrl', function ( $rootScope, $scope, $stateParams, $ionicLoading,
+    .controller( 'ViewCtrl', function ( $rootScope, $scope, $stateParams, $ionicLoading, ResourceCache,
                                         additionalStateParams, Api ) {
 
+        $scope.ResourceCache = ResourceCache;
 
         $scope.refresh = function () {
 
@@ -110,8 +111,8 @@ angular.module( 'starter.controllers', [] )
 
 
     } )
-    .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, $ionicLoading,
-                                        $ionicHistory, SearchModal, $log,
+    .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, $ionicLoading, ResourceCache,
+                                        $ionicHistory, SearchModal, $log, $resource,
                                         $stateParams, additionalStateParams, Api ) {
 
         /** @namespace $scope.data._id */
@@ -130,7 +131,7 @@ angular.module( 'starter.controllers', [] )
             Api[ resourceType ].get( { id: $stateParams.id } ).$promise
                 .then( function ( data ) {
                     // copy original data to watch changes
-                    $scope.originalResource = new Api.Coaches;
+                    $scope.originalResource = {};
                     angular.copy( data, $scope.originalResource ); // @todo rename to originalData
                     $scope.data = data;
                 } )
@@ -201,7 +202,7 @@ angular.module( 'starter.controllers', [] )
         $scope.load();
 
     } )
-    .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api, $ionicLoading,
+    .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api, $ionicLoading, ResourceCache,
                                           $ionicHistory ) {
 
         var rootState = function () {

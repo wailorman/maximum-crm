@@ -33,7 +33,8 @@ angular.module( 'starter', [
 
     .service( 'SearchModal', function ( $rootScope, $ionicModal, $q, $log, Api ) {
 
-        var scope = $rootScope.$new();
+        var scope = $rootScope.$new(),
+            sm = this;
 
         scope.searchFilter = {};
 
@@ -41,7 +42,7 @@ angular.module( 'starter', [
             scope.$applyAsync();
         } );
 
-        this.open = function ( parameters ) {
+        sm.open = function ( parameters ) {
             var deferred = $q.defer();
 
             // initialize modal

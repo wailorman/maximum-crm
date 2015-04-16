@@ -1,3 +1,6 @@
 .changed-field {
   background-color: #ffffdf;
 }
+.margined-buttons button {
+  margin-right: 5px;
+}
