@@ -21,17 +21,17 @@ angular.module( 'starter', [
         $ionicPlatform.ready( function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
-            if (window.cordova && window.cordova.plugins.Keyboard) {
+            if ( window.cordova && window.cordova.plugins.Keyboard ) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar( true );
             }
-            if (window.StatusBar) {
+            if ( window.StatusBar ) {
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
         } );
     } )
 
-    .service( 'SearchModal', function ( $rootScope, $ionicModal, $q, $log, Api ) {
+    .service( 'SearchModal', function ( $rootScope, $ionicModal, $q, $log, Api, ResourceCache ) {
 
         var scope = $rootScope.$new(),
             sm = this;
@@ -42,6 +42,21 @@ angular.module( 'starter', [
             scope.$applyAsync();
         } );
 
+        var callOnChoosed = function () {};
+
+        sm.onChoosed = function ( func ) {
+            callOnChoosed = func;
+        };
+
+        /**
+         *
+         * @param {object} parameters
+         * @param {string} parameters.title         Title of the modal
+         * @param {string} parameters.resourceType  Resource which from list will be loaded
+         * @param {string} parameters.arrayToPush   Array for pushing choosed result (if using array)
+         * @param {string} parameters.varToPut      Variable for putting choosed result (if using variable)
+         * @returns {*}
+         */
         sm.open = function ( parameters ) {
             var deferred = $q.defer();
 
@@ -54,10 +69,10 @@ angular.module( 'starter', [
                 modal.show();
 
                 // generate title
-                scope.title = "Найти группу";
+                scope.title = parameters.title;
 
                 // generate list
-                Api.Groups.query().$promise
+                Api[parameters.resourceType].query().$promise
                     .then( function ( array ) {
                         scope.items = array;
                     } )
@@ -71,13 +86,40 @@ angular.module( 'starter', [
                 };
 
                 scope.choose = function ( item ) {
-                    if (!item) modal.remove();
+                    if ( !item ) modal.remove();
 
-                    if (!item.hasOwnProperty( '_id' ))
+                    if ( !item.hasOwnProperty( '_id' ) ) {
+
                         $log.error( "Item hasn't _id property" );
 
-                    else
-                        deferred.resolve( item._id );
+                    } else {
+
+                        Api[parameters.resourceType].get( { id: item._id } ).$promise
+                            .catch( function ( err ) {
+                                $log.error( 'Can not cache choosed object: ' + err.statusText );
+                            } )
+                            .then( function ( data ) {
+
+                                ResourceCache.put( parameters.resourceType.toLowerCase() + '/' + item._id, data );
+
+                                if ( parameters.arrayToPush ) {
+
+                                    // to avoid id duplicate
+                                    if ( !parameters.arrayToPush.find( item._id ) ) {
+
+                                        parameters.arrayToPush.push( item._id );
+
+                                    }
+                                }
+
+                                if ( parameters.varToPut ) parameters.varToPut = item._id;
+
+                                callOnChoosed();
+
+                                deferred.resolve( item._id );
+
+                            } );
+                    }
 
                     modal.remove();
                 };

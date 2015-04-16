@@ -14,7 +14,25 @@
                        ng-model="data.name"/>
             </ion-item>
         </ion-list>
-        <button class="button-royal" ng-click="openModal()">Открыть модал</button>
+        <ion-item class="item-input">
+            <span class="input-label">Состоит в группах</span>
+
+            <div class="margined-buttons">
+                <button class="button button-outline button-royal"
+                        ng-repeat="groupId in data.consists"
+                        ng-click="$state.go( 'app.groups.view', { id: groupId } )">
+                    {{ ResourceCache.get( 'groups/'+groupId ).name }}
+                </button>
+            </div>
+
+            <button class="button button-outline button-balanced icon ion-plus"
+                    ng-click="SearchModal.open({
+                        title: 'Найти группу',
+                        resourceType: 'Groups',
+                        arrayToPush: data.consists
+                    })">
+            </button>
+        </ion-item>
     </ion-content>
 
     <ion-footer-bar align-title="center" class="bar-assertive">

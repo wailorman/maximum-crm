@@ -124,6 +124,9 @@ angular.module( 'starter.controllers', [] )
         /** @namespace $scope.data.$update */
         /** @namespace $scope.data.$create */
 
+        $scope.ResourceCache = ResourceCache;
+        $scope.SearchModal = SearchModal;
+        $scope.$state = $state;
         $scope.load = function () {
 
             var resourceType = additionalStateParams.resourceType;
@@ -146,6 +149,10 @@ angular.module( 'starter.controllers', [] )
 
 
         };
+
+        SearchModal.onChoosed( function () {
+            $scope.$applyAsync();
+        } );
 
         ///////////////
 
