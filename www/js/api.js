@@ -37,6 +37,7 @@ angular.module( 'starter.api', [] )
             } ),
             Clients: $resource( apiUrl + '/clients/:id', null, {
                 'get': { method: 'GET' },
+                'getReserved': { method: 'GET' },
                 'query': { method: 'GET', isArray: true },
                 'update': { method: 'PUT' },
                 'create': { method: 'POST' },
@@ -44,62 +45,46 @@ angular.module( 'starter.api', [] )
             } )
         };
 
-        return {
-            Groups: resources.Groups,
-            Halls: resources.Halls,
-            Coaches: resources.Coaches,
-            Clients: {
-                get: function ( params ) {
-                    var deferred = $q.defer();
 
-                    resources.Clients.get( params ).$promise
-                        .catch( deferred.reject )
-                        .then( function ( data ) {
+        resources.Clients.get = function ( params ) {
+            var deferred = $q.defer();
 
-                            /** @namespace data.consists */
+            resources.Clients.getReserved( params ).$promise
+                .catch( deferred.reject )
+                .then( function ( data ) {
 
-                            // does client consists in any groups
-                            if ( !data.consists ) return deferred.resolve( data );
+                    /** @namespace data.consists */
 
-                            // client consists in some group[s]
-                            async.each(
-                                data.consists,
-                                function ( groupId, ecb ) {
+                    // does client consists in any groups
+                    if ( !data.consists ) return deferred.resolve( data );
 
-                                    resources.Groups.get( { id: groupId } ).$promise
-                                        .then( function ( data ) {
-                                            ResourceCache.put( 'groups/' + data._id, data );
-                                        } )
-                                        .catch( function ( err ) {
-                                            $log.error( "Can't join group " + groupId + ": " + err.statusText );
-                                        } )
-                                        .finally( function () {
-                                            ecb();
-                                        } );
+                    // client consists in some group[s]
+                    async.each(
+                        data.consists,
+                        function ( groupId, ecb ) {
 
-                                },
-                                function () {
-                                    deferred.resolve( data );
-                                }
-                            );
+                            resources.Groups.get( { id: groupId } ).$promise
+                                .then( function ( data ) {
+                                    ResourceCache.put( 'groups/' + data._id, data );
+                                } )
+                                .catch( function ( err ) {
+                                    $log.error( "Can't join group " + groupId + ": " + err.statusText );
+                                } )
+                                .finally( function () {
+                                    ecb();
+                                } );
 
-                        } );
+                        },
+                        function () {
+                            deferred.resolve( data );
+                        }
+                    );
 
-                    return { $promise: deferred.promise };
-                },
-                query: function ( params ) {
-                    return resources.Clients.query( params );
-                },
-                update: function ( params ) {
-                    return resources.Clients.update( params );
-                },
-                create: function () {
-                    return resources.Clients.create( params );
-                },
-                remove: function () {
-                    return resources.Clients.remove( params );
-                }
-            }
+                } );
+
+            return { $promise: deferred.promise };
         };
+
+        return resources;
 
     } );

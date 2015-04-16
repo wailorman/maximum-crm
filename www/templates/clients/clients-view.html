@@ -21,8 +21,9 @@
                 <span class="input-label">Состоит в группах</span>
 
                 <div class="margined-buttons">
-                    <button class="button button-outline button-stable"
-                            ng-repeat="groupId in data.consists">
+                    <button class="button button-outline button-royal"
+                            ng-repeat="groupId in data.consists"
+                            ng-click="$state.go( 'app.groups.view', { id: groupId } )">
                         {{ ResourceCache.get( 'groups/'+groupId ).name }}
                     </button>
                 </div>
