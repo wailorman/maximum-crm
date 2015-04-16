@@ -47,9 +47,11 @@ angular.module( 'starter.controllers', [] )
     .controller( 'PlaylistCtrl', function ( $scope, $stateParams ) {
     } )
 
-    .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, ResourceCache, additionalStateParams, Api ) {
+    .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, $ionicHistory, ResourceCache, additionalStateParams, Api ) {
 
         $scope.refresh = function () {
+
+            $ionicHistory.clearCache();
 
             var resourceType = additionalStateParams.resourceType;
 
@@ -81,7 +83,7 @@ angular.module( 'starter.controllers', [] )
         $scope.ResourceCache = ResourceCache;
         $scope.$state = $state;
 
-        $ionicHistory.nextViewOptions( { historyRoot: true } );
+        //$ionicHistory.nextViewOptions( { historyRoot: true } );
 
         $scope.refresh = function () {
 
@@ -171,7 +173,7 @@ angular.module( 'starter.controllers', [] )
             $scope.data.$update( { id: $scope.data._id } )
                 .then( function () {
                     $ionicHistory.clearCache();
-                    $state.go( rootState() + '.view', { id: $scope.data._id } );
+                    $ionicHistory.goBack();
                 } )
                 .finally( function () {
                     $ionicLoading.hide();
@@ -190,8 +192,7 @@ angular.module( 'starter.controllers', [] )
                             $scope.data.$remove( { id: $scope.data._id } );
 
                             $ionicHistory.clearCache();
-                            $ionicHistory.nextViewOptions( { historyRoot: true } );
-                            $state.go( rootState() ); // go to list
+                            $state.go( rootState() );
                         }
                     }
                 ]
@@ -228,8 +229,7 @@ angular.module( 'starter.controllers', [] )
             $scope.data.$create()
                 .then( function () {
                     $ionicHistory.clearCache();
-                    $ionicHistory.nextViewOptions( { historyRoot: true } );
-                    $state.go( rootState() ); // go to list
+                    $ionicHistory.goBack();
                 } )
                 .finally( function () {
                     $ionicLoading.hide();
