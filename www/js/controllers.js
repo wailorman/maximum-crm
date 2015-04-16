@@ -158,7 +158,7 @@ angular.module( 'starter.controllers', [] )
         /////////////////
 
         var rootState = function () {
-            return $state.current.name.match( /\w+/ )[ 0 ];
+            return 'app.' + $state.current.name.match( /\w+/g )[ 1 ];
         };
 
         $scope.applyChanges = function () {
@@ -191,7 +191,7 @@ angular.module( 'starter.controllers', [] )
 
                             $ionicHistory.clearCache();
                             $ionicHistory.nextViewOptions( { historyRoot: true } );
-                            $state.go( rootState() + '.list' );
+                            $state.go( rootState() ); // go to list
                         }
                     }
                 ]
@@ -209,7 +209,7 @@ angular.module( 'starter.controllers', [] )
                                           $ionicHistory ) {
 
         var rootState = function () {
-            return $state.current.name.match( /\w+/ )[ 0 ];
+            return 'app.' + $state.current.name.match( /\w+/g )[ 1 ];
         };
 
         var resourceType = additionalStateParams.resourceType;
@@ -229,7 +229,7 @@ angular.module( 'starter.controllers', [] )
                 .then( function () {
                     $ionicHistory.clearCache();
                     $ionicHistory.nextViewOptions( { historyRoot: true } );
-                    $state.go( rootState() + '.list' );
+                    $state.go( rootState() ); // go to list
                 } )
                 .finally( function () {
                     $ionicLoading.hide();
