@@ -75,10 +75,13 @@ angular.module( 'starter.controllers', [] )
 
     } )
 
-    .controller( 'ViewCtrl', function ( $rootScope, $scope, $stateParams, $ionicLoading, ResourceCache,
-                                        additionalStateParams, Api ) {
+    .controller( 'ViewCtrl', function ( $rootScope, $scope, $state, $stateParams, $ionicLoading, $ionicHistory,
+                                        ResourceCache, additionalStateParams, Api ) {
 
         $scope.ResourceCache = ResourceCache;
+        $scope.$state = $state;
+
+        $ionicHistory.nextViewOptions( { historyRoot: true } );
 
         $scope.refresh = function () {
 

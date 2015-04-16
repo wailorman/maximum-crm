@@ -2,32 +2,11 @@ angular.module( 'starter.halls', [] )
     .config( function ( $stateProvider ) {
 
         $stateProvider
-            .state( 'halls', {
+            .state( 'app.halls', {
                 url: '/halls',
-                abstract: true,
-                templateUrl: "templates/menu.html",
-                controller: 'AppCtrl'
-            } )
-            .state( 'halls.create', {
-                url: "/new",
+                parent: 'app',
                 views: {
-                    'menuContent': {
-                        templateUrl: "templates/halls/halls-create.html",
-                        controller: 'CreateCtrl'
-                    }
-                },
-                resolve: {
-                    additionalStateParams: function () {
-                        return {
-                            resourceType: 'Halls'
-                        };
-                    }
-                }
-            } )
-            .state( 'halls.list', {
-                url: '',
-                views: {
-                    'menuContent': {
+                    'menuContent@app': {
                         templateUrl: "templates/halls/halls-list.html",
                         controller: 'ListCtrl'
                     }
@@ -40,10 +19,28 @@ angular.module( 'starter.halls', [] )
                     }
                 }
             } )
-            .state( 'halls.view', {
-                url: "/{id}",
+            .state( 'app.halls.create', {
+                url: "/new",
+                parent: 'app.halls',
                 views: {
-                    'menuContent': {
+                    'menuContent@app': {
+                        templateUrl: "templates/halls/halls-create.html",
+                        controller: 'CreateCtrl'
+                    }
+                },
+                resolve: {
+                    additionalStateParams: function () {
+                        return {
+                            resourceType: 'Halls'
+                        };
+                    }
+                }
+            } )
+            .state( 'app.halls.view', {
+                url: "/{id}",
+                parent: 'app.halls',
+                views: {
+                    'menuContent@app': {
                         templateUrl: "templates/halls/halls-view.html",
                         controller: 'ViewCtrl'
                     }
@@ -56,10 +53,11 @@ angular.module( 'starter.halls', [] )
                     }
                 }
             } )
-            .state( 'halls.edit', {
+            .state( 'app.halls.edit', {
                 url: "/{id}/edit",
+                parent: 'app.halls',
                 views: {
-                    'menuContent': {
+                    'menuContent@app': {
                         templateUrl: "templates/halls/halls-edit.html",
                         controller: 'EditCtrl'
                     }

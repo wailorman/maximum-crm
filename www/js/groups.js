@@ -2,32 +2,11 @@ angular.module( 'starter.groups', [] )
     .config( function ( $stateProvider ) {
 
         $stateProvider
-            .state( 'groups', {
+            .state( 'app.groups', {
                 url: '/groups',
-                abstract: true,
-                templateUrl: "templates/menu.html",
-                controller: 'AppCtrl'
-            } )
-            .state( 'groups.create', {
-                url: "/new",
+                parent: 'app',
                 views: {
-                    'menuContent': {
-                        templateUrl: "templates/groups/groups-create.html",
-                        controller: 'CreateCtrl'
-                    }
-                },
-                resolve: {
-                    additionalStateParams: function () {
-                        return {
-                            resourceType: 'Groups'
-                        };
-                    }
-                }
-            } )
-            .state( 'groups.list', {
-                url: '',
-                views: {
-                    'menuContent': {
+                    'menuContent@app': {
                         templateUrl: "templates/groups/groups-list.html",
                         controller: 'ListCtrl'
                     }
@@ -40,10 +19,28 @@ angular.module( 'starter.groups', [] )
                     }
                 }
             } )
-            .state( 'groups.view', {
-                url: "/{id}",
+            .state( 'app.groups.create', {
+                url: "/new",
+                parent: 'app.groups',
                 views: {
-                    'menuContent': {
+                    'menuContent@app': {
+                        templateUrl: "templates/groups/groups-create.html",
+                        controller: 'CreateCtrl'
+                    }
+                },
+                resolve: {
+                    additionalStateParams: function () {
+                        return {
+                            resourceType: 'Groups'
+                        };
+                    }
+                }
+            } )
+            .state( 'app.groups.view', {
+                url: "/{id}",
+                parent: 'app.groups',
+                views: {
+                    'menuContent@app': {
                         templateUrl: "templates/groups/groups-view.html",
                         controller: 'ViewCtrl'
                     }
@@ -56,10 +53,11 @@ angular.module( 'starter.groups', [] )
                     }
                 }
             } )
-            .state( 'groups.edit', {
+            .state( 'app.groups.edit', {
                 url: "/{id}/edit",
+                parent: 'app.groups',
                 views: {
-                    'menuContent': {
+                    'menuContent@app': {
                         templateUrl: "templates/groups/groups-edit.html",
                         controller: 'EditCtrl'
                     }
