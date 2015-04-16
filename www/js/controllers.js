@@ -75,10 +75,13 @@ angular.module( 'starter.controllers', [] )
 
     } )
 
-    .controller( 'ViewCtrl', function ( $rootScope, $scope, $stateParams, $ionicLoading, ResourceCache,
-                                        additionalStateParams, Api ) {
+    .controller( 'ViewCtrl', function ( $rootScope, $scope, $state, $stateParams, $ionicLoading, $ionicHistory,
+                                        ResourceCache, additionalStateParams, Api ) {
 
         $scope.ResourceCache = ResourceCache;
+        $scope.$state = $state;
+
+        $ionicHistory.nextViewOptions( { historyRoot: true } );
 
         $scope.refresh = function () {
 
@@ -155,7 +158,7 @@ angular.module( 'starter.controllers', [] )
         /////////////////
 
         var rootState = function () {
-            return $state.current.name.match( /\w+/ )[ 0 ];
+            return 'app.' + $state.current.name.match( /\w+/g )[ 1 ];
         };
 
         $scope.applyChanges = function () {
@@ -188,7 +191,7 @@ angular.module( 'starter.controllers', [] )
 
                             $ionicHistory.clearCache();
                             $ionicHistory.nextViewOptions( { historyRoot: true } );
-                            $state.go( rootState() + '.list' );
+                            $state.go( rootState() ); // go to list
                         }
                     }
                 ]
@@ -206,7 +209,7 @@ angular.module( 'starter.controllers', [] )
                                           $ionicHistory ) {
 
         var rootState = function () {
-            return $state.current.name.match( /\w+/ )[ 0 ];
+            return 'app.' + $state.current.name.match( /\w+/g )[ 1 ];
         };
 
         var resourceType = additionalStateParams.resourceType;
@@ -226,7 +229,7 @@ angular.module( 'starter.controllers', [] )
                 .then( function () {
                     $ionicHistory.clearCache();
                     $ionicHistory.nextViewOptions( { historyRoot: true } );
-                    $state.go( rootState() + '.list' );
+                    $state.go( rootState() ); // go to list
                 } )
                 .finally( function () {
                     $ionicLoading.hide();

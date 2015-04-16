@@ -2,32 +2,11 @@ angular.module( 'starter.clients', [] )
     .config( function ( $stateProvider ) {
 
         $stateProvider
-            .state( 'clients', {
+            .state( 'app.clients', {
                 url: '/clients',
-                abstract: true,
-                templateUrl: "templates/menu.html",
-                controller: 'AppCtrl'
-            } )
-            .state( 'clients.create', {
-                url: "/new",
+                parent: 'app',
                 views: {
-                    'menuContent': {
-                        templateUrl: "templates/clients/clients-create.html",
-                        controller: 'CreateCtrl'
-                    }
-                },
-                resolve: {
-                    additionalStateParams: function () {
-                        return {
-                            resourceType: 'Clients'
-                        };
-                    }
-                }
-            } )
-            .state( 'clients.list', {
-                url: '',
-                views: {
-                    'menuContent': {
+                    'menuContent@app': {
                         templateUrl: "templates/clients/clients-list.html",
                         controller: 'ListCtrl'
                     }
@@ -40,10 +19,28 @@ angular.module( 'starter.clients', [] )
                     }
                 }
             } )
-            .state( 'clients.view', {
-                url: "/{id}",
+            .state( 'app.clients.create', {
+                url: "/new",
+                parent: 'app.clients',
                 views: {
-                    'menuContent': {
+                    'menuContent@app': {
+                        templateUrl: "templates/clients/clients-create.html",
+                        controller: 'CreateCtrl'
+                    }
+                },
+                resolve: {
+                    additionalStateParams: function () {
+                        return {
+                            resourceType: 'Clients'
+                        };
+                    }
+                }
+            } )
+            .state( 'app.clients.view', {
+                url: "/{id}",
+                parent: 'app.clients',
+                views: {
+                    'menuContent@app': {
                         templateUrl: "templates/clients/clients-view.html",
                         controller: 'ViewCtrl'
                     }
@@ -56,10 +53,11 @@ angular.module( 'starter.clients', [] )
                     }
                 }
             } )
-            .state( 'clients.edit', {
+            .state( 'app.clients.edit', {
                 url: "/{id}/edit",
+                parent: 'app.clients',
                 views: {
-                    'menuContent': {
+                    'menuContent@app': {
                         templateUrl: "templates/clients/clients-edit.html",
                         controller: 'EditCtrl'
                     }

@@ -94,6 +94,7 @@ angular.module( 'starter', [
         $stateProvider
             .state( 'app', {
                 abstract: true,
+                url: '',
                 templateUrl: "templates/menu.html",
                 controller: 'AppCtrl'
             } )
