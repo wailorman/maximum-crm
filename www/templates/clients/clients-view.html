@@ -17,7 +17,7 @@
                 <span class="input-label">Имя</span>
                 {{ data.name }}
             </ion-item>
-            <ion-item class="item-input" ng-show="data.consists">
+            <ion-item class="item-input" ng-show="data.consists && data.consists.length > 0">
                 <span class="input-label">Состоит в группах</span>
 
                 <div class="margined-buttons">
