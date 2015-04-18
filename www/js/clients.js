@@ -1,71 +1,71 @@
-angular.module( 'starter.halls', [] )
+angular.module( 'starter.clients', [] )
     .config( function ( $stateProvider ) {
 
         $stateProvider
-            .state( 'app.halls', {
-                url: '/halls',
+            .state( 'app.clients', {
+                url: '/clients',
                 parent: 'app',
                 views: {
                     'menuContent@app': {
-                        templateUrl: "templates/halls/halls-list.html",
+                        templateUrl: "templates/clients/clients-list.html",
                         controller: 'ListCtrl'
                     }
                 },
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            resourceType: 'Halls'
+                            resourceType: 'Clients'
                         };
                     }
                 }
             } )
-            .state( 'app.halls.create', {
+            .state( 'app.clients.create', {
                 url: "/new",
-                parent: 'app.halls',
+                parent: 'app.clients',
                 views: {
                     'menuContent@app': {
-                        templateUrl: "templates/halls/halls-create.html",
+                        templateUrl: "templates/clients/clients-create.html",
                         controller: 'CreateCtrl'
                     }
                 },
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            resourceType: 'Halls'
+                            resourceType: 'Clients'
                         };
                     }
                 }
             } )
-            .state( 'app.halls.view', {
+            .state( 'app.clients.view', {
                 url: "/{id}",
-                parent: 'app.halls',
+                parent: 'app.clients',
                 views: {
                     'menuContent@app': {
-                        templateUrl: "templates/halls/halls-view.html",
+                        templateUrl: "templates/clients/clients-view.html",
                         controller: 'ViewCtrl'
                     }
                 },
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            resourceType: 'Halls'
+                            resourceType: 'Clients'
                         };
                     }
                 }
             } )
-            .state( 'app.halls.edit', {
+            .state( 'app.clients.edit', {
                 url: "/{id}/edit",
-                parent: 'app.halls',
+                parent: 'app.clients',
                 views: {
                     'menuContent@app': {
-                        templateUrl: "templates/halls/halls-edit.html",
+                        templateUrl: "templates/clients/clients-edit.html",
                         controller: 'EditCtrl'
                     }
                 },
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            resourceType: 'Halls'
+                            resourceType: 'Clients'
                         };
                     }
                 }

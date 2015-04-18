@@ -2,16 +2,28 @@ angular.module( 'starter.coaches', [] )
     .config( function ( $stateProvider ) {
 
         $stateProvider
-            .state( 'coaches', {
+            .state( 'app.coaches', {
                 url: '/coaches',
-                abstract: true,
-                templateUrl: "templates/menu.html",
-                controller: 'AppCtrl'
-            } )
-            .state( 'coaches.create', {
-                url: "/new",
+                parent: 'app',
                 views: {
-                    'menuContent': {
+                    'menuContent@app': {
+                        templateUrl: "templates/coaches/coaches-list.html",
+                        controller: 'ListCtrl'
+                    }
+                },
+                resolve: {
+                    additionalStateParams: function () {
+                        return {
+                            resourceType: 'Coaches'
+                        };
+                    }
+                }
+            } )
+            .state( 'app.coaches.create', {
+                url: "/new",
+                parent: 'app.coaches',
+                views: {
+                    'menuContent@app': {
                         templateUrl: "templates/coaches/coaches-create.html",
                         controller: 'CreateCtrl'
                     }
@@ -19,31 +31,16 @@ angular.module( 'starter.coaches', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            createType: 'coach'
+                            resourceType: 'Coaches'
                         };
                     }
                 }
             } )
-            .state( 'coaches.list', {
-                url: '',
-                resolve: {
-                    additionalStateParams: function () {
-                        return {
-                            listType: 'coaches'
-                        };
-                    }
-                },
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/coaches/coaches-list.html",
-                        controller: 'ListCtrl'
-                    }
-                }
-            } )
-            .state( 'coaches.view', {
+            .state( 'app.coaches.view', {
                 url: "/{id}",
+                parent: 'app.coaches',
                 views: {
-                    'menuContent': {
+                    'menuContent@app': {
                         templateUrl: "templates/coaches/coaches-view.html",
                         controller: 'ViewCtrl'
                     }
@@ -51,15 +48,16 @@ angular.module( 'starter.coaches', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            viewType: 'coach'
+                            resourceType: 'Coaches'
                         };
                     }
                 }
             } )
-            .state( 'coaches.edit', {
+            .state( 'app.coaches.edit', {
                 url: "/{id}/edit",
+                parent: 'app.coaches',
                 views: {
-                    'menuContent': {
+                    'menuContent@app': {
                         templateUrl: "templates/coaches/coaches-edit.html",
                         controller: 'EditCtrl'
                     }
@@ -67,7 +65,7 @@ angular.module( 'starter.coaches', [] )
                 resolve: {
                     additionalStateParams: function () {
                         return {
-                            editType: 'coach'
+                            resourceType: 'Coaches'
                         };
                     }
                 }

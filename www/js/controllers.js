@@ -47,26 +47,22 @@ angular.module( 'starter.controllers', [] )
     .controller( 'PlaylistCtrl', function ( $scope, $stateParams ) {
     } )
 
-    .service( 'List', function ( Api ) {
-
-    } )
-
-    .controller( 'ListCtrl', function ( $scope, $state, additionalStateParams, Api ) {
+    .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, $ionicHistory, ResourceCache, additionalStateParams, Api ) {
 
         $scope.refresh = function () {
 
-            var listType = additionalStateParams.listType;
+            $ionicHistory.clearCache();
 
-            if (listType === 'coaches') {
-                Api.Coaches.query().$promise.then( receiveData );
-            } else if (listType === 'halls') {
-                Api.Halls.query().$promise.then( receiveData );
-            }
+            var resourceType = additionalStateParams.resourceType;
 
-            function receiveData( array ) {
-                $scope.items = array;
-                $scope.$broadcast( 'scroll.refreshComplete' );
-            }
+            Api[ resourceType ].query().$promise
+                .then( function ( array ) {
+                    $scope.items = array;
+                } )
+                .finally( function () {
+                    $scope.$broadcast( 'scroll.refreshComplete' );
+                } );
+
 
         };
 
@@ -81,23 +77,34 @@ angular.module( 'starter.controllers', [] )
 
     } )
 
-    .controller( 'ViewCtrl', function ( $rootScope, $scope, $stateParams, additionalStateParams, Api ) {
+    .controller( 'ViewCtrl', function ( $rootScope, $scope, $state, $stateParams, $ionicLoading, $ionicHistory,
+                                        ResourceCache, additionalStateParams, Api ) {
 
+        $scope.collapseSwitcherValues = {};
+
+        $scope.ResourceCache = ResourceCache;
+        $scope.$state = $state;
+
+        //$ionicHistory.nextViewOptions( { historyRoot: true } );
 
         $scope.refresh = function () {
 
-            var viewType = additionalStateParams.viewType;
+            var resourceType = additionalStateParams.resourceType;
 
-            if (viewType === 'coach') {
-                Api.Coaches.get( { id: $stateParams.id } ).$promise.then( receiveData );
-            } else if (viewType === 'hall') {
-                Api.Halls.get( { id: $stateParams.id } ).$promise.then( receiveData );
-            }
+            $ionicLoading.show( {
+                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
+                delay: 300
+            } );
 
-            function receiveData( data ) {
-                $scope.data = data;
-                $scope.$broadcast( 'scroll.refreshComplete' );
-            }
+            Api[ resourceType ].get( { id: $stateParams.id } ).$promise
+                .then( function ( data ) {
+                    $scope.data = data;
+                } )
+                .finally( function () {
+                    $ionicLoading.hide();
+                    $scope.$broadcast( 'scroll.refreshComplete' );
+                } );
+
 
         };
 
@@ -111,44 +118,76 @@ angular.module( 'starter.controllers', [] )
 
 
     } )
-    .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup,
-                                        $ionicViewService,
+    .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, $ionicLoading, ResourceCache,
+                                        $ionicHistory, SearchModal, $log, $resource,
                                         $stateParams, additionalStateParams, Api ) {
 
         /** @namespace $scope.data._id */
         /** @namespace $scope.data.$update */
         /** @namespace $scope.data.$create */
 
+        $scope.collapseSwitcherValues = {};
+
+        $scope.ResourceCache = ResourceCache;
+        $scope.SearchModal = SearchModal;
+        $scope.$state = $state;
         $scope.load = function () {
 
-            var editType = additionalStateParams.editType;
+            var resourceType = additionalStateParams.resourceType;
 
-            if (editType === 'coach') {
-                Api.Coaches.get( { id: $stateParams.id } ).$promise.then( receiveData );
+            $ionicLoading.show( {
+                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
+                delay: 300
+            } );
 
-            } else if (editType === 'hall') {
-                Api.Halls.get( { id: $stateParams.id } ).$promise.then( receiveData );
-            }
+            Api[ resourceType ].get( { id: $stateParams.id } ).$promise
+                .then( function ( data ) {
+                    // copy original data to watch changes
+                    $scope.originalResource = {};
+                    angular.copy( data, $scope.originalResource ); // @todo rename to originalData
+                    $scope.data = data;
+                } )
+                .finally( function () {
+                    $ionicLoading.hide();
+                } );
 
-            function receiveData( data ) {
-                // copy original data to watch changes
-                $scope.originalResource = new Api.Coaches;
-                angular.copy( data, $scope.originalResource ); // @todo rename to originalData
-                $scope.data = data;
-            }
 
+        };
+
+        SearchModal.onChoosed( function () {
+            $scope.$applyAsync();
+        } );
+
+        ///////////////
+
+        $scope.openModal = function () {
+            SearchModal.open().then(function (_id) {
+
+                $log.debug( 'Ive choosed this id: ' + _id );
+
+            } );
         };
 
         /////////////////
 
         var rootState = function () {
-            return $state.current.name.match( /\w+/ )[ 0 ];
+            return 'app.' + $state.current.name.match( /\w+/g )[ 1 ];
         };
 
         $scope.applyChanges = function () {
+
+            $ionicLoading.show( {
+                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
+                delay: 300
+            } );
+
             $scope.data.$update( { id: $scope.data._id } )
                 .then( function () {
-                    $state.go( rootState() + '.view', { id: $scope.data._id } );
+                    $ionicHistory.clearCache();
+                    $ionicHistory.goBack();
+                } )
+                .finally( function () {
+                    $ionicLoading.hide();
                 } );
         };
 
@@ -161,9 +200,21 @@ angular.module( 'starter.controllers', [] )
                         text: '<b>Да</b>',
                         type: 'button-positive',
                         onTap: function () {
-                            $scope.data.$remove( { id: $scope.data._id } );
-                            $ionicViewService.nextViewOptions({ disableBack: true });
-                            $state.go( rootState() + '.list' );
+
+                            $ionicLoading.show( {
+                                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
+                                delay: 300
+                            } );
+
+                            $scope.data.$remove( { id: $scope.data._id } )
+                                .catch( function ( err ) {
+                                    $log.error( 'Cant remove: '+err.statusText );
+                                })
+                                .then( function () {
+                                    $ionicLoading.hide();
+                                    $ionicHistory.clearCache();
+                                    $state.go( rootState() );
+                                } );
                         }
                     }
                 ]
@@ -177,35 +228,35 @@ angular.module( 'starter.controllers', [] )
         $scope.load();
 
     } )
-    .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api,
-                                          $ionicViewService ) {
-
+    .controller( 'CreateCtrl', function ( $scope, $state, additionalStateParams, Api, $ionicLoading, ResourceCache,
+                                          $ionicHistory ) {
 
         var rootState = function () {
-            return $state.current.name.match( /\w+/ )[ 0 ];
+            return 'app.' + $state.current.name.match( /\w+/g )[ 1 ];
         };
 
-        if (additionalStateParams.createType === 'coach') {
-            $scope.data = new Api.Coaches;
-        } else if (additionalStateParams.createType === 'hall') {
-            $scope.data = new Api.Halls;
-        }
+        var resourceType = additionalStateParams.resourceType;
 
+        $scope.data = new Api[ resourceType ];
 
-        function create() {
+        ////////////////
+
+        $scope.create = function () {
+
+            $ionicLoading.show( {
+                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
+                delay: 300
+            } );
 
             $scope.data.$create()
                 .then( function () {
-                    $ionicViewService.nextViewOptions({ disableBack: true });
-                    $state.go( rootState() + '.list' );
-                } );
+                    $ionicHistory.clearCache();
+                    $ionicHistory.goBack();
+                } )
+                .finally( function () {
+                    $ionicLoading.hide();
+                });
 
-        }
-
-        ////////////////
-
-        $scope.create = create;
-
-        ////////////////
+        };
 
     } );
