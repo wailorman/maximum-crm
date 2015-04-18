@@ -17,17 +17,29 @@
                 <span class="input-label">Имя</span>
                 {{ data.name }}
             </ion-item>
-            <ion-item class="item-input" ng-show="data.consists && data.consists.length > 0">
-                <span class="input-label">Состоит в группах</span>
 
-                <div class="margined-buttons">
-                    <button class="button button-outline button-royal"
-                            ng-repeat="groupId in data.consists"
-                            ng-click="$state.go( 'app.groups.view', { id: groupId } )">
-                        {{ ResourceCache.get( 'groups/'+groupId ).name }}
-                    </button>
-                </div>
+            <ion-item class="item-divider item-icon-right"
+                      ng-show="data.consists.length > 0"
+                      ng-click="collapseSwitcherValues.consists = !collapseSwitcherValues.consists">
+                Состоит в группах
+                <i ng-class="{
+                    'icon ion-arrow-down-b': !collapseSwitcherValues.consists,
+                    'icon ion-arrow-up-b': collapseSwitcherValues.consists
+                }"></i>
             </ion-item>
+
+            <div class="list__collapsible-items"
+                 ng-show="collapseSwitcherValues.consists">
+
+                <ion-item ng-repeat="groupId in data.consists"
+                          class="item-button-right">
+                    <a class="royal"
+                       ng-click="$state.go( 'app.groups.view', { id: groupId } )">
+                        {{ ResourceCache.get('groups/'+groupId ).name }}
+                    </a>
+                </ion-item>
+
+            </div>
         </ion-list>
     </ion-content>
 </ion-view>

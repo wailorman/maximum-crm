@@ -80,6 +80,8 @@ angular.module( 'starter.controllers', [] )
     .controller( 'ViewCtrl', function ( $rootScope, $scope, $state, $stateParams, $ionicLoading, $ionicHistory,
                                         ResourceCache, additionalStateParams, Api ) {
 
+        $scope.collapseSwitcherValues = {};
+
         $scope.ResourceCache = ResourceCache;
         $scope.$state = $state;
 
@@ -123,6 +125,8 @@ angular.module( 'starter.controllers', [] )
         /** @namespace $scope.data._id */
         /** @namespace $scope.data.$update */
         /** @namespace $scope.data.$create */
+
+        $scope.collapseSwitcherValues = {};
 
         $scope.ResourceCache = ResourceCache;
         $scope.SearchModal = SearchModal;
