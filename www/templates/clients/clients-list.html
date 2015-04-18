@@ -1,6 +1,6 @@
-<ion-view view-title="Тренеры" cache-view="true">
+<ion-view view-title="Клиенты" cache-view="true">
     <ion-nav-buttons side="right">
-        <a href="#/coaches/new">
+        <a href="#/clients/new">
             <button class="button button-clear icon ion-android-add">
             </button>
         </a>
@@ -12,7 +12,7 @@
         </ion-refresher>
         <ion-list>
             <ion-item collection-repeat="item in items"
-                      href="#/coaches/{{ item._id }}">
+                      href="#/clients/{{ item._id }}">
                 {{ item.name }}
             </ion-item>
         </ion-list>
