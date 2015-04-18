@@ -200,10 +200,21 @@ angular.module( 'starter.controllers', [] )
                         text: '<b>Да</b>',
                         type: 'button-positive',
                         onTap: function () {
-                            $scope.data.$remove( { id: $scope.data._id } );
 
-                            $ionicHistory.clearCache();
-                            $state.go( rootState() );
+                            $ionicLoading.show( {
+                                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
+                                delay: 300
+                            } );
+
+                            $scope.data.$remove( { id: $scope.data._id } )
+                                .catch( function ( err ) {
+                                    $log.error( 'Cant remove: '+err.statusText );
+                                })
+                                .then( function () {
+                                    $ionicLoading.hide();
+                                    $ionicHistory.clearCache();
+                                    $state.go( rootState() );
+                                } );
                         }
                     }
                 ]
