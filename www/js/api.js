@@ -4,9 +4,13 @@ angular.module( 'starter.api', [] )
         var rc = this,
             resourceCache = $cacheFactory( 'resources' );
 
-        rc.put = function ( key, value ) { return resourceCache.put( key, value ); };
+        rc.put = function ( key, value ) {
+            return resourceCache.put( key, value );
+        };
 
-        rc.get = function ( key ) { return resourceCache.get( key ); };
+        rc.get = function ( key ) {
+            return resourceCache.get( key );
+        };
 
     } )
     .factory( 'Api', function ( $resource, $q, $log, ResourceCache ) {
@@ -37,7 +41,15 @@ angular.module( 'starter.api', [] )
             } ),
             Clients: $resource( apiUrl + '/clients/:id', null, {
                 'get': { method: 'GET' },
-                'getReserved': { method: 'GET' },
+                "_get": { method: 'GET' },
+                'query': { method: 'GET', isArray: true },
+                'update': { method: 'PUT' },
+                'create': { method: 'POST' },
+                'remove': { method: 'DELETE' }
+            } ),
+            Lessons: $resource( apiUrl + '/lessons/:id', null, {
+                'get': { method: 'GET' },
+                "_get": { method: 'GET' },
                 'query': { method: 'GET', isArray: true },
                 'update': { method: 'PUT' },
                 'create': { method: 'POST' },
@@ -46,17 +58,53 @@ angular.module( 'starter.api', [] )
         };
 
 
+        /**
+         * Automatically put population array to ResourceCache
+         *
+         * @param resourceType  Name of cache path (e.g. groups)
+         * @param array         Array of ObjectIDs
+         * @returns {{$promise: *}}
+         */
+        var cacheArray = function ( resourceType, array ) {
+            var deferred = $q.defer();
+
+            async.each(
+                array,
+                function ( populateId, ecb ) {
+
+                    var Resource = resources[ resourceType.capitalize() ];
+
+                    Resource.get( { id: populateId } ).$promise
+                        .catch( function ( err ) {
+                            $log.error( "Can't join " + resourceType + "/" + populateId + ": " + err.statusText );
+                        } )
+                        .then( function ( data ) {
+
+                            ResourceCache.put( resourceType + '/' + populateId, data );
+                            ecb();
+
+                        } );
+                },
+                function () {
+                    deferred.resolve();
+                }
+            );
+
+            return { $promise: deferred.promise };
+        };
+
+
         resources.Clients.get = function ( params ) {
             var deferred = $q.defer();
 
-            resources.Clients.getReserved( params ).$promise
+            resources.Clients._get( params ).$promise
                 .catch( deferred.reject )
                 .then( function ( data ) {
 
                     /** @namespace data.consists */
 
                     // does client consists in any groups
-                    if ( !data.consists ) return deferred.resolve( data );
+                    if (!data.consists) return deferred.resolve( data );
 
                     // client consists in some group[s]
                     async.each(
@@ -68,13 +116,57 @@ angular.module( 'starter.api', [] )
                                     ResourceCache.put( 'groups/' + data._id, data );
                                 } )
                                 .catch( function ( err ) {
-                                    $log.error( "Can't join group " + groupId + ": " + err.statusText );
+                                    $log.error( "Can't join groups/" + groupId + ": " + err.statusText );
                                 } )
                                 .finally( function () {
                                     ecb();
                                 } );
 
                         },
+                        function () {
+                            deferred.resolve( data );
+                        }
+                    );
+
+                } );
+
+            return { $promise: deferred.promise };
+        };
+
+        resources.Lessons.get = function ( params ) {
+            var deferred = $q.defer();
+
+            resources.Lessons._get( params ).$promise
+                .catch( deferred.reject )
+                .then( function ( data ) {
+
+                    async.parallel(
+                        [
+                            // groups
+                            function ( pcb ) {
+
+                                if ( ! data.groups ) return pcb();
+                                cacheArray( 'groups', data.groups ).then( pcb );
+
+                            },
+
+                            // coaches
+                            function ( pcb ) {
+
+                                if ( ! data.coaches ) return pcb();
+                                cacheArray( 'coaches', data.coaches ).then( pcb );
+
+                            },
+
+                            // halls
+                            function ( pcb ) {
+
+                                if ( ! data.halls ) return pcb();
+                                cacheArray( 'halls', data.halls ).then( pcb );
+
+                            }
+
+                        ],
                         function () {
                             deferred.resolve( data );
                         }

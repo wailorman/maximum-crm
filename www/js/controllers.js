@@ -161,7 +161,7 @@ angular.module( 'starter.controllers', [] )
         ///////////////
 
         $scope.openModal = function () {
-            SearchModal.open().then(function (_id) {
+            SearchModal.open().then( function ( _id ) {
 
                 $log.debug( 'Ive choosed this id: ' + _id );
 
@@ -208,8 +208,8 @@ angular.module( 'starter.controllers', [] )
 
                             $scope.data.$remove( { id: $scope.data._id } )
                                 .catch( function ( err ) {
-                                    $log.error( 'Cant remove: '+err.statusText );
-                                })
+                                    $log.error( 'Cant remove: ' + err.statusText );
+                                } )
                                 .then( function () {
                                     $ionicLoading.hide();
                                     $ionicHistory.clearCache();
@@ -255,7 +255,7 @@ angular.module( 'starter.controllers', [] )
                 } )
                 .finally( function () {
                     $ionicLoading.hide();
-                });
+                } );
 
         };
 
