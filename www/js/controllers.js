@@ -160,6 +160,8 @@ angular.module( 'starter.controllers', [] )
 
         ///////////////
 
+        ///////////////
+
         $scope.openModal = function () {
             SearchModal.open().then( function ( _id ) {
 
@@ -238,6 +240,19 @@ angular.module( 'starter.controllers', [] )
         var resourceType = additionalStateParams.resourceType;
 
         $scope.data = new Api[ resourceType ];
+
+        ////////////////
+
+        // If we are create lesson
+        if ( additionalStateParams.resourceType == 'Lessons' ){
+            // we need to convert minute duration to time.end Date
+            $scope.$watch( 'lessonDuration', function () {
+                if ( $scope.data.time.start ){
+                    /** @namespace $scope.lessonDuration */
+                    $scope.data.time.end = new Date($scope.data.time.start.getTime() + $scope.lessonDuration * 60000);
+                }
+            } );
+        }
 
         ////////////////
 
