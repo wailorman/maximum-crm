@@ -68,11 +68,55 @@
                 Тренеры
             </div>
 
+            <ion-item ng-repeat="coachId in data.coaches"
+                      class="item-button-right">
+
+                <a class="royal" ng-click="$state.go( 'app.coaches.view', { id: coachId } )">
+                    {{ ResourceCache.get('coaches/'+coachId ).name }}
+                </a>
+
+                <button class="button button-assertive button-clear icon ion-close"
+                        ng-click="data.coaches.remove( coachId )">
+                </button>
+
+            </ion-item>
+
+            <button class="item button button-balanced button-clear button-full"
+                    ng-click="SearchModal.open({
+                            title: 'Найти тренера',
+                            resourceType: 'Coaches',
+                            arrayToPush: data.coaches
+                        })">
+                Добавить
+            </button>
+
             <!-- ------------------------------------- -->
 
             <div class="item item-divider">
                 Залы
             </div>
+
+            <ion-item ng-repeat="hallId in data.halls"
+                      class="item-button-right">
+
+                <a class="royal" ng-click="$state.go( 'app.halls.view', { id: hallId } )">
+                    {{ ResourceCache.get('halls/'+hallId ).name }}
+                </a>
+
+                <button class="button button-assertive button-clear icon ion-close"
+                        ng-click="data.halls.remove( hallId )">
+                </button>
+
+            </ion-item>
+
+            <button class="item button button-balanced button-clear button-full"
+                    ng-click="SearchModal.open({
+                            title: 'Найти зал',
+                            resourceType: 'Halls',
+                            arrayToPush: data.halls
+                        })">
+                Добавить
+            </button>
 
             <!-- ------------------------------------- -->
 
