@@ -118,7 +118,7 @@ angular.module( 'starter', [
 
                                 if ( parameters.varToPut ) parameters.varToPut = item._id;
 
-                                callOnChoosed();
+                                $rootScope.$applyAsync( callOnChoosed );
 
                                 deferred.resolve( item._id );
 
