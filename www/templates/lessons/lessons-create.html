@@ -8,17 +8,32 @@
     <ion-content>
         <ion-list>
             <ion-item class="item-input">
-                <span class="input-label">Начало</span>
-                <input type="datetime-local"
-                       ng-model="data.time.start"/>
+                <span class="input-label">Дата</span>
+                <ionic-datepicker idate="lessonAdditionalData.startDate">
+                    <button class="button button-block button-outline button-balanced">{{ lessonAdditionalData.startDate ?
+                        beautifyDate(lessonAdditionalData.startDate) : 'Дата проведения' }}
+                    </button>
+                </ionic-datepicker>
             </ion-item>
+
             <ion-item class="item-input">
-                <span class="input-label">Продолжительность (мин)</span>
-                <input type="number"
-                       placeholder="30"
-                       ng-model="lessonDuration"/>
+                <span class="input-label">Начнётся в</span>
+
+                <div>
+                    <ionic-time-picker
+                            style="display: inline-block"
+                            etime="lessonAdditionalData.startTime" format="24" step="15">
+                        <button class="button button-block button-outline button-balanced"> {{ getTimeByDate(
+                            lessonAdditionalData.startTime ) }}
+                        </button>
+                    </ionic-time-picker>
+                    <input type="number"
+                           style="margin-left: 15px; display: inline-block"
+                           placeholder="продлится (минут)"
+                           ng-model="lessonAdditionalData.duration"/>
+                </div>
+
             </ion-item>
         </ion-list>
-
     </ion-content>
 </ion-view>

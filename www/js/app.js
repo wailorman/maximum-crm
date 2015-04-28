@@ -8,6 +8,9 @@ angular.module( 'starter', [
     'ionic',
     'ngResource',
 
+    'ionic-timepicker',
+    'ionic-datepicker',
+
     'starter.api',
     'starter.controllers',
     'starter.coaches',
