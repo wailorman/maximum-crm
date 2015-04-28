@@ -15,15 +15,16 @@
                       href="#/lessons/{{ item._id }}"
                       class="inline-blocks">
                 <div class="lessons-list-item__date">
-                    24.01
+                    {{ item.time.start.getDate() >= 10 ? item.time.start.getDate() : '0'+item.time.start.getDate()
+                    }}.{{ item.time.start.getMonth() >= 10 ? item.time.start.getMonth() : '0'+item.time.start.getMonth()  }}
                 </div>
                 <div class="lessons-list-item__time"> <!-- time block -->
                     <div style="display: table-row-group">
                         <div style="display: table-row">
-                            15:00
+                            {{ getTimeByDate( item.time.start ) }}
                         </div>
                         <div style="display: table-row">
-                            16:40
+                            {{ getTimeByDate( item.time.end ) }}
                         </div>
                     </div>
                 </div>

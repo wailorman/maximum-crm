@@ -47,7 +47,7 @@ angular.module( 'starter.controllers', [] )
     .controller( 'PlaylistCtrl', function ( $scope, $stateParams ) {
     } )
 
-    .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, $ionicHistory, ResourceCache, additionalStateParams, Api ) {
+    .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, $ionicHistory, $log, ResourceCache, additionalStateParams, Api ) {
 
         $scope.ResourceCache = ResourceCache;
 
@@ -66,6 +66,26 @@ angular.module( 'starter.controllers', [] )
                 } );
 
 
+        };
+
+        $scope.getTimeByDate = function ( date ) {
+            if ( !date ) return '';
+
+            if ( typeof date == 'number' ) {
+                date = new Date( date * 1000 );
+                return date.getHours() + ':' + ( date.getMinutes() < 10 ? "0" : "" ) + date.getMinutes();
+            } else if ( date instanceof Date ) {
+                return date.getHours() + ':' + ( date.getMinutes() < 10 ? "0" : "" ) + date.getMinutes();
+            } else {
+
+                try {
+                    date = new Date( date );
+                    return $scope.getTimeByDate( date );
+                } catch ( e ) {
+                    $log.error( 'Can not convert date to Date: ' + e );
+                }
+
+            }
         };
 
         /////////////////

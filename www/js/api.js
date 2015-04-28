@@ -141,6 +141,9 @@ angular.module( 'starter.api', [] )
                 .catch( deferred.reject )
                 .then( function ( data ) {
 
+                    data.time.start = new Date( data.time.start );
+                    data.time.end = new Date( data.time.end );
+
                     async.parallel(
                         [
                             // groups
@@ -188,6 +191,9 @@ angular.module( 'starter.api', [] )
                     async.each(
                         array,
                         function ( data, ecb ) {
+
+                            data.time.start = new Date( data.time.start );
+                            data.time.end = new Date( data.time.end );
 
                             async.parallel(
                                 [
