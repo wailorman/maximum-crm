@@ -177,12 +177,6 @@ angular.module( 'starter.api', [] )
             return { $promise: deferred.promise };
         };
 
-        // properties
-
-        resources.Lessons.prototype.groups = [];
-        resources.Lessons.prototype.coaches = [];
-        resources.Lessons.prototype.halls = [];
-
         return resources;
 
     } );

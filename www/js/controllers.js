@@ -241,7 +241,17 @@ angular.module( 'starter.controllers', [] )
         $scope.SearchModal = SearchModal;
         $scope.ResourceCache = ResourceCache;
 
-        ////////////////
+        //////////////// DEFAULT PARAMETERS OF NEW RESOURCE
+
+        if ( resourceType == 'Lessons' ) {
+
+            $scope.data.groups = [];
+            $scope.data.coaches = [];
+            $scope.data.halls = [];
+
+        }
+
+        //////////////// OTHER SPECIFIC FUNCTIONS FOR EACH RESOURCE TYPE
 
         if ( resourceType == 'Lessons' ) {
 
@@ -284,7 +294,7 @@ angular.module( 'starter.controllers', [] )
 
         }
 
-        ////////////////
+        //////////////// FUNCTIONS
 
 
         $scope.getTimeByDate = function ( date ) {
@@ -325,7 +335,7 @@ angular.module( 'starter.controllers', [] )
                 delay: 300
             } );
 
-            $scope.data.$create()
+            $scope.data.$save()
                 .then( function () {
                     $ionicHistory.clearCache();
                     $ionicHistory.goBack();
