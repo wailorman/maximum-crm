@@ -51,6 +51,7 @@ angular.module( 'starter.api', [] )
                 'get': { method: 'GET' },
                 "_get": { method: 'GET' },
                 'query': { method: 'GET', isArray: true },
+                '_query': { method: 'GET', isArray: true },
                 'update': { method: 'PUT' },
                 'create': { method: 'POST' },
                 'remove': { method: 'DELETE' }
@@ -90,7 +91,7 @@ angular.module( 'starter.api', [] )
                 }
             );
 
-            return { $promise: deferred.promise };
+            return deferred.promise;
         };
 
 
@@ -169,6 +170,41 @@ angular.module( 'starter.api', [] )
                         ],
                         function () {
                             deferred.resolve( data );
+                        }
+                    );
+
+                } );
+
+            return { $promise: deferred.promise };
+        };
+
+        resources.Lessons.query = function ( params ) {
+            var deferred = $q.defer();
+
+            resources.Lessons._query( params ).$promise
+                .catch( deferred.reject )
+                .then( function ( array ) {
+
+                    async.each(
+                        array,
+                        function ( data, ecb ) {
+
+                            async.parallel(
+                                [
+                                    // groups
+                                    function ( pcb ) {
+
+                                        if ( ! data.groups ) return pcb();
+                                        cacheArray( 'groups', data.groups ).then( pcb );
+
+                                    }
+
+                                ], ecb
+                            );
+
+                        },
+                        function () {
+                            deferred.resolve( array );
                         }
                     );
 
