@@ -230,18 +230,20 @@ angular.module( 'starter.controllers', [] )
         $scope.load();
 
     } )
-    .controller( 'CreateCtrl', function ( $rootScope, $scope, $state, additionalStateParams, Api, $ionicLoading, ResourceCache,
-        $ionicHistory ) {
+    .controller( 'CreateCtrl', function ( $rootScope, $scope, $state, additionalStateParams,
+        Api, $ionicLoading, ResourceCache, $ionicHistory, SearchModal ) {
 
 
         var resourceType = additionalStateParams.resourceType,
             currentDate = new Date();
 
         $scope.data = new Api[resourceType];
+        $scope.SearchModal = SearchModal;
+        $scope.ResourceCache = ResourceCache;
 
         ////////////////
 
-        if ( additionalStateParams.resourceType == 'Lessons' ) {
+        if ( resourceType == 'Lessons' ) {
 
             var nextMinuteMultiplieOf15 = ((currentDate.getMinutes() / 15).toFixed().toNumber()) * 15,
                 nextEpochTimeMultiplieOf15 = currentDate.getHours() * 3600 + nextMinuteMultiplieOf15 * 60;

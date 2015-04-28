@@ -23,8 +23,7 @@
                     <ionic-time-picker
                             style="display: inline-block"
                             etime="lessonAdditionalData.startTime" format="24" step="15">
-                        <button class="button button-block button-outline button-balanced"> {{ getTimeByDate(
-                            lessonAdditionalData.startTime ) }}
+                        <button class="button button-block button-outline button-balanced"> {{ getTimeByDate(lessonAdditionalData.startTime ) }}
                         </button>
                     </ionic-time-picker>
                     <input type="number"
@@ -34,6 +33,49 @@
                 </div>
 
             </ion-item>
+
+            <!-- -------------------------------------- -->
+
+            <div class="item item-divider">
+                Группы
+            </div>
+
+            <ion-item ng-repeat="groupId in data.groups"
+                      class="item-button-right">
+
+                <a class="royal" ng-click="$state.go( 'app.groups.view', { id: groupId } )">
+                    {{ ResourceCache.get('groups/'+groupId ).name }}
+                </a>
+
+                <button class="button button-assertive button-clear icon ion-close"
+                        ng-click="data.groups.remove( groupId )">
+                </button>
+
+            </ion-item>
+
+            <button class="item button button-balanced button-clear button-full"
+                    ng-click="SearchModal.open({
+                            title: 'Найти группу',
+                            resourceType: 'Groups',
+                            arrayToPush: data.groups
+                        })">
+                Добавить
+            </button>
+
+            <!-- ------------------------------------- -->
+
+            <div class="item item-divider">
+                Тренеры
+            </div>
+
+            <!-- ------------------------------------- -->
+
+            <div class="item item-divider">
+                Залы
+            </div>
+
+            <!-- ------------------------------------- -->
+
         </ion-list>
     </ion-content>
 </ion-view>
