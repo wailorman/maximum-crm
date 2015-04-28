@@ -10,10 +10,28 @@
                 pulling-text="Обновить..."
                 on-refresh="refresh()">
         </ion-refresher>
-        <ion-list>
+        <ion-list class="lessons-list-item">
             <ion-item collection-repeat="item in items"
-                      href="#/lessons/{{ item._id }}">
-                {{ item.name }}
+                      href="#/lessons/{{ item._id }}"
+                      class="inline-blocks">
+                <div class="lessons-list-item__date">
+                    24.01
+                </div>
+                <div class="lessons-list-item__time"> <!-- time block -->
+                    <div style="display: table-row-group">
+                        <div style="display: table-row">
+                            15:00
+                        </div>
+                        <div style="display: table-row">
+                            16:40
+                        </div>
+                    </div>
+                </div>
+                <div class="lessons-list-item__groups">
+                    {{ ResourceCache.get( 'groups/' + item.groups[0] ).name; }}
+                    <span ng-show="item.groups.length > 1"
+                            class="badge badge-positive"> +{{ item.groups.length - 1 }} </span>
+                </div>
             </ion-item>
         </ion-list>
     </ion-content>

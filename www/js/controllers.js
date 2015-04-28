@@ -49,6 +49,8 @@ angular.module( 'starter.controllers', [] )
 
     .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, $ionicHistory, ResourceCache, additionalStateParams, Api ) {
 
+        $scope.ResourceCache = ResourceCache;
+
         $scope.refresh = function () {
 
             $ionicHistory.clearCache();

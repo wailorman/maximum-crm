@@ -6,3 +6,28 @@
   margin-top: 3px;
   margin-bottom: 3px;
 }
+.inline-blocks {
+  display: block;
+}
+.inline-blocks div {
+  display: table-cell;
+}
+.lessons-list-item {
+  vertical-align: middle;
+}
+.lessons-list-item div {
+  vertical-align: middle;
+}
+.lessons-list-item__date {
+  padding: 0 10px;
+}
+.lessons-list-item__time {
+  line-height: 1.4;
+  padding: 0 10px;
+}
+.lessons-list-item__groups {
+  padding: 0 10px 0 40px;
+}
+.lessons-list-item__groups .badge {
+  top: 2em;
+}
