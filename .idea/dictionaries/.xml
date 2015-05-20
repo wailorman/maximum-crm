@@ -2,7 +2,9 @@
   <dictionary name="Сергей">
     <words>
       <w>choosed</w>
+      <w>datepicker</w>
       <w>revalidate</w>
+      <w>timepicker</w>
     </words>
   </dictionary>
 </component>

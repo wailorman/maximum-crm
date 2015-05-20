@@ -1,0 +1,39 @@
+<ion-view view-title="Занятия" cache-view="true">
+    <ion-nav-buttons side="right">
+        <a href="#/lessons/new">
+            <button class="button button-clear icon ion-android-add">
+            </button>
+        </a>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-refresher
+                pulling-text="Обновить..."
+                on-refresh="refresh()">
+        </ion-refresher>
+        <ion-list class="lessons-list-item">
+            <ion-item collection-repeat="item in items"
+                      href="#/lessons/{{ item._id }}"
+                      class="inline-blocks">
+                <div class="lessons-list-item__date">
+                    {{ item.time.start | date: "dd.MM" }}
+                </div>
+                <div class="lessons-list-item__time"> <!-- time block -->
+                    <div style="display: table-row-group">
+                        <div style="display: table-row"> <!-- start -->
+                            {{ item.time.start | date: "HH:mm" }}
+                        </div>
+                        <div style="display: table-row"> <!-- end -->
+                            {{ item.time.end | date: "HH:mm" }}
+                        </div>
+                    </div>
+                </div>
+                <div class="lessons-list-item__groups">
+                    <span ng-show="item.groups.length <= 1">{{ ResourceCache.get( 'groups/' + item.groups[0] ).name; }}</span>
+
+                    <span ng-show="item.groups.length > 1"
+                          class="badge badge-assertive">{{ item.groups.length }}</span>
+                </div>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

@@ -8,12 +8,16 @@ angular.module( 'starter', [
     'ionic',
     'ngResource',
 
+    'ionic-timepicker',
+    'ionic-datepicker',
+
     'starter.api',
     'starter.controllers',
     'starter.coaches',
     'starter.halls',
     'starter.groups',
-    'starter.clients'
+    'starter.clients',
+    'starter.lessons'
 ] )
 
     .run( function ( $ionicPlatform ) {
@@ -114,7 +118,7 @@ angular.module( 'starter', [
 
                                 if ( parameters.varToPut ) parameters.varToPut = item._id;
 
-                                callOnChoosed();
+                                $rootScope.$applyAsync( callOnChoosed );
 
                                 deferred.resolve( item._id );
 
@@ -127,6 +131,28 @@ angular.module( 'starter', [
             } );
 
             return deferred.promise;
+        };
+
+    } )
+    
+    .service( 'Spinner', function ( $ionicLoading, $rootScope ) {
+
+        var scope = $rootScope.$new();
+
+        scope.hideSpinner = function () {
+            return $ionicLoading.hide();
+        };
+
+        this.show = function () {
+            $ionicLoading.show( {
+                template: '<ion-spinner class="spinner-energized" ng-click="hideSpinner()"></ion-spinner>',
+                scope: scope,
+                delay: 300
+            } );
+        };
+
+        this.hide = function () {
+            $ionicLoading.hide();
         };
 
     } )
