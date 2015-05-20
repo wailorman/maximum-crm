@@ -1,7 +1,7 @@
 angular.module( 'starter.controllers.edit', [] )
-    .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, $ionicLoading, ResourceCache,
+    .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, ResourceCache,
         $ionicHistory, SearchModal, $log, $resource,
-        $stateParams, additionalStateParams, Api ) {
+        $stateParams, additionalStateParams, Api, Spinner ) {
 
         /** @namespace $scope.data._id */
         /** @namespace $scope.data.$update */
@@ -16,10 +16,7 @@ angular.module( 'starter.controllers.edit', [] )
 
             var resourceType = additionalStateParams.resourceType;
 
-            $ionicLoading.show( {
-                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
-                delay: 300
-            } );
+            Spinner.show();
 
             Api[resourceType].get( { id: $stateParams.id } ).$promise
                 .then( function ( data ) {
@@ -29,7 +26,7 @@ angular.module( 'starter.controllers.edit', [] )
                     $scope.data = data;
                 } )
                 .finally( function () {
-                    $ionicLoading.hide();
+                    Spinner.hide();
                 } );
 
 

@@ -1,6 +1,6 @@
 angular.module( 'starter.controllers.view', [] )
-    .controller( 'ViewCtrl', function ( $rootScope, $scope, $state, $stateParams, $ionicLoading, $ionicHistory,
-        ResourceCache, additionalStateParams, Api ) {
+    .controller( 'ViewCtrl', function ( $rootScope, $scope, $state, $stateParams, $ionicHistory,
+        ResourceCache, additionalStateParams, Api, Spinner ) {
 
         $scope.collapseSwitcherValues = {};
 
@@ -13,17 +13,14 @@ angular.module( 'starter.controllers.view', [] )
 
             var resourceType = additionalStateParams.resourceType;
 
-            $ionicLoading.show( {
-                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
-                delay: 300
-            } );
+            Spinner.show();
 
             Api[resourceType].get( { id: $stateParams.id } ).$promise
                 .then( function ( data ) {
                     $scope.data = data;
                 } )
                 .finally( function () {
-                    $ionicLoading.hide();
+                    Spinner.hide();
                     $scope.$broadcast( 'scroll.refreshComplete' );
                 } );
 
@@ -39,4 +36,4 @@ angular.module( 'starter.controllers.view', [] )
         $scope.refresh();
 
 
-    } )
+    } );

@@ -1,20 +1,29 @@
 angular.module( 'starter.controllers.list', [] )
-    .controller( 'ListCtrl', function ( $scope, $state, $ionicLoading, $ionicHistory, $log, ResourceCache, additionalStateParams, Api ) {
+    .controller( 'ListCtrl', function ( $scope, $state, $ionicHistory, $log,
+        ResourceCache, additionalStateParams, Api, Spinner ) {
 
         $scope.ResourceCache = ResourceCache;
 
-        $scope.refresh = function () {
+        $scope.refresh = function ( firstRefresh ) {
 
             $ionicHistory.clearCache();
 
             var resourceType = additionalStateParams.resourceType;
+
+            if ( firstRefresh )
+                Spinner.show();
 
             Api[resourceType].query().$promise
                 .then( function ( array ) {
                     $scope.items = array;
                 } )
                 .finally( function () {
-                    $scope.$broadcast( 'scroll.refreshComplete' );
+
+                    if ( firstRefresh )
+                        Spinner.hide();
+                    else
+                        $scope.$broadcast( 'scroll.refreshComplete' );
+
                 } );
 
 
@@ -47,6 +56,6 @@ angular.module( 'starter.controllers.list', [] )
 
         //////////////////
 
-        $scope.refresh();
+        $scope.refresh( true ); // first refresh
 
-    } )
+    } );

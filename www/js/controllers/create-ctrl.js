@@ -1,6 +1,6 @@
 angular.module( 'starter.controllers.create', [] )
     .controller( 'CreateCtrl', function ( $rootScope, $scope, $state, additionalStateParams,
-        Api, $ionicLoading, ResourceCache, $ionicHistory, SearchModal ) {
+        Api, ResourceCache, $ionicHistory, SearchModal, Spinner ) {
 
 
         var resourceType = additionalStateParams.resourceType,
@@ -99,10 +99,7 @@ angular.module( 'starter.controllers.create', [] )
 
         $scope.create = function () {
 
-            $ionicLoading.show( {
-                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
-                delay: 300
-            } );
+            Spinner.show();
 
             $scope.data.$save()
                 .then( function () {
@@ -110,7 +107,7 @@ angular.module( 'starter.controllers.create', [] )
                     $ionicHistory.goBack();
                 } )
                 .finally( function () {
-                    $ionicLoading.hide();
+                    Spinner.hide();
                 } );
 
         };
