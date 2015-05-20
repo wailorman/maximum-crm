@@ -2,7 +2,7 @@
     <ion-nav-title>Занятие</ion-nav-title>
     <ion-nav-buttons side="right">
         <!-- edit button -->
-        <a ng-href="#/halls/{{ data._id }}/edit">
+        <a ng-href="#/lessons/{{ data._id }}/edit">
             <button class="button button-clear icon ion-android-create">
             </button>
         </a>
@@ -14,9 +14,98 @@
         </ion-refresher>
         <ion-list>
             <ion-item class="item-input">
-                <span class="input-label">Название</span>
-                {{ data.name }}
+                <div class="lessons-view__date">
+                    {{ data.time.start | date: "dd.MM.yyyy" }}
+                </div>
             </ion-item>
+            <ion-item>
+                <div class="lessons-view__time">{{ data.time.start | date: "HH:mm" }}</div>
+                <div class="lessons-view__time">{{ data.time.end | date: "HH:mm" }}</div>
+            </ion-item>
+
+            <!-- ------------------------- GROUPS ------------------------- -->
+            <ion-item class="smart-collapse"
+                      ng-click="collapseTrigger.groups = !collapseTrigger.groups">
+
+                Группа
+
+                <span class="item-note"
+                      ng-show="data.groups.length === 1">
+                    {{ ResourceCache.get( 'groups/'+data.groups[0] ).name }}
+                </span>
+
+                <span ng-show="data.groups.length > 1"
+                      class="badge badge-dark">
+                    {{ data.groups.length }}
+                </span>
+
+            </ion-item>
+
+            <!-- list of additional populate objects -->
+            <ion-item ng-show="data.groups.length > 1 && collapseTrigger.groups"
+                      ng-repeat="groupId in data.groups"
+                      class="smart-collapse__child">
+                {{ ResourceCache.get( 'groups/'+groupId ).name }}
+            </ion-item>
+
+
+            <!-- -------------------------- COACHES ------------------------ -->
+            <ion-item class="smart-collapse"
+                      ng-click="collapseTrigger.coaches = !collapseTrigger.coaches">
+
+                Тренер
+
+                <span class="item-note"
+                      ng-show="data.coaches.length <= 1">
+                    {{ ResourceCache.get( 'coaches/'+data.coaches[0] ).name }}
+                </span>
+
+                <span ng-show="data.coaches.length > 1"
+                      class="badge badge-dark">
+                    {{ data.coaches.length }}
+                </span>
+
+            </ion-item>
+
+            <!-- list of additional populate objects -->
+            <ion-item ng-show="data.coaches.length > 1 && collapseTrigger.coaches"
+                      ng-repeat="coachId in data.coaches"
+                      class="smart-collapse__child">
+                {{ ResourceCache.get( 'coaches/'+coachId ).name }}
+            </ion-item>
+
+
+            <!-- --------------------------- HALLS ----------------------- -->
+            <ion-item class="smart-collapse"
+                      ng-click="collapseTrigger.halls = !collapseTrigger.halls">
+
+                Зал
+
+                <span class="item-note"
+                      ng-show="data.halls.length <= 1">
+                    {{ ResourceCache.get( 'halls/'+data.halls[0] ).name }}
+                </span>
+
+                <span ng-show="data.halls.length > 1"
+                      class="badge badge-dark">
+                    {{ data.halls.length }}
+                </span>
+
+            </ion-item>
+
+            <!-- list of additional populate objects -->
+            <ion-item ng-show="data.halls.length > 1 && collapseTrigger.halls"
+                      ng-repeat="hallId in data.halls"
+                      class="smart-collapse__child">
+                <a class="royal"
+                   ng-click="$state.go( 'app.halls.view', { id: hallId } )">
+                    {{ ResourceCache.get('halls/'+hallId ).name }}
+                </a>
+            </ion-item>
+
+
+            <!-- -------------------------------------------------- -->
+
         </ion-list>
     </ion-content>
 </ion-view>
