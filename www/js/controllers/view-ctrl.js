@@ -3,6 +3,7 @@ angular.module( 'starter.controllers.view', [] )
         ResourceCache, additionalStateParams, Api, Spinner ) {
 
         $scope.collapseSwitcherValues = {};
+        $scope.collapseTrigger = {};
 
         $scope.ResourceCache = ResourceCache;
         $scope.$state = $state;

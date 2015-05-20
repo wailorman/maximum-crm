@@ -44,8 +44,10 @@
             <!-- list of additional populate objects -->
             <ion-item ng-show="data.groups.length > 1 && collapseTrigger.groups"
                       ng-repeat="groupId in data.groups"
-                      class="smart-collapse__child">
+                      class="smart-collapse__child item-icon-right"
+                      href="#/groups/{{ groupId }}">
                 {{ ResourceCache.get( 'groups/'+groupId ).name }}
+                <i class="icon ion-arrow-right-c"></i>
             </ion-item>
 
 
@@ -70,8 +72,10 @@
             <!-- list of additional populate objects -->
             <ion-item ng-show="data.coaches.length > 1 && collapseTrigger.coaches"
                       ng-repeat="coachId in data.coaches"
-                      class="smart-collapse__child">
+                      class="smart-collapse__child item-icon-right"
+                      href="#/coaches/{{ coachId }}">
                 {{ ResourceCache.get( 'coaches/'+coachId ).name }}
+                <i class="icon ion-arrow-right-c"></i>
             </ion-item>
 
 
@@ -96,11 +100,10 @@
             <!-- list of additional populate objects -->
             <ion-item ng-show="data.halls.length > 1 && collapseTrigger.halls"
                       ng-repeat="hallId in data.halls"
-                      class="smart-collapse__child">
-                <a class="royal"
-                   ng-click="$state.go( 'app.halls.view', { id: hallId } )">
-                    {{ ResourceCache.get('halls/'+hallId ).name }}
-                </a>
+                      class="smart-collapse__child item-icon-right"
+                      href="#/halls/{{ hallId }}">
+                {{ ResourceCache.get('halls/'+hallId ).name }}
+                <i class="icon ion-arrow-right-c"></i>
             </ion-item>
 
 
