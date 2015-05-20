@@ -134,6 +134,28 @@ angular.module( 'starter', [
         };
 
     } )
+    
+    .service( 'Spinner', function ( $ionicLoading, $rootScope ) {
+
+        var scope = $rootScope.$new();
+
+        scope.hideSpinner = function () {
+            return $ionicLoading.hide();
+        };
+
+        this.show = function () {
+            $ionicLoading.show( {
+                template: '<ion-spinner class="spinner-energized" ng-click="hideSpinner()"></ion-spinner>',
+                scope: scope,
+                delay: 300
+            } );
+        };
+
+        this.hide = function () {
+            $ionicLoading.hide();
+        };
+
+    } )
 
     .config( function ( $stateProvider, $urlRouterProvider ) {
 
