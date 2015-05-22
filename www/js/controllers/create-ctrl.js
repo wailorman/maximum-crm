@@ -12,11 +12,15 @@ angular.module( 'starter.controllers.create', [] )
 
         //////////////// DEFAULT PARAMETERS OF NEW RESOURCE
 
-        if ( resourceType == 'Lessons' ) {
+        if ( resourceType === 'Lessons' ) {
 
             $scope.data.groups = [];
             $scope.data.coaches = [];
             $scope.data.halls = [];
+
+        }else if ( resourceType === 'Clients' ){
+
+            $scope.data.consists = [];
 
         }
 
