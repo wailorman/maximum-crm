@@ -90,6 +90,10 @@ angular.module( 'starter.controllers.edit', [] )
                                 .then( function () {
                                     Spinner.hide();
                                     $ionicHistory.clearCache();
+                                    $ionicHistory.clearHistory();
+                                    $ionicHistory.nextViewOptions({
+                                        disableBack: true
+                                    });
                                     $state.go( rootState() );
                                 } );
                         }
