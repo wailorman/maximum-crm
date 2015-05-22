@@ -6,6 +6,7 @@
         </button>
     </ion-nav-buttons>
     <ion-content>
+
         <ion-list>
             <ion-item class="item-input">
                 <span class="input-label">Имя</span>
@@ -13,6 +14,37 @@
                        ng-model="data.name"/>
             </ion-item>
         </ion-list>
+
+        <!-- ------------- -->
+
+        <ion-item class="item-divider item-icon-right">
+            Добавить в группы
+        </ion-item>
+
+        <ion-item ng-repeat="groupId in data.consists"
+
+                  class="smart-collapse__child item-button-right">
+
+            {{ ResourceCache.get('groups/'+groupId ).name }}
+
+            <button class="button button-small button-clear"
+                    ng-click="data.consists.remove( groupId )">
+                <i class="icon ion-close"></i>
+            </button>
+
+        </ion-item>
+
+
+        <button class="item button button-balanced button-clear button-full"
+                ng-click="SearchModal.open({
+                            title: 'Найти группу',
+                            resourceType: 'Groups',
+                            arrayToPush: data.consists
+                        })">
+            Добавить
+        </button>
+
+        <!-- ------------- -->
 
     </ion-content>
 </ion-view>
