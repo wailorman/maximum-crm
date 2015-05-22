@@ -67,7 +67,7 @@ angular.module( 'starter.controllers.edit', [] )
                     $ionicHistory.goBack();
                 } )
                 .finally( function () {
-                    $ionicLoading.hide();
+                    Spinner.hide();
                 } );
         };
 
@@ -81,17 +81,14 @@ angular.module( 'starter.controllers.edit', [] )
                         type: 'button-positive',
                         onTap: function () {
 
-                            $ionicLoading.show( {
-                                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
-                                delay: 300
-                            } );
+                            Spinner.show();
 
                             $scope.data.$remove( { id: $scope.data._id } )
                                 .catch( function ( err ) {
                                     $log.error( 'Cant remove: ' + err.statusText );
                                 } )
                                 .then( function () {
-                                    $ionicLoading.hide();
+                                    Spinner.hide();
                                     $ionicHistory.clearCache();
                                     $state.go( rootState() );
                                 } );
