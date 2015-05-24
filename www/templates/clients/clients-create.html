@@ -1,50 +1,62 @@
-<ion-view cache-view="true">
-    <ion-nav-title>Новый клиент</ion-nav-title>
-    <ion-nav-buttons side="right">
-        <button class="button button-clear icon ion-android-done"
-                ng-click="create()">
-        </button>
-    </ion-nav-buttons>
-    <ion-content>
+<form name="createForm">
 
-        <ion-list>
-            <ion-item class="item-input">
-                <span class="input-label">Имя</span>
-                <input type="text"
-                       ng-model="data.name"/>
+    <ion-view cache-view="false">
+        <ion-nav-title>Новый клиент</ion-nav-title>
+        <ion-content>
+
+
+            <ion-list>
+                <ion-item class="item-input item-icon-right">
+                    <span class="input-label">Имя</span>
+                    <input type="text"
+                           required
+                           name="name"
+                           ng-model="data.name"/>
+                    <i ng-show="!createForm.name.$valid && (!createForm.name.$pristine || formSubmited)"
+                       tooltip-placement="left" tooltip-trigger="click" tooltip="Не должно быть пустым!"
+                       class="icon ion-android-alert assertive"></i>
+                </ion-item>
+            </ion-list>
+
+            <!-- ------------- -->
+
+            <ion-item class="item-divider item-icon-right">
+                Добавить в группы
             </ion-item>
-        </ion-list>
 
-        <!-- ------------- -->
+            <ion-item ng-repeat="groupId in data.consists"
 
-        <ion-item class="item-divider item-icon-right">
-            Добавить в группы
-        </ion-item>
+                      class="smart-collapse__child item-button-right">
 
-        <ion-item ng-repeat="groupId in data.consists"
+                {{ ResourceCache.get('groups/'+groupId ).name }}
 
-                  class="smart-collapse__child item-button-right">
+                <button class="button button-small button-clear"
+                        ng-click="data.consists.remove( groupId )">
+                    <i class="icon ion-close"></i>
+                </button>
 
-            {{ ResourceCache.get('groups/'+groupId ).name }}
-
-            <button class="button button-small button-clear"
-                    ng-click="data.consists.remove( groupId )">
-                <i class="icon ion-close"></i>
-            </button>
-
-        </ion-item>
+            </ion-item>
 
 
-        <button class="item button button-balanced button-clear button-full"
-                ng-click="SearchModal.open({
+            <button class="item button button-balanced button-clear button-full"
+                    ng-click="SearchModal.open({
                             title: 'Найти группу',
                             resourceType: 'Groups',
                             arrayToPush: data.consists
                         })">
-            Добавить
-        </button>
+                Добавить
+            </button>
 
-        <!-- ------------- -->
+            <!-- ------------- -->
 
-    </ion-content>
-</ion-view>
+
+
+
+        </ion-content>
+
+        <ion-footer-bar align-title="center" class="bar-balanced">
+            <div class="title" ng-click="create(createForm)">Создать</div>
+        </ion-footer-bar>
+    </ion-view>
+
+</form>
