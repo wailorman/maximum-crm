@@ -67,7 +67,8 @@ angular.module( 'starter', [
             // initialize modal
             $ionicModal.fromTemplateUrl( 'templates/search-modal.html', {
                 scope: scope,
-                animation: 'slide-in-up'
+                animation: 'slide-in-up',
+                focusFirstInput: true
             } ).then( function ( modal ) {
 
                 modal.show();

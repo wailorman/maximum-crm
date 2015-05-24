@@ -19,42 +19,42 @@ angular.module( 'starter.api', [] )
 
         var resources = {
             Groups: $resource( apiUrl + '/groups/:id', null, {
-                'get': { method: 'GET' },
-                'query': { method: 'GET', isArray: true },
-                'update': { method: 'PUT' },
-                'create': { method: 'POST' },
-                'remove': { method: 'DELETE' }
+                'get': { method: 'GET', timeout: 5000 },
+                'query': { method: 'GET', isArray: true, timeout: 5000 },
+                'update': { method: 'PUT', timeout: 5000 },
+                'create': { method: 'POST', timeout: 5000 },
+                'remove': { method: 'DELETE', timeout: 5000 }
             } ),
             Halls: $resource( apiUrl + '/halls/:id', null, {
-                'get': { method: 'GET' },
-                'query': { method: 'GET', isArray: true },
-                'update': { method: 'PUT' },
-                'create': { method: 'POST' },
-                'remove': { method: 'DELETE' }
+                'get': { method: 'GET', timeout: 5000 },
+                'query': { method: 'GET', isArray: true, timeout: 5000 },
+                'update': { method: 'PUT', timeout: 5000 },
+                'create': { method: 'POST', timeout: 5000 },
+                'remove': { method: 'DELETE', timeout: 5000 }
             } ),
             Coaches: $resource( apiUrl + '/coaches/:id', null, {
-                'get': { method: 'GET' },
-                'query': { method: 'GET', isArray: true },
-                'update': { method: 'PUT' },
-                'create': { method: 'POST' },
-                'remove': { method: 'DELETE' }
+                'get': { method: 'GET', timeout: 5000 },
+                'query': { method: 'GET', isArray: true, timeout: 5000 },
+                'update': { method: 'PUT', timeout: 5000 },
+                'create': { method: 'POST', timeout: 5000 },
+                'remove': { method: 'DELETE', timeout: 5000 }
             } ),
             Clients: $resource( apiUrl + '/clients/:id', null, {
-                'get': { method: 'GET' },
-                "_get": { method: 'GET' },
-                'query': { method: 'GET', isArray: true },
-                'update': { method: 'PUT' },
-                'create': { method: 'POST' },
-                'remove': { method: 'DELETE' }
+                'get': { method: 'GET', timeout: 5000 },
+                "_get": { method: 'GET', timeout: 5000 },
+                'query': { method: 'GET', isArray: true, timeout: 5000 },
+                'update': { method: 'PUT', timeout: 5000 },
+                'create': { method: 'POST', timeout: 5000 },
+                'remove': { method: 'DELETE', timeout: 5000 }
             } ),
             Lessons: $resource( apiUrl + '/lessons/:id', null, {
-                'get': { method: 'GET' },
-                "_get": { method: 'GET' },
-                'query': { method: 'GET', isArray: true },
-                '_query': { method: 'GET', isArray: true },
-                'update': { method: 'PUT' },
-                'create': { method: 'POST' },
-                'remove': { method: 'DELETE' }
+                'get': { method: 'GET', timeout: 5000 },
+                "_get": { method: 'GET', timeout: 5000 },
+                'query': { method: 'GET', isArray: true, timeout: 5000 },
+                '_query': { method: 'GET', isArray: true, timeout: 5000 },
+                'update': { method: 'PUT', timeout: 5000 },
+                'create': { method: 'POST', timeout: 5000 },
+                'remove': { method: 'DELETE', timeout: 5000 }
             } )
         };
 
