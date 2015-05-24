@@ -11,6 +11,9 @@ angular.module( 'starter', [
     'ionic-timepicker',
     'ionic-datepicker',
 
+    'ui.bootstrap.tpls',
+    'ui.bootstrap.tooltip',
+
     'starter.api',
     'starter.controllers',
     'starter.coaches',
