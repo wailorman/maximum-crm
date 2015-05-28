@@ -11,6 +11,9 @@ angular.module( 'starter', [
     'ionic-timepicker',
     'ionic-datepicker',
 
+    'ui.bootstrap.tpls',
+    'ui.bootstrap.tooltip',
+
     'starter.api',
     'starter.controllers',
     'starter.coaches',
@@ -67,7 +70,8 @@ angular.module( 'starter', [
             // initialize modal
             $ionicModal.fromTemplateUrl( 'templates/search-modal.html', {
                 scope: scope,
-                animation: 'slide-in-up'
+                animation: 'slide-in-up',
+                focusFirstInput: true
             } ).then( function ( modal ) {
 
                 modal.show();
@@ -134,7 +138,7 @@ angular.module( 'starter', [
         };
 
     } )
-    
+
     .service( 'Spinner', function ( $ionicLoading, $rootScope ) {
 
         var scope = $rootScope.$new();
@@ -153,6 +157,35 @@ angular.module( 'starter', [
 
         this.hide = function () {
             $ionicLoading.hide();
+        };
+
+    } )
+
+    .service( 'Popup', function ( $rootScope, $ionicPopup ) {
+
+        /**
+         * Show error popup
+         * @param firstArg {string} If passed one arg it will be message. If two args it will be title
+         * @param [secondArg] {string} If two args passed it will be subTitle
+         */
+        this.showErrorPopup = function ( firstArg, secondArg ) {
+
+            var parameters = {
+                    scope: $rootScope.$new(),
+                    buttons: [
+                        { text: 'OK' }
+                    ]
+                };
+
+            if ( secondArg ) { // if second argument passed
+                parameters.subTitle = secondArg;
+                parameters.title = firstArg;
+            } else {
+                parameters.title = firstArg;
+            }
+
+            $ionicPopup.show( parameters );
+
         };
 
     } )

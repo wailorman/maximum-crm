@@ -1,6 +1,6 @@
 angular.module( 'starter.controllers.create', [] )
     .controller( 'CreateCtrl', function ( $rootScope, $scope, $state, additionalStateParams,
-        Api, ResourceCache, $ionicHistory, SearchModal, Spinner ) {
+        Api, ResourceCache, $ionicHistory, SearchModal, Spinner, Popup ) {
 
 
         var resourceType = additionalStateParams.resourceType,
@@ -9,6 +9,7 @@ angular.module( 'starter.controllers.create', [] )
         $scope.data = new Api[resourceType];
         $scope.SearchModal = SearchModal;
         $scope.ResourceCache = ResourceCache;
+        $scope.formSubmited = false;
 
         //////////////// DEFAULT PARAMETERS OF NEW RESOURCE
 
@@ -18,7 +19,7 @@ angular.module( 'starter.controllers.create', [] )
             $scope.data.coaches = [];
             $scope.data.halls = [];
 
-        }else if ( resourceType === 'Clients' ){
+        } else if ( resourceType === 'Clients' ) {
 
             $scope.data.consists = [];
 
@@ -70,6 +71,10 @@ angular.module( 'starter.controllers.create', [] )
         //////////////// FUNCTIONS
 
 
+        var rootState = function () {
+            return 'app.' + $state.current.name.match( /\w+/g )[1];
+        };
+
         $scope.getTimeByDate = function ( date ) {
             if ( !date ) return '';
 
@@ -101,18 +106,29 @@ angular.module( 'starter.controllers.create', [] )
             return date.getDate() + ' ' + monthsString[date.getMonth()] + ' ' + date.getFullYear().toString().last( 2 );
         };
 
-        $scope.create = function () {
+        $scope.create = function ( form ) {
 
-            Spinner.show();
+            $scope.formSubmited = true;
 
-            $scope.data.$save()
-                .then( function () {
-                    $ionicHistory.clearCache();
-                    $ionicHistory.goBack();
-                } )
-                .finally( function () {
-                    Spinner.hide();
-                } );
+            if ( form.$valid ) {
+
+                Spinner.show();
+
+                $scope.data.$save()
+                    .then( function () {
+                        // successfully created
+                        $ionicHistory.clearCache();
+                        $state.go( rootState() );
+                    } )
+                    .finally( function () {
+                        Spinner.hide();
+                    } );
+
+            }else{
+
+                Popup.showErrorPopup( 'Форма заполнена неверно' );
+
+            }
 
         };
 
