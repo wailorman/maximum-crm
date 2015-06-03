@@ -4,7 +4,7 @@ app.directive( 'resourceCache', function ( ResourceCache ) {
 
 
     return {
-        restrict: 'A',
+        restrict: 'EA',
         scope: {
             resourceType: '@',
             field: '@',
