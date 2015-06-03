@@ -1,6 +1,8 @@
-var app = angular.module( 'starter.resource-cache', [] );
+var app = angular.module( 'starter.resource-cache', [
+    'ngResource',
+    'starter.api'
+] );
 app.directive( 'resourceCache', function ( ResourceCache ) {
-
 
 
     return {
@@ -12,18 +14,25 @@ app.directive( 'resourceCache', function ( ResourceCache ) {
         },
         link: function ( scope, elem ) {
 
-            scope.$watch( 'resourceId', function () {
+            scope.recompile = function ( resourceType, resourceId, field ) {
 
-                var resourceType = scope.resourceType,
-                    field = scope.field ? scope.field : 'name',
-                    resourceId = scope.resourceId;
+                if ( !field ) field = 'name';
 
                 var cachedObject = ResourceCache.get( resourceType + '/' + resourceId );
-
 
                 if ( cachedObject && cachedObject.hasOwnProperty( field ) ) {
                     elem.html( cachedObject[field] );
                 }
+
+            };
+
+            scope.$watch( 'resourceId', function () {
+
+                scope.recompile(
+                    scope.resourceType,
+                    scope.resourceId,
+                    scope.field
+                );
 
             }, true );
         }
