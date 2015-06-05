@@ -20,7 +20,9 @@ angular.module( 'starter', [
     'starter.halls',
     'starter.groups',
     'starter.clients',
-    'starter.lessons'
+    'starter.lessons',
+
+    'starter.resource-cache'
 ] )
 
     .run( function ( $ionicPlatform ) {
