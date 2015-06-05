@@ -1,5 +1,4 @@
 var app = angular.module( 'starter.resource-cache', [
-    'ngResource',
     'starter.api'
 ] );
 app.directive( 'resourceCache', function ( ResourceCache ) {

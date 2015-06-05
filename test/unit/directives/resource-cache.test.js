@@ -1,16 +1,13 @@
 describe( 'resourceCache directive', function () {
 
-    var element, scope, _compile, testGroupId, testClientId, $resource;
+    var element, $rootScope, scope, $compile, testGroupId, testClientId, $resource, ResourceCache;
 
     var failTest = function ( err ) {
         expect( err ).not.toBeDefined();
     };
 
-    //var apiUri = 'http://api.max-crm.wailorman.ru:21080';
-
     beforeEach( module( 'starter.resource-cache' ) );
     beforeEach( module( 'starter.api' ) );
-    //beforeEach( module( 'ngResource' ) );
 
     var tpls = {
         /**
@@ -19,108 +16,121 @@ describe( 'resourceCache directive', function () {
          * @param params.resourceType
          * @param params.resourceId
          * @param params.field
+         * @param params.expectedValue
          */
         compileElement: function ( params ) {
 
             var html;
 
-            expect( params.resourceType ).toBeDefined();
-            expect( params.resourceId ).toBeDefined();
-
-            html = '<resource-cache resource-type="' + params.resourceType + '" resource-id="' + params.resourceId + '"';
+            html = '<resource-cache resource-type="' + params.resourceType + '" resource-id="cacheResourceId"';
             if ( params.field ) html += ' field="' + params.field + '"';
             html += '></resource-cache>';
 
-            element = _compile( html )( scope );
-            scope.$digest();
+            $rootScope.cacheResourceId = params.resourceId;
+
+            element = $compile( html )( $rootScope );
+
+            $rootScope.$digest();
+
+            if ( params.expectedValue === '' )
+                expect( element.html() ).toEqual( '' );
+            else
+                expect( element.html() ).toContain( params.expectedValue );
 
             return element;
 
         }
     };
 
-    it( 'should create test resources', function ( done ) {
+    beforeEach( inject( function ( _$rootScope_, _$compile_, _ResourceCache_ ) {
 
+        scope = _$rootScope_.$new();
+        $rootScope = _$rootScope_;
+        $compile = _$compile_;
+        ResourceCache = _ResourceCache_;
 
-        inject( function ( _Api_, $httpBackend, $injector ) {
+        ResourceCache.put(
+            'coaches/named',
+            {
+                name: 'SomeName'
+            }
+        );
 
-            $resource = $injector.get('$resource');
-
-            $resource( 'http://api.max-crm.wailorman.ru:21080/' )
-
-        });
-
-            //async.waterfall( [
-            //
-            //    function ( wcb ) {
-
-            // expect to successfully create a new group
-
-            //_Api_.Groups.create( {}, { name: 'Resource cache test group' } ).$promise
-
-                //newGroup.name = 'Resource cache test group';
-                //newGroup.$save()
-                //    .catch( failTest )
-                //.then( function ( createdGroup ) {
-
-                    //expect( createdGroup._id ).toBeDefined();
-                    //testGroupId = createdGroup._id;
-                    //wcb( createdGroup._id );
-
-                    //done();
-
-                    //} );
-
-                    //},
-
-                    //function ( newGroupId, wcb ) {
-
-                    // expect to success create a new client
-
-                    //_Api_.Clients.create( {}, { name: 'Resource cache test client', consists: [newGroupId] } ).$promise
-
-                    //newClient.name = 'Resource cache test client';
-                    //newClient.consists = [newGroupId];
-                    //newClient.$save()
-                    //    .catch( failTest )
-                    //            .then( function ( createdClient ) {
-                    //
-                    //                expect( createdClient._id ).toBeDefined();
-                    //                testClientId = createdClient._id;
-                    //                wcb();
-                    //
-                    //            } );
-                    //
-                    //    }
-                    //
-                    //], function () {
-                    //    done();
-                    //} );
-
-
-                //} );
-
-        //} );
-    } );
-
-
-    beforeEach( inject( function ( $rootScope, $compile ) {
-
-        scope = $rootScope.$new();
-        _compile = $compile;
+        ResourceCache.put(
+            'coaches/some-object',
+            {
+                someField: 'SomeValue'
+            }
+        );
 
     } ) );
 
-    describe( 'should compile if', function () {
+    describe( 'should be compiled if', function () {
 
-        it( 'passed resourceType and resourceId. should display name', function () {
+        console.log( '2' );
+
+        it( 'passed resourceType, resourceId', function () {
 
             tpls.compileElement( {
-                resourceType: 'groups',
-                resourceId: testGroupId
+                resourceType: 'coaches',
+                resourceId: 'named',
+                expectedValue: 'SomeName'
             } );
 
-            expect( element.html() ).toEqual( 'Resource cache test group' );
+        } );
+
+        it( 'passed resourceType, field, resourceId', function () {
+
+            tpls.compileElement( {
+                resourceType: 'coaches',
+                field: 'someField',
+                resourceId: 'some-object',
+                expectedValue: 'SomeValue'
+            } );
+
+        } );
+
+    } );
+
+    describe( 'should be empty if', function () {
+
+        it( 'passed resourceType', function () {
+
+            tpls.compileElement( {
+                resourceType: 'coaches',
+                expectedValue: ''
+            } );
+
+        } );
+
+        it( 'passed resourceType and resourceId, but object has not the name field', function () {
+
+            tpls.compileElement( {
+                resourceType: 'coaches',
+                resourceId: 'some-object',
+                expectedValue: ''
+            } );
+
+        } );
+
+        it( 'passed resourceType and resourceId, but such object does not exist', function () {
+
+            tpls.compileElement( {
+                resourceType: 'coaches',
+                resourceId: 'nonexistent',
+                expectedValue: ''
+            } );
+
+        } );
+
+        it( 'passed resourceType, field, resourceId, but object has not passed field', function () {
+
+            tpls.compileElement( {
+                resourceType: 'coaches',
+                field: 'undeclaredField',
+                resourceId: 'named',
+                expectedValue: ''
+            } );
 
         } );
 
