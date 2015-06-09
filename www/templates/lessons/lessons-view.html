@@ -24,87 +24,18 @@
             </ion-item>
 
             <!-- ------------------------- GROUPS ------------------------- -->
-            <ion-item class="smart-collapse"
-                      ng-click="collapseTrigger.groups = !collapseTrigger.groups">
-
-                Группа
-
-                <span class="item-note"
-                      ng-show="data.groups.length === 1">
-                    {{ ResourceCache.get( 'groups/'+data.groups[0] ).name }}
-                </span>
-
-                <span ng-show="data.groups.length > 1"
-                      class="badge badge-dark">
-                    {{ data.groups.length }}
-                </span>
-
-            </ion-item>
-
-            <!-- list of additional populate objects -->
-            <ion-item ng-show="data.groups.length > 1 && collapseTrigger.groups"
-                      ng-repeat="groupId in data.groups"
-                      class="smart-collapse__child item-icon-right"
-                      href="#/groups/{{ groupId }}">
-                {{ ResourceCache.get( 'groups/'+groupId ).name }}
-                <i class="icon ion-arrow-right-c"></i>
-            </ion-item>
+            <div class="item" populate-view item-label="Группа" resource-type="groups" population-key="data.groups">
+            </div>
 
 
             <!-- -------------------------- COACHES ------------------------ -->
-            <ion-item class="smart-collapse"
-                      ng-click="collapseTrigger.coaches = !collapseTrigger.coaches">
-
-                Тренер
-
-                <span class="item-note"
-                      ng-show="data.coaches.length <= 1">
-                    {{ ResourceCache.get( 'coaches/'+data.coaches[0] ).name }}
-                </span>
-
-                <span ng-show="data.coaches.length > 1"
-                      class="badge badge-dark">
-                    {{ data.coaches.length }}
-                </span>
-
-            </ion-item>
-
-            <!-- list of additional populate objects -->
-            <ion-item ng-show="data.coaches.length > 1 && collapseTrigger.coaches"
-                      ng-repeat="coachId in data.coaches"
-                      class="smart-collapse__child item-icon-right"
-                      href="#/coaches/{{ coachId }}">
-                {{ ResourceCache.get( 'coaches/'+coachId ).name }}
-                <i class="icon ion-arrow-right-c"></i>
-            </ion-item>
+            <div class="item" populate-view item-label="Тренер" resource-type="coaches" population-key="data.coaches">
+            </div>
 
 
             <!-- --------------------------- HALLS ----------------------- -->
-            <ion-item class="smart-collapse"
-                      ng-click="collapseTrigger.halls = !collapseTrigger.halls">
-
-                Зал
-
-                <span class="item-note"
-                      ng-show="data.halls.length <= 1">
-                    {{ ResourceCache.get( 'halls/'+data.halls[0] ).name }}
-                </span>
-
-                <span ng-show="data.halls.length > 1"
-                      class="badge badge-dark">
-                    {{ data.halls.length }}
-                </span>
-
-            </ion-item>
-
-            <!-- list of additional populate objects -->
-            <ion-item ng-show="data.halls.length > 1 && collapseTrigger.halls"
-                      ng-repeat="hallId in data.halls"
-                      class="smart-collapse__child item-icon-right"
-                      href="#/halls/{{ hallId }}">
-                {{ ResourceCache.get('halls/'+hallId ).name }}
-                <i class="icon ion-arrow-right-c"></i>
-            </ion-item>
+            <div class="item" populate-view item-label="Зал" resource-type="halls" population-key="data.halls">
+            </div>
 
 
             <!-- -------------------------------------------------- -->
