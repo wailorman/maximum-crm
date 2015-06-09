@@ -10,8 +10,8 @@
             <ion-item class="item-input">
                 <span class="input-label">Дата</span>
                 <ionic-datepicker idate="lessonAdditionalData.startDate">
-                    <button class="button button-block button-outline button-balanced">{{ lessonAdditionalData.startDate ?
-                        beautifyDate(lessonAdditionalData.startDate) : 'Дата проведения' }}
+                    <button class="button button-block button-outline button-balanced">{{ data.time.start ?
+                        $filter('date')( data.time.start, 'dd.MM.yyyy' ) : 'Дата проведения' }}
                     </button>
                 </ionic-datepicker>
             </ion-item>
@@ -23,7 +23,7 @@
                     <ionic-time-picker
                             style="display: inline-block"
                             etime="lessonAdditionalData.startTime" format="24" step="15">
-                        <button class="button button-block button-outline button-balanced"> {{ getTimeByDate(lessonAdditionalData.startTime ) }}
+                        <button class="button button-block button-outline button-balanced"> {{ $filter('date')( data.time.start, 'hh:mm' ) }}
                         </button>
                     </ionic-time-picker>
                     <input type="number"

@@ -1,6 +1,6 @@
 angular.module( 'starter.controllers.edit', [] )
     .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, ResourceCache,
-        $ionicHistory, SearchModal, $log, $resource,
+        $ionicHistory, SearchModal, $log, $resource, $filter,
         $stateParams, additionalStateParams, Api, Spinner ) {
 
         /** @namespace $scope.data._id */
@@ -12,6 +12,7 @@ angular.module( 'starter.controllers.edit', [] )
         $scope.ResourceCache = ResourceCache;
         $scope.SearchModal = SearchModal;
         $scope.$state = $state;
+        $scope.$filter = $filter;
         $scope.load = function () {
 
             var resourceType = additionalStateParams.resourceType;
