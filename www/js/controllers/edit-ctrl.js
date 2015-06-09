@@ -56,10 +56,7 @@ angular.module( 'starter.controllers.edit', [] )
 
         $scope.applyChanges = function () {
 
-            $ionicLoading.show( {
-                template: '<ion-spinner class="spinner-energized"></ion-spinner>',
-                delay: 300
-            } );
+            Spinner.show();
 
             $scope.data.$update( { id: $scope.data._id } )
                 .then( function () {

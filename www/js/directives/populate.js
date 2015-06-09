@@ -16,6 +16,8 @@ angular.module( 'starter.populate', [
 
                 $scope.$watch( 'populationKey', function () {
 
+                    values = '';
+
                     if ( typeof $scope.populationKey === 'string' ){
 
                         objectFromCache = ResourceCache.get( $scope.resourceType + '/' + $scope.populationKey );

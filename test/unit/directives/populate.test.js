@@ -151,4 +151,42 @@ describe( 'populate directive', function () {
 
     } );
 
+    ///////////
+
+    it( 'should not populate if current key is empty and previous key is not empty', function () {
+
+        $scope.firstCoaches = [ 'first', 'second' ];
+        $scope.secondCoaches = [];
+
+        var elem1 = compileElement(
+            '<div class="item" populate-view resource-type="coaches" population-key="firstCoaches"></div>'
+        );
+
+        var elem2 = compileElement(
+            '<div class="item" populate-view resource-type="coaches" population-key="secondCoaches"></div>'
+        );
+
+        expect( elem1.html() ).toContain( '>First coach, Second coach<' );
+        expect( elem2.html() ).toEqual( '' );
+
+    } );
+
+    it( 'should not populate if current key is exist and previous key is not exist', function () {
+
+        $scope.firstCoaches = [ 'first', 'second' ];
+        $scope.secondCoaches = [ 'third', 'fourth' ];
+
+        var elem1 = compileElement(
+            '<div class="item" populate-view resource-type="coaches" population-key="firstCoaches"></div>'
+        );
+
+        var elem2 = compileElement(
+            '<div class="item" populate-view resource-type="coaches" population-key="secondCoaches"></div>'
+        );
+
+        expect( elem1.html() ).toContain( '>First coach, Second coach<' );
+        expect( elem2.html() ).toEqual( '' );
+
+    } );
+
 } );
