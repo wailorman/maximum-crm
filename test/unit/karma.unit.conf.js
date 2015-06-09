@@ -18,6 +18,7 @@ module.exports = function(config) {
         '../../www/lib/ionic/js/ionic.bundle.js',
         '../../www/lib/angular-resource/angular-resource.js',
         '../../www/lib/sugar/release/sugar.min.js',
+        '../../www/lib/async/lib/async.js',
         '../../www/lib/angular/angular.js',
         '../../www/lib/angular-mocks/angular-mocks.js',
 
