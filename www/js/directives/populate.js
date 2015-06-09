@@ -3,7 +3,7 @@ angular.module( 'starter.populate', [
 ] )
     .directive( 'populateView', function ( ResourceCache ) {
 
-        var html, singleResource, resourceIds, values;
+        var html, singleResource, resourceIds, values, objectFromCache;
 
         return {
             restrict: 'A',
@@ -16,8 +16,32 @@ angular.module( 'starter.populate', [
 
                 $scope.$watch( 'populationKey', function () {
 
-                    values = ResourceCache.get( $scope.resourceType + '/' + $scope.populationKey );
-                    if ( values ) values = values.name;
+                    if ( typeof $scope.populationKey === 'string' ){
+
+                        objectFromCache = ResourceCache.get( $scope.resourceType + '/' + $scope.populationKey );
+                        if ( objectFromCache ) values = objectFromCache.name;
+                        else values = '';
+
+                    }
+                    else if ( $scope.populationKey instanceof Array ){
+
+                        for ( var i in $scope.populationKey ){
+                            if ( $scope.populationKey.hasOwnProperty(i) && typeof $scope.populationKey[i] === 'string' ){
+
+                                objectFromCache = ResourceCache.get( $scope.resourceType + '/' + $scope.populationKey[i] );
+
+                                if ( objectFromCache ) {
+                                    if ( i == 0 ){
+                                        values = objectFromCache.name;
+                                    }else{
+                                        values = values + ', ' + objectFromCache.name
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
                     else values = '';
 
                     html = $scope.itemLabel ? $scope.itemLabel : '';

@@ -49,7 +49,7 @@ describe( 'populate directive', function () {
 
     } );
 
-    /////////////////////////////////////////////////////
+    /// STRING //////////////////////////////////////////////////
 
     it( 'should populate existing object by string key', function () {
 
@@ -59,7 +59,7 @@ describe( 'populate directive', function () {
             '<item populate-view resource-type="coaches" population-key="theCoach"></item>'
         );
 
-        expect( elem.html() ).toContain( 'First coach' );
+        expect( elem.html() ).toContain( '>First coach<' );
     } );
 
     it( 'should not populate nonexistent object by string key', function () {
@@ -71,6 +71,57 @@ describe( 'populate directive', function () {
         );
 
         expect( elem.html() ).toEqual( '' );
+
+    } );
+
+    /// ARRAY ////////////////////////////////////////////////
+
+    it( 'should work with array of string keys', function () {
+
+        $scope.theCoaches = [ 'first', 'second' ];
+
+        elem = compileElement(
+            '<item populate-view resource-type="coaches" population-key="theCoaches"></item>'
+        );
+
+        expect( elem.html() ).toContain( '>First coach, Second coach<' );
+
+    } );
+
+    it( 'should work with 1-length array of string keys', function () {
+
+        $scope.theCoaches = [ 'first' ];
+
+        elem = compileElement(
+            '<item populate-view resource-type="coaches" population-key="theCoaches"></item>'
+        );
+
+        expect( elem.html() ).toContain( '>First coach<' );
+
+
+    } );
+
+    it( 'should ignore invalid array keys', function () {
+
+        $scope.theCoaches = [ 'first', 3 ];
+
+        elem = compileElement(
+            '<item populate-view resource-type="coaches" population-key="theCoaches"></item>'
+        );
+
+        expect( elem.html() ).toContain( '>First coach<' );
+
+    } );
+
+    it( 'should ignore nonexistent objects in key-array', function () {
+
+        $scope.theCoaches = [ 'first', 'third' ];
+
+        elem = compileElement(
+            '<item populate-view resource-type="coaches" population-key="theCoaches"></item>'
+        );
+
+        expect( elem.html() ).toContain( '>First coach<' );
 
     } );
 
