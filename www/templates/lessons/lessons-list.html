@@ -27,11 +27,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="lessons-list-item__groups">
-                    <span ng-show="item.groups.length <= 1">{{ ResourceCache.get( 'groups/' + item.groups[0] ).name; }}</span>
-
-                    <span ng-show="item.groups.length > 1"
-                          class="badge badge-assertive">{{ item.groups.length }}</span>
+                <div class="lessons-list-item__groups"
+                        populate-view
+                        resource-type="groups"
+                        population-key="item.groups">
                 </div>
             </ion-item>
         </ion-list>
