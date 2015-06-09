@@ -49,4 +49,29 @@ describe( 'populate directive', function () {
 
     } );
 
+    /////////////////////////////////////////////////////
+
+    it( 'should populate existing object by string key', function () {
+
+        $scope.theCoach = 'first';
+
+        elem = compileElement(
+            '<item populate-view resource-type="coaches" population-key="theCoach"></item>'
+        );
+
+        expect( elem.html() ).toContain( 'First coach' );
+    } );
+
+    it( 'should not populate nonexistent object by string key', function () {
+
+        $scope.theCoach = 'third';
+
+        elem = compileElement(
+            '<item populate-view resource-type="coaches" population-key="theCoach"></item>'
+        );
+
+        expect( elem.html() ).toEqual( '' );
+
+    } );
+
 } );
