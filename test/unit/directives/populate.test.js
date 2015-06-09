@@ -125,4 +125,30 @@ describe( 'populate directive', function () {
 
     } );
 
+    /// EMPTY ///////////////////////////////////////////////
+
+    it( 'should not populate by empty array of keys', function () {
+
+        $scope.theCoaches = [];
+
+        elem = compileElement(
+            '<item populate-view resource-type="coaches" population-key="theCoaches"></item>'
+        );
+
+        expect( elem.html() ).toEqual( '' );
+
+    } );
+
+    it( 'should not populate by empty key', function () {
+
+        $scope.theCoaches = null;
+
+        elem = compileElement(
+            '<item populate-view resource-type="coaches" population-key="theCoaches"></item>'
+        );
+
+        expect( elem.html() ).toEqual( '' );
+
+    } );
+
 } );
