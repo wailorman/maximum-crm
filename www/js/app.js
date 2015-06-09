@@ -22,7 +22,8 @@ angular.module( 'starter', [
     'starter.clients',
     'starter.lessons',
 
-    'starter.resource-cache'
+    'starter.resource-cache',
+    'starter.populate'
 ] )
 
     .run( function ( $ionicPlatform ) {
