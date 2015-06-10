@@ -135,6 +135,7 @@ angular.module( 'starter.controllers.edit', [] )
         $scope.applyChanges = function () {
 
             Spinner.show();
+            $scope.applyAdditionalObjectData();
 
             $scope.data.$update( { id: $scope.data._id } )
                 .then( function () {
