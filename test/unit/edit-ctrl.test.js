@@ -286,6 +286,20 @@ describe( 'EditCtrl controller', function () {
 
             } );
 
+            it( 'should write .durationInMinutes to time.end', function () {
+
+                additScope.lessonAdditionalData.startTimeInSeconds = 5400;
+                additScope.lessonAdditionalData.durationInMinutes = 30;
+                additScope.applyAdditionalObjectData();
+
+                expect( additScope.data.time.start.getHours() ).toEqual( 1 );
+                expect( additScope.data.time.start.getMinutes() ).toEqual( 30 );
+
+                expect( additScope.data.time.end.getHours() ).toEqual( 2 );
+                expect( additScope.data.time.end.getMinutes() ).toEqual( 0 );
+
+            } );
+
         } );
 
     } );
