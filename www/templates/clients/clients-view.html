@@ -18,28 +18,13 @@
                 {{ data.name }}
             </ion-item>
 
-            <ion-item class="item-divider item-icon-right"
-                      ng-show="data.consists.length > 0"
-                      ng-click="collapseSwitcherValues.consists = !collapseSwitcherValues.consists">
-                Состоит в группах
-                <i ng-class="{
-                    'icon ion-arrow-down-b': !collapseSwitcherValues.consists,
-                    'icon ion-arrow-up-b': collapseSwitcherValues.consists
-                }"></i>
-            </ion-item>
-
-            <div class="list__collapsible-items"
-                 ng-show="collapseSwitcherValues.consists">
-
-                <ion-item ng-repeat="groupId in data.consists"
-                          class="item-button-right">
-                    <a class="royal"
-                       ng-click="$state.go( 'app.groups.view', { id: groupId } )">
-                        {{ ResourceCache.get('groups/'+groupId ).name }}
-                    </a>
-                </ion-item>
-
+            <div populate-view
+                 class="item"
+                 item-label="Состоит в группах"
+                 resource-type="groups"
+                 population-key="data.consists">
             </div>
+
         </ion-list>
     </ion-content>
 </ion-view>

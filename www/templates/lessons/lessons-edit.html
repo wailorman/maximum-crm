@@ -9,9 +9,9 @@
         <ion-list>
             <ion-item class="item-input">
                 <span class="input-label">Дата</span>
-                <ionic-datepicker idate="lessonAdditionalData.startDate">
-                    <button class="button button-block button-outline button-balanced">{{ lessonAdditionalData.startDate ?
-                        beautifyDate(lessonAdditionalData.startDate) : 'Дата проведения' }}
+                <ionic-datepicker idate="lessonAdditionalData.date">
+                    <button class="button button-block button-outline button-balanced">{{ data.time.start ?
+                        $filter('date')( lessonAdditionalData.date, 'dd.MM.yyyy' ) : 'Дата проведения' }}
                     </button>
                 </ionic-datepicker>
             </ion-item>
@@ -22,19 +22,19 @@
                 <div>
                     <ionic-time-picker
                             style="display: inline-block"
-                            etime="lessonAdditionalData.startTime" format="24" step="15">
-                        <button class="button button-block button-outline button-balanced"> {{ getTimeByDate(lessonAdditionalData.startTime ) }}
+                            etime="lessonAdditionalData.startTimeInSeconds" format="24" step="15">
+                        <button class="button button-block button-outline button-balanced"> {{ lessonAdditionalData.getStringStartTime() }}
                         </button>
                     </ionic-time-picker>
                     <input type="number"
                            style="margin-left: 15px; display: inline-block"
                            placeholder="продлится (минут)"
-                           ng-model="lessonAdditionalData.duration"/>
+                           ng-model="lessonAdditionalData.durationInMinutes"/>
                 </div>
 
             </ion-item>
 
-            <!-- -------------------------------------- -->
+            <!-- ------------------ GROUPS -------------------- -->
 
             <div class="item item-divider">
                 Группы
@@ -62,7 +62,7 @@
                 Добавить
             </button>
 
-            <!-- ------------------------------------- -->
+            <!-- ----------------- COACHES -------------------- -->
 
             <div class="item item-divider">
                 Тренеры
@@ -90,7 +90,7 @@
                 Добавить
             </button>
 
-            <!-- ------------------------------------- -->
+            <!-- ----------------- HALLS -------------------- -->
 
             <div class="item item-divider">
                 Залы
