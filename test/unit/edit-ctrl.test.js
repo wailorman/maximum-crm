@@ -96,13 +96,13 @@ describe( 'EditCtrl controller', function () {
 
     describe( 'lessonAdditionalData', function () {
 
-        var lessonAdditionalDataScope;
+        var additScope;
 
         describe( 'display ( .loadAdditionalObjectData() )', function () {
 
             beforeEach( function () {
                 inject( function ( $rootScope, $controller, $q ) {
-                    lessonAdditionalDataScope = $rootScope.$new();
+                    additScope = $rootScope.$new();
 
                     var startTime = new Date(),
                         endTime = new Date();
@@ -146,29 +146,29 @@ describe( 'EditCtrl controller', function () {
                     };
 
                     $controller( 'EditCtrl', {
-                        $scope: lessonAdditionalDataScope,
+                        $scope: additScope,
                         additionalStateParams: {
                             resourceType: 'Lessons'
                         },
                         Api: ApiMock
                     } );
 
-                    lessonAdditionalDataScope.data = mockedLessonData;
+                    additScope.data = mockedLessonData;
 
-                    lessonAdditionalDataScope.loadAdditionalObjectData();
+                    additScope.loadAdditionalObjectData();
                 } );
             } );
 
             it( '.date should return date without any hours/minutes/seconds/milliseconds', function () {
 
-                /** @namespace lessonAdditionalDataScope.lessonAdditionalData.date */
+                /** @namespace additScope.lessonAdditionalData.date */
 
                 // getting from time.start
 
-                var milliseconds = lessonAdditionalDataScope.lessonAdditionalData.date.getMilliseconds();
-                var seconds = lessonAdditionalDataScope.lessonAdditionalData.date.getSeconds();
-                var minutes = lessonAdditionalDataScope.lessonAdditionalData.date.getMinutes();
-                var hours = lessonAdditionalDataScope.lessonAdditionalData.date.getHours();
+                var milliseconds = additScope.lessonAdditionalData.date.getMilliseconds();
+                var seconds = additScope.lessonAdditionalData.date.getSeconds();
+                var minutes = additScope.lessonAdditionalData.date.getMinutes();
+                var hours = additScope.lessonAdditionalData.date.getHours();
 
                 expect( milliseconds ).toEqual( 0 );
                 expect( seconds ).toEqual( 0 );
@@ -179,9 +179,9 @@ describe( 'EditCtrl controller', function () {
 
             it( '.date should return correct date of time.start', function () {
 
-                var day = lessonAdditionalDataScope.lessonAdditionalData.date.getDate();
-                var month = lessonAdditionalDataScope.lessonAdditionalData.date.getMonth() + 1;
-                var year = lessonAdditionalDataScope.lessonAdditionalData.date.getFullYear();
+                var day = additScope.lessonAdditionalData.date.getDate();
+                var month = additScope.lessonAdditionalData.date.getMonth() + 1;
+                var year = additScope.lessonAdditionalData.date.getFullYear();
 
                 expect( day ).toEqual( 8 );
                 expect( month ).toEqual( 5 );
@@ -191,23 +191,23 @@ describe( 'EditCtrl controller', function () {
 
             it( '.startTimeInSeconds', function () {
 
-                /** @namespace lessonAdditionalDataScope.lessonAdditionalData.startTimeInSeconds */
+                /** @namespace additScope.lessonAdditionalData.startTimeInSeconds */
 
-                expect( lessonAdditionalDataScope.lessonAdditionalData.startTimeInSeconds ).toEqual( 39600 );
+                expect( additScope.lessonAdditionalData.startTimeInSeconds ).toEqual( 39600 );
 
             } );
 
             it( '.getStringStartTime', function () {
 
-                expect( lessonAdditionalDataScope.lessonAdditionalData.getStringStartTime() ).toEqual( '11:00' );
+                expect( additScope.lessonAdditionalData.getStringStartTime() ).toEqual( '11:00' );
 
             } );
 
             it( '.durationInMinutes', function () {
 
-                /** @namespace lessonAdditionalDataScope.lessonAdditionalData.durationInMinutes */
+                /** @namespace additScope.lessonAdditionalData.durationInMinutes */
 
-                expect( lessonAdditionalDataScope.lessonAdditionalData.durationInMinutes ).toEqual( 30 );
+                expect( additScope.lessonAdditionalData.durationInMinutes ).toEqual( 30 );
 
             } );
 
@@ -217,7 +217,7 @@ describe( 'EditCtrl controller', function () {
 
             beforeEach( function () {
                 inject( function ( $rootScope, $controller, $q ) {
-                    lessonAdditionalDataScope = $rootScope.$new();
+                    additScope = $rootScope.$new();
 
                     var startTime = new Date(),
                         endTime = new Date();
@@ -242,15 +242,15 @@ describe( 'EditCtrl controller', function () {
                     };
 
                     $controller( 'EditCtrl', {
-                        $scope: lessonAdditionalDataScope,
+                        $scope: additScope,
                         additionalStateParams: {
                             resourceType: 'Lessons'
                         }
                     } );
 
-                    lessonAdditionalDataScope.data = mockedLessonData;
+                    additScope.data = mockedLessonData;
 
-                    lessonAdditionalDataScope.loadAdditionalObjectData();
+                    additScope.loadAdditionalObjectData();
                 } );
             } );
 
@@ -262,17 +262,27 @@ describe( 'EditCtrl controller', function () {
                 newLessonDate.setMonth( 8-1 );
                 newLessonDate.setFullYear( 2016 );
 
-                lessonAdditionalDataScope.lessonAdditionalData.date = newLessonDate;
+                additScope.lessonAdditionalData.date = newLessonDate;
 
-                lessonAdditionalDataScope.applyAdditionalObjectData();
+                additScope.applyAdditionalObjectData();
 
-                expect( lessonAdditionalDataScope.data.time.start.getDate() ).toEqual( 2 );
-                expect( lessonAdditionalDataScope.data.time.start.getMonth() ).toEqual( 8-1 );
-                expect( lessonAdditionalDataScope.data.time.start.getFullYear() ).toEqual( 2016 );
+                expect( additScope.data.time.start.getDate() ).toEqual( 2 );
+                expect( additScope.data.time.start.getMonth() ).toEqual( 8-1 );
+                expect( additScope.data.time.start.getFullYear() ).toEqual( 2016 );
 
-                expect( lessonAdditionalDataScope.data.time.end.getDate() ).toEqual( 2 );
-                expect( lessonAdditionalDataScope.data.time.end.getMonth() ).toEqual( 8-1 );
-                expect( lessonAdditionalDataScope.data.time.end.getFullYear() ).toEqual( 2016 );
+                expect( additScope.data.time.end.getDate() ).toEqual( 2 );
+                expect( additScope.data.time.end.getMonth() ).toEqual( 8-1 );
+                expect( additScope.data.time.end.getFullYear() ).toEqual( 2016 );
+
+            } );
+
+            it( 'should write .startTimeInSeconds to time.start', function () {
+
+                additScope.lessonAdditionalData.startTimeInSeconds = 5400;
+                additScope.applyAdditionalObjectData();
+
+                expect( additScope.data.time.start.getHours() ).toEqual( 1 );
+                expect( additScope.data.time.start.getMinutes() ).toEqual( 30 );
 
             } );
 

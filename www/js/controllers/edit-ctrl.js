@@ -87,6 +87,14 @@ angular.module( 'starter.controllers.edit', [] )
             $scope.data.time.start = date;
             $scope.data.time.end = date;
 
+            // startTime
+
+            var startHour = (new Date( $scope.lessonAdditionalData.startTimeInSeconds * 1000 )).getUTCHours(),
+                startMinute = ( $scope.lessonAdditionalData.startTimeInSeconds - (startHour*3600) ) / 60;
+
+            $scope.data.time.start.setHours( startHour );
+            $scope.data.time.start.setMinutes( startMinute );
+
         };
 
         $scope.getTimepickerTime = function ( date ) {
