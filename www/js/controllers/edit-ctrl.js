@@ -50,11 +50,18 @@ angular.module( 'starter.controllers.edit', [] )
                 $scope.lessonAdditionalData = {};
 
                 // date
-                var year = data.time.start.getFullYear();
-                var month = data.time.start.getMonth()+1;
-                var day = data.time.start.getDate();
+                var year = data.time.start.getFullYear(),
+                    month = data.time.start.getMonth() + 1,
+                    day = data.time.start.getDate();
 
                 $scope.lessonAdditionalData.date = new Date( year + '-' + month + '-' + day );
+
+                // startTimeInSeconds
+                var startSeconds = data.time.start.getSeconds(),
+                    startMinutesInSeconds = data.time.start.getMinutes() * 60,
+                    startHoursInSeconds = data.time.start.getHours() * 3600;
+
+                $scope.lessonAdditionalData.startTimeInSeconds = startSeconds + startMinutesInSeconds + startHoursInSeconds;
 
             }
 

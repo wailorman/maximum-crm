@@ -1,6 +1,6 @@
 fdescribe( 'EditCtrl controller', function () {
 
-    var EditCtrlScope, EditCtrl, resourceType;
+    var EditCtrlScope, EditCtrl, resourceType, mockedLessonData;
 
     resourceType = 'Lesson';
 
@@ -102,7 +102,7 @@ fdescribe( 'EditCtrl controller', function () {
             inject( function ( $rootScope, $controller, $q ) {
                 lessonAdditionalDataScope = $rootScope.$new();
 
-                var mockedLessonData = {
+                mockedLessonData = {
                     time: {
                         start: new Date( "2015-05-08T11:00:00.000Z" ),
                         end: new Date( "2015-05-08T11:30:00.000Z" )
@@ -162,6 +162,18 @@ fdescribe( 'EditCtrl controller', function () {
             expect( day ).toEqual( 8 );
             expect( month ).toEqual( 5 );
             expect( year ).toEqual( 2015 );
+
+        } );
+
+        it( '.startTimeInSeconds', function () {
+
+            /** @namespace lessonAdditionalDataScope.lessonAdditionalData.startTimeInSeconds */
+
+            var expectedTime = mockedLessonData.time.start.getSeconds() +
+                mockedLessonData.time.start.getMinutes() * 60 +
+                mockedLessonData.time.start.getHours() * 3600;
+
+            expect( lessonAdditionalDataScope.lessonAdditionalData.startTimeInSeconds ).toEqual( expectedTime );
 
         } );
 
