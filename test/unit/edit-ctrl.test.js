@@ -197,6 +197,12 @@ describe( 'EditCtrl controller', function () {
 
             } );
 
+            fit( '.getStringStartTime', function () {
+
+                expect( lessonAdditionalDataScope.lessonAdditionalData.getStringStartTime() ).toEqual( '11:00' );
+
+            } );
+
             it( '.durationInMinutes', function () {
 
                 /** @namespace lessonAdditionalDataScope.lessonAdditionalData.durationInMinutes */

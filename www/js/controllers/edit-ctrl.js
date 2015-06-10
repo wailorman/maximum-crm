@@ -69,6 +69,11 @@ angular.module( 'starter.controllers.edit', [] )
 
                 $scope.lessonAdditionalData.durationInMinutes = ( endMilliseconds - startMilliseconds ) / 1000 / 60;
 
+                $scope.lessonAdditionalData.getStringStartTime = function () {
+                    var date = new Date( $scope.lessonAdditionalData.startTimeInSeconds * 1000 );
+                    return $filter( 'date' )( date, 'H:mm', 'UTC' );
+                }
+
             }
 
         };
