@@ -197,7 +197,7 @@ describe( 'EditCtrl controller', function () {
 
             } );
 
-            fit( '.getStringStartTime', function () {
+            it( '.getStringStartTime', function () {
 
                 expect( lessonAdditionalDataScope.lessonAdditionalData.getStringStartTime() ).toEqual( '11:00' );
 

@@ -9,9 +9,9 @@
         <ion-list>
             <ion-item class="item-input">
                 <span class="input-label">Дата</span>
-                <ionic-datepicker idate="lessonAdditionalData.startDate">
+                <ionic-datepicker idate="lessonAdditionalData.date">
                     <button class="button button-block button-outline button-balanced">{{ data.time.start ?
-                        $filter('date')( data.time.start, 'dd.MM.yyyy' ) : 'Дата проведения' }}
+                        $filter('date')( lessonAdditionalData.date, 'dd.MM.yyyy' ) : 'Дата проведения' }}
                     </button>
                 </ionic-datepicker>
             </ion-item>
