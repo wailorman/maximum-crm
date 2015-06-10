@@ -15,12 +15,24 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+        '../../www/lib/angular/angular.js',
         '../../www/lib/ionic/js/ionic.bundle.js',
+        '../../www/lib/ionic/js/ionic-angular.js',
+        //'../../www/lib/ng-cordova/dist/ng-cordova.js',
+        //'../../www/lib/ngCordova/dist/ng-cordova.js',
+        '../../www/lib/angular-mocks/angular-mocks.js',
         '../../www/lib/angular-resource/angular-resource.js',
         '../../www/lib/sugar/release/sugar.min.js',
         '../../www/lib/async/lib/async.js',
-        '../../www/lib/angular/angular.js',
-        '../../www/lib/angular-mocks/angular-mocks.js',
+
+        '../../www/lib/ionic-timepicker/dist/ionic-timepicker.js',
+        '../../www/lib/ionic-timepicker/dist/templates.js',
+
+        '../../www/lib/ionic-datepicker/dist/ionic-datepicker.js',
+        '../../www/lib/ionic-datepicker/dist/templates.js',
+
+        '../../www/lib/angular-bootstrap/ui-bootstrap.min.js',
+        '../../www/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
 
         '../../www/js/**/*.js',
         './**/*.test.js'
