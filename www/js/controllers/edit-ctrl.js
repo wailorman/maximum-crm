@@ -39,6 +39,18 @@ angular.module( 'starter.controllers.edit', [] )
 
         ///////////////
 
+        $scope.getTimepickerTime = function ( date ) {
+
+            var numberOfSeconds;
+
+            numberOfSeconds = date.getSeconds(); // seconds
+            numberOfSeconds = numberOfSeconds + date.getMinutes() * 60; // minutes
+            numberOfSeconds = numberOfSeconds + date.getHours() * 3600; // hours
+
+            return numberOfSeconds;
+
+        };
+
         ///////////////
 
         $scope.openModal = function () {
