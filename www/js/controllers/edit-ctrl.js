@@ -63,6 +63,12 @@ angular.module( 'starter.controllers.edit', [] )
 
                 $scope.lessonAdditionalData.startTimeInSeconds = startSeconds + startMinutesInSeconds + startHoursInSeconds;
 
+                // durationInMinutes
+                var startMilliseconds = data.time.start.getTime(),
+                    endMilliseconds = data.time.end.getTime();
+
+                $scope.lessonAdditionalData.durationInMinutes = ( endMilliseconds - startMilliseconds ) / 1000 / 60;
+
             }
 
         };
