@@ -78,6 +78,17 @@ angular.module( 'starter.controllers.edit', [] )
 
         };
 
+        $scope.applyAdditionalObjectData = function () {
+
+            // date
+
+            var date = $scope.lessonAdditionalData.date;
+
+            $scope.data.time.start = date;
+            $scope.data.time.end = date;
+
+        };
+
         $scope.getTimepickerTime = function ( date ) {
 
             var numberOfSeconds;

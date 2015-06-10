@@ -98,7 +98,7 @@ describe( 'EditCtrl controller', function () {
 
         var lessonAdditionalDataScope;
 
-        describe( 'display', function () {
+        describe( 'display ( .loadAdditionalObjectData() )', function () {
 
             beforeEach( function () {
                 inject( function ( $rootScope, $controller, $q ) {
@@ -107,9 +107,9 @@ describe( 'EditCtrl controller', function () {
                     var startTime = new Date(),
                         endTime = new Date();
 
-                    startTime.setDate(8);
-                    startTime.setMonth(5-1);
-                    startTime.setFullYear(2015);
+                    startTime.setDate( 8 );
+                    startTime.setMonth( 5 - 1 );
+                    startTime.setFullYear( 2015 );
 
                     startTime.setHours( 11 );
                     startTime.setMinutes( 0 );
@@ -117,9 +117,9 @@ describe( 'EditCtrl controller', function () {
                     startTime.setMilliseconds( 0 );
 
 
-                    endTime.setDate(8);
-                    endTime.setMonth(5-1);
-                    endTime.setFullYear(2015);
+                    endTime.setDate( 8 );
+                    endTime.setMonth( 5 - 1 );
+                    endTime.setFullYear( 2015 );
 
                     endTime.setHours( 11 );
                     endTime.setMinutes( 30 );
@@ -208,6 +208,71 @@ describe( 'EditCtrl controller', function () {
                 /** @namespace lessonAdditionalDataScope.lessonAdditionalData.durationInMinutes */
 
                 expect( lessonAdditionalDataScope.lessonAdditionalData.durationInMinutes ).toEqual( 30 );
+
+            } );
+
+        } );
+
+        describe( 'save ( .applyAdditionalObjectData() )', function () {
+
+            beforeEach( function () {
+                inject( function ( $rootScope, $controller, $q ) {
+                    lessonAdditionalDataScope = $rootScope.$new();
+
+                    var startTime = new Date(),
+                        endTime = new Date();
+
+                    mockedLessonData = {
+                        time: {
+                            start: startTime,
+                            end: endTime
+                        }
+                    };
+
+                    var ApiMock = {
+                        'Lessons': {
+                            get: function ( params ) {
+                                var deferred = $q.defer();
+
+                                deferred.resolve( mockedLessonData );
+
+                                return { $promise: deferred.promise };
+                            }
+                        }
+                    };
+
+                    $controller( 'EditCtrl', {
+                        $scope: lessonAdditionalDataScope,
+                        additionalStateParams: {
+                            resourceType: 'Lessons'
+                        }
+                    } );
+
+                    lessonAdditionalDataScope.data = mockedLessonData;
+
+                    lessonAdditionalDataScope.loadAdditionalObjectData();
+                } );
+            } );
+
+            it( 'should write .date to time.start and time.end equally', function () {
+
+                var newLessonDate = new Date();
+
+                newLessonDate.setDate( 2 );
+                newLessonDate.setMonth( 8-1 );
+                newLessonDate.setFullYear( 2016 );
+
+                lessonAdditionalDataScope.lessonAdditionalData.date = newLessonDate;
+
+                lessonAdditionalDataScope.applyAdditionalObjectData();
+
+                expect( lessonAdditionalDataScope.data.time.start.getDate() ).toEqual( 2 );
+                expect( lessonAdditionalDataScope.data.time.start.getMonth() ).toEqual( 8-1 );
+                expect( lessonAdditionalDataScope.data.time.start.getFullYear() ).toEqual( 2016 );
+
+                expect( lessonAdditionalDataScope.data.time.end.getDate() ).toEqual( 2 );
+                expect( lessonAdditionalDataScope.data.time.end.getMonth() ).toEqual( 8-1 );
+                expect( lessonAdditionalDataScope.data.time.end.getFullYear() ).toEqual( 2016 );
 
             } );
 
