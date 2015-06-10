@@ -1,6 +1,6 @@
 angular.module( 'starter.controllers.edit', [] )
     .controller( 'EditCtrl', function ( $rootScope, $scope, $state, $ionicPopup, ResourceCache,
-        $ionicHistory, SearchModal, $log, $resource, $filter,
+        $ionicHistory, SearchModal, $log, $resource, $filter, $q,
         $stateParams, additionalStateParams, Api, Spinner ) {
 
         /** @namespace $scope.data._id */
@@ -13,6 +13,7 @@ angular.module( 'starter.controllers.edit', [] )
         $scope.SearchModal = SearchModal;
         $scope.$state = $state;
         $scope.$filter = $filter;
+
         $scope.load = function () {
 
             var resourceType = additionalStateParams.resourceType;
@@ -25,12 +26,12 @@ angular.module( 'starter.controllers.edit', [] )
                     $scope.originalResource = {};
                     angular.copy( data, $scope.originalResource ); // @todo rename to originalData
                     $scope.data = data;
+
+                    $scope.loadAdditionalObjectData();
                 } )
                 .finally( function () {
                     Spinner.hide();
                 } );
-
-
         };
 
         SearchModal.onChoosed( function () {
@@ -38,6 +39,26 @@ angular.module( 'starter.controllers.edit', [] )
         } );
 
         ///////////////
+
+        $scope.loadAdditionalObjectData = function () {
+
+            var resourceType = additionalStateParams.resourceType,
+                data = $scope.data;
+
+            if ( resourceType === 'Lessons' ){
+
+                $scope.lessonAdditionalData = {};
+
+                // date
+                var year = data.time.start.getFullYear();
+                var month = data.time.start.getMonth()+1;
+                var day = data.time.start.getDate();
+
+                $scope.lessonAdditionalData.date = new Date( year + '-' + month + '-' + day );
+
+            }
+
+        };
 
         $scope.getTimepickerTime = function ( date ) {
 

@@ -1,6 +1,8 @@
 fdescribe( 'EditCtrl controller', function () {
 
-    var EditCtrlScope, EditCtrl;
+    var EditCtrlScope, EditCtrl, resourceType;
+
+    resourceType = 'Lesson';
 
     beforeEach( module( 'starter' ) );
 
@@ -31,6 +33,8 @@ fdescribe( 'EditCtrl controller', function () {
             theDate.setSeconds( 0 );
             theDate.setMilliseconds( 0 );
 
+            resourceType = 'Lesson';
+
         } );
 
         it( 'should return 0 if time 00:00', function () {
@@ -49,7 +53,7 @@ fdescribe( 'EditCtrl controller', function () {
 
             expect( EditCtrlScope.getTimepickerTime( theDate ) ).toEqual( 3600 );
 
-        }  );
+        } );
 
         it( 'should return 5400 if time 01:30', function () {
 
@@ -58,7 +62,7 @@ fdescribe( 'EditCtrl controller', function () {
 
             expect( EditCtrlScope.getTimepickerTime( theDate ) ).toEqual( 5400 );
 
-        }  );
+        } );
 
         it( 'should return 7200 if time 02:00', function () {
 
@@ -67,7 +71,7 @@ fdescribe( 'EditCtrl controller', function () {
 
             expect( EditCtrlScope.getTimepickerTime( theDate ) ).toEqual( 7200 );
 
-        }  );
+        } );
 
         it( 'should return 9000 if time 02:30', function () {
 
@@ -76,7 +80,7 @@ fdescribe( 'EditCtrl controller', function () {
 
             expect( EditCtrlScope.getTimepickerTime( theDate ) ).toEqual( 9000 );
 
-        }  );
+        } );
 
         it( 'should do not forget about seconds. 00:00:01 should return 1', function () {
 
@@ -86,7 +90,80 @@ fdescribe( 'EditCtrl controller', function () {
 
             expect( EditCtrlScope.getTimepickerTime( theDate ) ).toEqual( 1 );
 
-        }  );
+        } );
+
+    } );
+
+    fdescribe( 'lessonAdditionalData', function () {
+
+        var lessonAdditionalDataScope;
+
+        beforeEach( function () {
+            inject( function ( $rootScope, $controller, $q ) {
+                lessonAdditionalDataScope = $rootScope.$new();
+
+                var mockedLessonData = {
+                    time: {
+                        start: new Date( "2015-05-08T11:00:00.000Z" ),
+                        end: new Date( "2015-05-08T11:30:00.000Z" )
+                    }
+                };
+
+                var ApiMock = {
+                    'Lessons': {
+                        get: function ( params ) {
+                            var deferred = $q.defer();
+
+                            deferred.resolve( mockedLessonData );
+
+                            return { $promise: deferred.promise };
+                        }
+                    }
+                };
+
+                $controller( 'EditCtrl', {
+                    $scope: lessonAdditionalDataScope,
+                    additionalStateParams: {
+                        resourceType: 'Lessons'
+                    },
+                    Api: ApiMock
+                } );
+
+                lessonAdditionalDataScope.data = mockedLessonData;
+
+                lessonAdditionalDataScope.loadAdditionalObjectData();
+            } );
+        } );
+
+        it( '.date should return date without any hours/minutes/seconds/milliseconds', function () {
+
+            /** @namespace lessonAdditionalDataScope.lessonAdditionalData.date */
+
+            // getting from time.start
+
+            var milliseconds = lessonAdditionalDataScope.lessonAdditionalData.date.getMilliseconds();
+            var seconds = lessonAdditionalDataScope.lessonAdditionalData.date.getSeconds();
+            var minutes = lessonAdditionalDataScope.lessonAdditionalData.date.getMinutes();
+            var hours = lessonAdditionalDataScope.lessonAdditionalData.date.getHours();
+
+            expect( milliseconds ).toEqual( 0 );
+            expect( seconds ).toEqual( 0 );
+            expect( minutes ).toEqual( 0 );
+            expect( hours ).toEqual( 0 );
+
+        } );
+
+        it( '.date should return correct date of time.start', function () {
+
+            var day = lessonAdditionalDataScope.lessonAdditionalData.date.getDate();
+            var month = lessonAdditionalDataScope.lessonAdditionalData.date.getMonth() + 1;
+            var year = lessonAdditionalDataScope.lessonAdditionalData.date.getFullYear();
+
+            expect( day ).toEqual( 8 );
+            expect( month ).toEqual( 5 );
+            expect( year ).toEqual( 2015 );
+
+        } );
 
     } );
 
