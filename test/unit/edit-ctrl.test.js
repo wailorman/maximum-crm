@@ -1,4 +1,4 @@
-fdescribe( 'EditCtrl controller', function () {
+describe( 'EditCtrl controller', function () {
 
     var EditCtrlScope, EditCtrl, resourceType, mockedLessonData;
 
@@ -94,7 +94,7 @@ fdescribe( 'EditCtrl controller', function () {
 
     } );
 
-    fdescribe( 'lessonAdditionalData', function () {
+    describe( 'lessonAdditionalData', function () {
 
         var lessonAdditionalDataScope;
 
