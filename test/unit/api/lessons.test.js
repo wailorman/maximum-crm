@@ -11,8 +11,8 @@ fdescribe( 'Api: Lessons', function () {
         },
         apiUri = 'http://api.max-crm.wailorman.ru:21080',
         mockedTime = {
-            start: (new Date()).setHours( 10 ),
-            end: (new Date()).setHours( 11 )
+            start: new Date((new Date()).setHours( 10 )),
+            end: new Date((new Date()).setHours( 11 ))
         };
 
     beforeEach( function () {
@@ -92,10 +92,7 @@ fdescribe( 'Api: Lessons', function () {
 
             defineRespond( 'GET', 200, '/lessons/lesson1', {
                 _id: 'lesson1',
-                time: {
-                    start: (new Date()).setHours( 10 ),
-                    end: (new Date()).setHours( 11 )
-                }
+                time: mockedTime
             } );
 
             Api.Lessons.get( { id: 'lesson1' } ).$promise
@@ -189,7 +186,7 @@ fdescribe( 'Api: Lessons', function () {
 
             } );
 
-            fdescribe( 'date', function () {
+            describe( 'date', function () {
 
                 it( 'should have the same day, month, year with time.start', function () {
 
@@ -207,6 +204,12 @@ fdescribe( 'Api: Lessons', function () {
                     expect( receivedObject.time.date.getMilliseconds() ).toEqual( 0 );
 
                 } );
+
+            } );
+
+            describe( 'epochStart', function () {
+
+
 
             } );
 

@@ -160,6 +160,8 @@ angular.module( 'starter.api', [
                         object.time.date.setSeconds( 0 );
                         object.time.date.setMilliseconds( 0 );
 
+                        // epochStart
+
                     }
 
                     // nested documents
