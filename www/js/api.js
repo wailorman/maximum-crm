@@ -154,13 +154,14 @@ angular.module( 'starter.api', [
                         object.time = {};
 
                         // date
-                        object.time.date = document.time.start;
+                        object.time.date = angular.copy( document.time.start );
                         object.time.date.setHours( 0 );
                         object.time.date.setMinutes( 0 );
                         object.time.date.setSeconds( 0 );
                         object.time.date.setMilliseconds( 0 );
 
                         // epochStart
+                        object.time.epochStart = (document.time.start.getHours() * 3600) + (document.time.start.getMinutes() * 60);
 
                     }
 

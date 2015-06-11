@@ -1,4 +1,4 @@
-fdescribe( 'Api: Lessons', function () {
+describe( 'Api: Lessons', function () {
 
     var $httpBackend, Api,
         callback = {
@@ -188,6 +188,13 @@ fdescribe( 'Api: Lessons', function () {
 
             describe( 'date', function () {
 
+                it( 'should be an instance of Date', function () {
+
+                    expect( receivedObject.time.date ).toBeDefined();
+                    expect( receivedObject.time.date instanceof Date ).toBeTruthy();
+
+                } );
+
                 it( 'should have the same day, month, year with time.start', function () {
 
                     expect( receivedObject.time.date.getDate() ).toEqual( 25 );
@@ -209,7 +216,20 @@ fdescribe( 'Api: Lessons', function () {
 
             describe( 'epochStart', function () {
 
+                /** @namespace receivedObject.time.epochStart */
 
+                it( 'should be a number', function () {
+
+                    expect( receivedObject.time.epochStart ).toBeDefined();
+                    expect( typeof receivedObject.time.epochStart ).toEqual( 'number' );
+
+                } );
+
+                it( 'should equal number of passed seconds from the start of the day', function () {
+
+                    expect( receivedObject.time.epochStart ).toEqual( 50400 );
+
+                } );
 
             } );
 
