@@ -144,6 +144,10 @@ angular.module( 'starter.api', [
                 .catch( deferred.reject )
                 .then( function ( document ) {
 
+                    if ( !document._id ) return deferred.reject();
+
+                    object._id = document._id;
+
                     async.parallel(
                         [
                             // coaches

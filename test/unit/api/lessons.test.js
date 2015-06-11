@@ -84,13 +84,14 @@ describe( 'Api: Lessons', function () {
 
     };
 
-    describe( 'GET', function () {
+    describe( 'get object', function () {
 
         it( 'should request a lesson from API', function () {
 
             expectRequest( 'GET', '/lessons/lesson1' );
 
             defineRespond( 'GET', 200, '/lessons/lesson1', {
+                _id: 'lesson1',
                 time: {
                     start: (new Date()).setHours( 10 ),
                     end: (new Date()).setHours( 11 )
@@ -98,8 +99,7 @@ describe( 'Api: Lessons', function () {
             } );
 
             Api.Lessons.get( { id: 'lesson1' } ).$promise
-                .catch( callback.error )
-                .then( callback.success );
+                .then( callback.success, callback.error );
 
             $httpBackend.flush();
 
@@ -108,7 +108,39 @@ describe( 'Api: Lessons', function () {
 
         } );
 
-        describe( 'coaches', function () {
+        it( 'should work without any properties except _id', function () {
+
+            defineRespond( 'GET', 200, '/lessons/lesson1', {
+                _id: 'lesson1'
+            } );
+
+            Api.Lessons.get( { id: 'lesson1' } ).$promise
+                .then( callback.success, callback.error );
+
+            $httpBackend.flush();
+
+            expect( callback.error ).not.toHaveBeenCalled();
+            expect( callback.success ).toHaveBeenCalled();
+
+            expect( callback.success.calls.mostRecent().args[ 0 ]._id ).toEqual( 'lesson1' );
+
+        } );
+
+        it( 'should return an error if there is no _id property or document is empty', function () {
+
+            defineRespond( 'GET', 200, '/lessons/lesson1', {} );
+
+            Api.Lessons.get( { id: 'lesson1' } ).$promise
+                .then( callback.success, callback.error );
+
+            $httpBackend.flush();
+
+            expect( callback.success ).not.toHaveBeenCalled();
+            expect( callback.error ).toHaveBeenCalled();
+
+        } );
+
+        describe( 'coaches population', function () {
 
             it( 'should populate coaches', function () {
 
@@ -181,7 +213,7 @@ describe( 'Api: Lessons', function () {
 
         } );
 
-        describe( 'groups', function () {
+        describe( 'groups population', function () {
 
             it( 'should populate groups', function () {
 
@@ -254,7 +286,7 @@ describe( 'Api: Lessons', function () {
 
         } );
 
-        describe( 'halls', function () {
+        describe( 'halls population', function () {
 
             it( 'should populate halls', function () {
 
