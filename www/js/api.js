@@ -196,6 +196,32 @@ angular.module( 'starter.api', [
 
                                 }else return pcb();
 
+                            },
+
+                            // halls
+                            function ( pcb ) {
+
+                                if (document.halls) {
+
+                                    object.halls = [];
+                                    async.each( document.halls, function ( hall, ecb ) {
+
+                                        resources.Halls.get( { id: hall } ).$promise
+                                            .then( function ( hallDocument ) {
+
+                                                object.halls.push( hallDocument );
+                                                return ecb();
+
+                                            }, function () {
+                                                return ecb();
+                                            } );
+
+                                    }, function () {
+                                        pcb();
+                                    } );
+
+                                }else return pcb();
+
                             }
                         ],
                         function () {

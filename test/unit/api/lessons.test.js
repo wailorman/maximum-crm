@@ -55,6 +55,20 @@ describe( 'Api: Lessons', function () {
 
         defineRespond( 'GET', 404, '/groups/group3', {} );
 
+        // halls
+
+        defineRespond( 'GET', 200, '/halls/hall1', {
+            _id: 'hall1',
+            name: 'hall1'
+        } );
+
+        defineRespond( 'GET', 200, '/halls/hall2', {
+            _id: 'hall2',
+            name: 'hall2'
+        } );
+
+        defineRespond( 'GET', 404, '/halls/hall3', {} );
+
     } ) );
 
     var defineRespond = function ( method, status, path, data ) {
@@ -143,6 +157,9 @@ describe( 'Api: Lessons', function () {
 
             it( 'should ignore populating nonexistent coach', function () {
 
+                expectRequest( 'GET', '/coaches/coach1' );
+                expectRequest( 'GET', '/coaches/coach3' );
+
                 defineRespond( 'GET', 200, '/lessons/lesson2', {
                     _id: 'lesson2',
                     time: mockedTime,
@@ -213,6 +230,9 @@ describe( 'Api: Lessons', function () {
 
             it( 'should ignore populating nonexistent group', function () {
 
+                expectRequest( 'GET', '/groups/group1' );
+                expectRequest( 'GET', '/groups/group3' );
+
                 defineRespond( 'GET', 200, '/lessons/lesson2', {
                     _id: 'lesson2',
                     time: mockedTime,
@@ -229,6 +249,79 @@ describe( 'Api: Lessons', function () {
 
                 expect( callback.success.calls.mostRecent().args[ 0 ].groups.length ).toBe( 1 );
                 expect( callback.success.calls.mostRecent().args[ 0 ].groups[ 0 ]._id ).toBe( 'group1' );
+
+            } );
+
+        } );
+
+        describe( 'halls', function () {
+
+            it( 'should populate halls', function () {
+
+                expectRequest( 'GET', '/halls/hall1' );
+                expectRequest( 'GET', '/halls/hall2' );
+
+                defineRespond( 'GET', 200, '/lessons/lesson2', {
+                    _id: 'lesson2',
+                    time: mockedTime,
+                    halls: [ 'hall1', 'hall2' ]
+                } );
+
+                Api.Lessons.get( { id: 'lesson2' } ).$promise
+                    .then( callback.success, callback.error );
+
+                $httpBackend.flush();
+
+                expect( callback.success ).toHaveBeenCalled();
+                expect( callback.error ).not.toHaveBeenCalled();
+
+                expect( callback.success.calls.mostRecent().args[ 0 ].halls[ 0 ]._id ).toEqual( 'hall1' );
+                expect( callback.success.calls.mostRecent().args[ 0 ].halls[ 0 ].name ).toEqual( 'hall1' );
+                expect( callback.success.calls.mostRecent().args[ 0 ].halls[ 1 ]._id ).toEqual( 'hall2' );
+                expect( callback.success.calls.mostRecent().args[ 0 ].halls[ 1 ].name ).toEqual( 'hall2' );
+
+            } );
+
+            it( 'should ignore halls if there is no', function () {
+
+                defineRespond( 'GET', 200, '/lessons/lesson2', {
+                    _id: 'lesson2',
+                    time: mockedTime
+                } );
+
+                Api.Lessons.get( { id: 'lesson2' } ).$promise
+                    .then( callback.success, callback.error );
+
+                $httpBackend.flush();
+
+                expect( callback.success ).toHaveBeenCalled();
+                expect( callback.error ).not.toHaveBeenCalled();
+
+                expect( callback.success.calls.mostRecent().args[ 0 ].halls ).toBeUndefined();
+
+            } );
+
+            it( 'should ignore populating nonexistent hall', function () {
+
+                expectRequest( 'GET', '/halls/hall1' );
+                expectRequest( 'GET', '/halls/hall3' );
+
+                defineRespond( 'GET', 200, '/lessons/lesson2', {
+                    _id: 'lesson2',
+                    time: mockedTime,
+                    halls: [ 'hall1', 'hall3' ]
+                } );
+
+                Api.Lessons.get( { id: 'lesson2' } ).$promise
+                    .then( callback.success, callback.error );
+
+                $httpBackend.flush();
+
+                expect( callback.success ).toHaveBeenCalled();
+                expect( callback.error ).not.toHaveBeenCalled();
+
+                expect( callback.success.calls.mostRecent().args[ 0 ].halls.length ).toBe( 1 );
+                expect( callback.success.calls.mostRecent().args[ 0 ].halls[ 0 ]._id ).toBe( 'hall1' );
 
             } );
 
