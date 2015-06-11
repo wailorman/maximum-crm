@@ -153,6 +153,9 @@ angular.module( 'starter.api', [
 
                         object.time = {};
 
+                        object.time.start = document.time.start;
+                        object.time.end = document.time.end;
+
                         // date
                         object.time.date = angular.copy( document.time.start );
                         object.time.date.setHours( 0 );

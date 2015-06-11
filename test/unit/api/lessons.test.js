@@ -252,6 +252,24 @@ describe( 'Api: Lessons', function () {
 
             } );
 
+            describe( 'original time.start & time.end', function () {
+
+                it( 'should be an instance of Date', function () {
+
+                    expect( receivedObject.time.start instanceof Date ).toBeTruthy();
+                    expect( receivedObject.time.end instanceof Date ).toBeTruthy();
+
+                } );
+
+                it( 'should be original', function () {
+
+                    expect( receivedObject.time.start ).toEqual( startTime );
+                    expect( receivedObject.time.end ).toEqual( endTime );
+
+                } );
+
+            } );
+
         } );
 
         describe( 'coaches population', function () {
