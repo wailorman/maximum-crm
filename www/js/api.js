@@ -160,7 +160,33 @@ angular.module( 'starter.api', [
                                                 object.coaches.push( coachDocument );
                                                 return ecb();
 
-                                            }, function ( err ) {
+                                            }, function () {
+                                                return ecb();
+                                            } );
+
+                                    }, function () {
+                                        pcb();
+                                    } );
+
+                                }else return pcb();
+
+                            },
+
+                            // groups
+                            function ( pcb ) {
+
+                                if (document.groups) {
+
+                                    object.groups = [];
+                                    async.each( document.groups, function ( group, ecb ) {
+
+                                        resources.Groups.get( { id: group } ).$promise
+                                            .then( function ( groupDocument ) {
+
+                                                object.groups.push( groupDocument );
+                                                return ecb();
+
+                                            }, function () {
                                                 return ecb();
                                             } );
 
