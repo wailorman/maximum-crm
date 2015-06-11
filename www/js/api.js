@@ -1,4 +1,6 @@
-angular.module( 'starter.api', [] )
+angular.module( 'starter.api', [
+    'ngResource'
+] )
     .service( 'ResourceCache', function ( $cacheFactory ) {
 
         var rc = this,
@@ -135,44 +137,43 @@ angular.module( 'starter.api', [] )
         };
 
         resources.Lessons.get = function ( params ) {
-            var deferred = $q.defer();
+            var deferred = $q.defer(),
+                object = {};
 
             resources.Lessons._get( params ).$promise
                 .catch( deferred.reject )
-                .then( function ( data ) {
-
-                    data.time.start = new Date( data.time.start );
-                    data.time.end = new Date( data.time.end );
+                .then( function ( document ) {
 
                     async.parallel(
                         [
-                            // groups
-                            function ( pcb ) {
-
-                                if ( ! data.groups ) return pcb();
-                                cacheArray( 'groups', data.groups ).then( pcb );
-
-                            },
-
                             // coaches
                             function ( pcb ) {
 
-                                if ( ! data.coaches ) return pcb();
-                                cacheArray( 'coaches', data.coaches ).then( pcb );
+                                if (document.coaches) {
 
-                            },
+                                    object.coaches = [];
+                                    async.each( document.coaches, function ( coach, ecb ) {
 
-                            // halls
-                            function ( pcb ) {
+                                        resources.Coaches.get( { id: coach } ).$promise
+                                            .then( function ( coachDocument ) {
 
-                                if ( ! data.halls ) return pcb();
-                                cacheArray( 'halls', data.halls ).then( pcb );
+                                                object.coaches.push( coachDocument );
+                                                return ecb();
+
+                                            }, function ( err ) {
+                                                return ecb();
+                                            } );
+
+                                    }, function () {
+                                        pcb();
+                                    } );
+
+                                }else return pcb();
 
                             }
-
                         ],
                         function () {
-                            deferred.resolve( data );
+                            deferred.resolve( object );
                         }
                     );
 
@@ -200,7 +201,7 @@ angular.module( 'starter.api', [] )
                                     // groups
                                     function ( pcb ) {
 
-                                        if ( ! data.groups ) return pcb();
+                                        if (!data.groups) return pcb();
                                         cacheArray( 'groups', data.groups ).then( pcb );
 
                                     }
