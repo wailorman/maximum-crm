@@ -233,6 +233,25 @@ describe( 'Api: Lessons', function () {
 
             } );
 
+            describe( 'duration', function () {
+
+                /** @namespace receivedObject.time.duration */
+
+                it( 'should be a number', function () {
+
+                    expect( receivedObject.time.duration ).toBeDefined();
+                    expect( typeof receivedObject.time.duration ).toEqual( 'number' );
+
+                } );
+
+                it( 'should equal number of minutes lesson long', function () {
+
+                    expect( receivedObject.time.duration ).toEqual( 35 );
+
+                } );
+
+            } );
+
         } );
 
         describe( 'coaches population', function () {

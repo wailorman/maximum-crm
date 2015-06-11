@@ -163,6 +163,12 @@ angular.module( 'starter.api', [
                         // epochStart
                         object.time.epochStart = (document.time.start.getHours() * 3600) + (document.time.start.getMinutes() * 60);
 
+                        // duration
+                        var unixTimeStart = document.time.start.getTime(),
+                            unixTimeEnd = document.time.end.getTime();
+
+                        object.time.duration = ( unixTimeEnd - unixTimeStart ) / 60 / 1000;
+
                     }
 
                     // nested documents
