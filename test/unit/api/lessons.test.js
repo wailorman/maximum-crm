@@ -1,4 +1,4 @@
-describe( 'Api: Lessons', function () {
+fdescribe( 'Api: Lessons', function () {
 
     var $httpBackend, Api,
         callback = {
@@ -137,6 +137,78 @@ describe( 'Api: Lessons', function () {
 
             expect( callback.success ).not.toHaveBeenCalled();
             expect( callback.error ).toHaveBeenCalled();
+
+        } );
+
+        describe( 'time', function () {
+
+            var startTime, endTime, receivedObject;
+
+            beforeEach( function () {
+
+                startTime = new Date();
+                endTime = new Date();
+
+                startTime.setDate( 25 );
+                startTime.setMonth( 5-1 );
+                startTime.setFullYear( 2015 );
+
+                endTime.setDate( 25 );
+                endTime.setMonth( 5-1 );
+                endTime.setFullYear( 2015 );
+
+                startTime.setHours( 14 );
+                startTime.setMinutes( 0 );
+                startTime.setSeconds( 0 );
+                startTime.setMilliseconds( 0 );
+
+                endTime.setHours( 14 );
+                endTime.setMinutes( 35 );
+                endTime.setSeconds( 0 );
+                endTime.setMilliseconds( 0 );
+
+                defineRespond( 'GET', 200, '/lessons/time-lesson', {
+                    _id: 'time-lesson',
+                    time: {
+                        start: startTime,
+                        end: endTime
+                    }
+                } );
+
+                ///////////
+
+                Api.Lessons.get( {id: 'time-lesson'} ).$promise
+                    .then( callback.success, callback.error );
+
+                $httpBackend.flush();
+
+                expect( callback.error ).not.toHaveBeenCalled();
+                expect( callback.success ).toHaveBeenCalled();
+
+                receivedObject = callback.success.calls.mostRecent().args[ 0 ];
+
+            } );
+
+            fdescribe( 'date', function () {
+
+                it( 'should have the same day, month, year with time.start', function () {
+
+                    expect( receivedObject.time.date.getDate() ).toEqual( 25 );
+                    expect( receivedObject.time.date.getMonth() ).toEqual( 5-1 );
+                    expect( receivedObject.time.date.getFullYear() ).toEqual( 2015 );
+
+                } );
+
+                it( 'should be with 0 hours, minutes, seconds and milliseconds', function () {
+
+                    expect( receivedObject.time.date.getHours() ).toEqual( 0 );
+                    expect( receivedObject.time.date.getMinutes() ).toEqual( 0 );
+                    expect( receivedObject.time.date.getSeconds() ).toEqual( 0 );
+                    expect( receivedObject.time.date.getMilliseconds() ).toEqual( 0 );
+
+                } );
+
+            } );
 
         } );
 

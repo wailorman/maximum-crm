@@ -141,12 +141,28 @@ angular.module( 'starter.api', [
                 object = {};
 
             resources.Lessons._get( params ).$promise
-                .catch( deferred.reject )
                 .then( function ( document ) {
 
                     if ( !document._id ) return deferred.reject();
 
                     object._id = document._id;
+
+                    // time
+
+                    if ( document.time && document.time.start && document.time.end ){
+
+                        object.time = {};
+
+                        // date
+                        object.time.date = document.time.start;
+                        object.time.date.setHours( 0 );
+                        object.time.date.setMinutes( 0 );
+                        object.time.date.setSeconds( 0 );
+                        object.time.date.setMilliseconds( 0 );
+
+                    }
+
+                    // nested documents
 
                     async.parallel(
                         [
@@ -233,7 +249,7 @@ angular.module( 'starter.api', [
                         }
                     );
 
-                } );
+                },deferred.reject );
 
             return { $promise: deferred.promise };
         };
