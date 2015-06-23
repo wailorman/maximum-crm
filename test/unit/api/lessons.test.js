@@ -505,8 +505,8 @@ describe( 'Api: Lessons', function () {
                 object = {
                     time: {
                         date: new Date( '2015-04-08' ),
-                        epochStart: 14 * 3600,
-                        duration: 30
+                        epochStart: 14 * 3600,  // 14:00
+                        duration: 30            // 30 minutes
                     }
                 };
 
@@ -523,6 +523,13 @@ describe( 'Api: Lessons', function () {
                 expect( document.time.end.getDate() ).toEqual( 8 );
                 expect( document.time.end.getMonth() ).toEqual( 4-1 );
                 expect( document.time.end.getFullYear() ).toEqual( 2015 );
+
+            } );
+
+            it( 'should set correct start time', function () {
+
+                expect( document.time.start.getHours() ).toEqual( 14 );
+                expect( document.time.start.getMinutes() ).toEqual( 0 );
 
             } );
 

@@ -303,7 +303,9 @@ angular.module( 'starter.api', [
 
         resources.Lessons._convert2document = function ( object ) {
 
-            var document = {};
+            var document = {},
+                startNumberOf = {}, // number of <hours|minutes> from start of a day
+                remainedSeconds;
 
             ////////   TIME   /////////
 
@@ -311,6 +313,16 @@ angular.module( 'starter.api', [
 
             document.time.start = object.time.date;
             document.time.end = object.time.date;
+
+            remainedSeconds = object.time.epochStart;
+
+            startNumberOf.hours = Math.floor( remainedSeconds / 3600 ); // how many hours can fit in this number of seconds?
+            remainedSeconds = object.time.epochStart - ( startNumberOf.hours * 3600 ); // leave only entire minutes
+
+            startNumberOf.minutes = Math.floor( remainedSeconds / 60 );
+
+            document.time.start.setHours( startNumberOf.hours );
+            document.time.start.setMinutes( startNumberOf.minutes );
 
             return document;
 
