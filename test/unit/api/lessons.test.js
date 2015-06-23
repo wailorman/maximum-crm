@@ -493,4 +493,42 @@ describe( 'Api: Lessons', function () {
 
     } );
 
+    fdescribe( 'convert to document', function () {
+
+        var document = {},
+            object = {};
+
+        describe( 'time', function () {
+
+            beforeEach( function () {
+
+                object = {
+                    time: {
+                        date: new Date( '2015-04-08' ),
+                        epochStart: 14 * 3600,
+                        duration: 30
+                    }
+                };
+
+                document = Api.Lessons._convert2document( object );
+
+            } );
+
+            it( 'should use correct date (dd-MM-yy)', function () {
+
+                expect( document.time.start.getDate() ).toEqual( 8 );
+                expect( document.time.start.getMonth() ).toEqual( 4-1 );
+                expect( document.time.start.getFullYear() ).toEqual( 2015 );
+
+                expect( document.time.end.getDate() ).toEqual( 8 );
+                expect( document.time.end.getMonth() ).toEqual( 4-1 );
+                expect( document.time.end.getFullYear() ).toEqual( 2015 );
+
+            } );
+
+        } );
+
+    } );
+
+
 } );

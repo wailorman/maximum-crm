@@ -17,6 +17,11 @@ angular.module( 'starter.api', [
     } )
     .factory( 'Api', function ( $resource, $q, $log, ResourceCache ) {
 
+        // If resource has private get method ( e.g. _get() ) this method will
+        // return plain document from API
+
+        // Public get() method will return beautiful object
+
         var apiUrl = 'http://api.max-crm.wailorman.ru:21080';
 
         var resources = {
@@ -147,37 +152,67 @@ angular.module( 'starter.api', [
 
                     object._id = document._id;
 
-                    // time
-
-                    if ( document.time && document.time.start && document.time.end ){
-
-                        object.time = {};
-
-                        object.time.start = document.time.start;
-                        object.time.end = document.time.end;
-
-                        // date
-                        object.time.date = angular.copy( document.time.start );
-                        object.time.date.setHours( 0 );
-                        object.time.date.setMinutes( 0 );
-                        object.time.date.setSeconds( 0 );
-                        object.time.date.setMilliseconds( 0 );
-
-                        // epochStart
-                        object.time.epochStart = (document.time.start.getHours() * 3600) + (document.time.start.getMinutes() * 60);
-
-                        // duration
-                        var unixTimeStart = document.time.start.getTime(),
-                            unixTimeEnd = document.time.end.getTime();
-
-                        object.time.duration = ( unixTimeEnd - unixTimeStart ) / 60 / 1000;
-
-                    }
-
                     // nested documents
+
+                    //
+                    // convert plain stringObjectID array to populated objects
+                    // example:
+                    //
+                    // ...
+                    // coaches: [ '689ads6b6c6a6fb9a7c6a9f6', '689ads6b6c6a6fb9a7c6a000' ],
+                    // ...
+                    //
+                    // to -->
+                    //
+                    // ...
+                    // coaches: [
+                    //     {
+                    //         _id: '689ads6b6c6a6fb9a7c6a9f6',
+                    //         name: 'Best coach ever'
+                    //     },
+                    //     ...
+                    // ],
+                    // ...
+                    //
+
+
 
                     async.parallel(
                         [
+                            // time
+                            function ( pcb ) {
+
+                                if (document.time && document.time.start && document.time.end) {
+
+                                    object.time = {};
+
+                                    object.time.start = document.time.start;
+                                    object.time.end = document.time.end;
+
+                                    // date
+                                    object.time.date = angular.copy( document.time.start ); // calculating from lesson start time
+                                    object.time.date.setHours( 0 );
+                                    object.time.date.setMinutes( 0 );
+                                    object.time.date.setSeconds( 0 );
+                                    object.time.date.setMilliseconds( 0 );
+
+                                    // epochStart
+                                    // Number of seconds from start of the day to start of the lesson
+                                    object.time.epochStart = (document.time.start.getHours() * 3600) + (document.time.start.getMinutes() * 60);
+
+                                    // duration
+                                    // Number of minutes from start of the lesson
+                                    var unixTimeStart = document.time.start.getTime(),
+                                        unixTimeEnd = document.time.end.getTime();
+
+                                    object.time.duration = ( unixTimeEnd - unixTimeStart ) / 60 / 1000;
+
+                                }
+
+                                pcb();
+
+                            },
+
                             // coaches
                             function ( pcb ) {
 
@@ -264,6 +299,21 @@ angular.module( 'starter.api', [
                 },deferred.reject );
 
             return { $promise: deferred.promise };
+        };
+
+        resources.Lessons._convert2document = function ( object ) {
+
+            var document = {};
+
+            ////////   TIME   /////////
+
+            document.time = {};
+
+            document.time.start = object.time.date;
+            document.time.end = object.time.date;
+
+            return document;
+
         };
 
         resources.Lessons.query = function ( params ) {
