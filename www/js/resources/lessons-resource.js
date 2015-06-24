@@ -111,7 +111,7 @@ angular.module( 'starter.api.lessons', [
          * reject -- calls only if all requests respond an error
          * resolve -- calls after all requests been responded. Args: resultArray (already populated)
          *
-         * @param {Resource} resource
+         * @param {Resource} resource Should have _get() func!
          * @param {array|Array} arrayOfIds
          */
         Lessons.populateArray = function ( resource, arrayOfIds ) {
