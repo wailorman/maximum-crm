@@ -514,7 +514,7 @@ describe( 'Api: Lessons', function () {
 
             } );
 
-            it( 'should use correct date (dd-MM-yy)', function () {
+            it( 'should get correct date (dd-MM-yy)', function () {
 
                 expect( document.time.start.getDate() ).toEqual( 8 );
                 expect( document.time.start.getMonth() ).toEqual( 4-1 );
@@ -526,10 +526,30 @@ describe( 'Api: Lessons', function () {
 
             } );
 
-            it( 'should set correct start time', function () {
+            it( 'should get 14:00 start time', function () {
 
                 expect( document.time.start.getHours() ).toEqual( 14 );
                 expect( document.time.start.getMinutes() ).toEqual( 0 );
+
+            } );
+
+            it( 'should get 14:30 end time if duration=30', function () {
+
+                expect( document.time.end.getHours() ).toEqual( 14 );
+                expect( document.time.end.getMinutes() ).toEqual( 30 );
+
+            } );
+
+            it( 'should get 15:30 end time if duration=90', function () {
+
+                expect( document.time.end.getHours() ).toEqual( 15 );
+                expect( document.time.end.getMinutes() ).toEqual( 30 );
+
+            } );
+
+            it( 'should move to the next day if duration=1500', function () {
+
+                
 
             } );
 

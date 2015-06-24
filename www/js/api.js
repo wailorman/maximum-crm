@@ -305,15 +305,20 @@ angular.module( 'starter.api', [
 
             var document = {},
                 startNumberOf = {}, // number of <hours|minutes> from start of a day
-                remainedSeconds;
+                remainedSeconds,
+                durationInUnixtime,
+                dateInUnixtime;
 
             ////////   TIME   /////////
 
             document.time = {};
 
+            // date
             document.time.start = object.time.date;
             document.time.end = object.time.date;
+            dateInUnixtime = object.time.date.getTime();
 
+            // start (manipulations with epochStart)
             remainedSeconds = object.time.epochStart;
 
             startNumberOf.hours = Math.floor( remainedSeconds / 3600 ); // how many hours can fit in this number of seconds?
@@ -323,6 +328,12 @@ angular.module( 'starter.api', [
 
             document.time.start.setHours( startNumberOf.hours );
             document.time.start.setMinutes( startNumberOf.minutes );
+
+            // end (manipulations with duration)
+            durationInUnixtime = object.time.duration * 60 * 1000;
+            document.time.end = new Date( dateInUnixtime + durationInUnixtime );
+
+
 
             return document;
 

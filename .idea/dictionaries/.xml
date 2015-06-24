@@ -5,6 +5,7 @@
       <w>datepicker</w>
       <w>revalidate</w>
       <w>timepicker</w>
+      <w>unixtime</w>
     </words>
   </dictionary>
 </component>
