@@ -353,7 +353,7 @@ fdescribe( 'Lessons resource', function () {
 
             coachesResource = $resource( apiUri + '/coaches/:id', null,
                 {
-                    'get': { method: 'GET' }
+                    '_get': { method: 'GET' }
                 }
             );
 

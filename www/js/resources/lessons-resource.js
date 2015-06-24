@@ -123,7 +123,7 @@ angular.module( 'starter.api.lessons', [
                 arrayOfIds,
                 function ( objectId, ecb ) {
 
-                    resource.get( { id: objectId } ).$promise
+                    resource._get( { id: objectId } ).$promise
                         .then(
                         function ( coach ) {
                             resultArray.push( coach );
