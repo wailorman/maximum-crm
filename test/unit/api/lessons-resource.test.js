@@ -58,6 +58,29 @@ fdescribe( 'Lessons resource', function () {
 
             } );
 
+            describe( 'epochStart', function () {
+
+                it( 'should return 50400 for 14:00', function () {
+
+                    expect( resultTime.epochStart ).toEqual( 50400 );
+
+                } );
+
+                it( 'should return 0 if lesson starts at 00:00', function () {
+
+                    simpleTimeObject = {
+                        start: new Date( 2015, 5 - 1, 8, 0, 0 ),
+                        end: new Date( 2015, 5 - 1, 8, 0, 30 )
+                    };
+
+                    resultTime = Lessons.getExtendedTimeBySimple( simpleTimeObject );
+
+                    expect( resultTime.epochStart ).toEqual( 0 );
+
+                } );
+
+            } );
+
         } );
 
     } );

@@ -36,6 +36,8 @@ angular.module( 'starter.api.lessons', [
                 timeObject.start.getDate()
             );
 
+            resultTime.epochStart = resultTime.start.getHours() * 3600 + resultTime.start.getMinutes();
+
             return resultTime;
         };
 
