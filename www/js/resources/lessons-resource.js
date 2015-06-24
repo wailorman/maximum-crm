@@ -149,6 +149,85 @@ angular.module( 'starter.api.lessons', [
             return deferred.promise;
         };
 
+        /**
+         *
+         * @param {object} params
+         * @param {string} params.id
+         */
+        Lessons.get = function ( params ) {
+            var deferred     = $q.defer(),
+                resultObject = {};
+
+            Lessons._get( params ).$promise
+                .then(
+                function ( document ) {
+
+                    // time
+                    resultObject.time = Lessons.getExtendedTimeBySimple( document.time );
+
+                    // populate arrays
+                    async.parallel(
+                        [
+                            // coaches
+                            function ( pcb ) {
+
+                                Lessons.populateArray( Coaches, document.coaches )
+
+                                    .then( function ( populatedCoaches ) {
+                                        resultObject.coaches = populatedCoaches;
+                                    }, function () { //error. nothing to catch!
+
+                                    }, deferred.notify )
+
+                                    .finally( pcb );
+
+                            },
+
+                            // halls
+                            function ( pcb ) {
+
+                                Lessons.populateArray( Halls, document.halls )
+
+                                    .then( function ( populatedHalls ) {
+                                        resultObject.halls = populatedHalls;
+                                        pcb();
+                                    }, function () { //error. nothing to catch!
+
+                                    }, deferred.notify )
+
+                                    .finally( pcb );
+
+                            },
+
+                            // groups
+                            function ( pcb ) {
+
+                                Lessons.populateArray( Groups, document.groups )
+
+                                    .then( function ( populatedGroups ) {
+                                        resultObject.groups = populatedGroups;
+                                        pcb();
+                                    }, function () { //error. nothing to catch!
+
+                                    }, deferred.notify )
+
+                                    .finally( pcb );
+
+                            }
+                        ],
+                        function () {
+                            deferred.resolve( resultObject );
+                        }
+                    );
+
+                },
+                deferred.reject,
+                deferred.notify
+            );
+
+            return { $promise: deferred.promise };
+        };
+
         return Lessons;
 
     } );

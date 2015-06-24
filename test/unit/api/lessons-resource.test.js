@@ -446,4 +446,195 @@ fdescribe( 'Lessons resource', function () {
 
     } );
 
+    describe( 'get', function () {
+
+        var resultObject = {};
+
+        beforeEach( function () {
+
+            ///////////   CORRECT    ///////////////////
+
+            // LESSONS
+
+            defineRespond( 'GET', 200, '/lessons/lesson-correct', {
+                time: {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                },
+                coaches: [ 'coach1', 'coach2' ],
+                halls: [ 'hall1', 'hall2' ],
+                groups: [ 'group1', 'group2' ]
+            } );
+
+            // COACHES
+
+            defineRespond( 'GET', 200, '/coaches/coach1', {
+                _id: 'coach1',
+                name: 'The Coach 1'
+            } );
+
+            defineRespond( 'GET', 200, '/coaches/coach2', {
+                _id: 'coach2',
+                name: 'The Coach 2'
+            } );
+
+            // HALLS
+
+            defineRespond( 'GET', 200, '/halls/hall1', {
+                _id: 'hall1',
+                name: 'The Hall 1'
+            } );
+
+            defineRespond( 'GET', 200, '/halls/hall2', {
+                _id: 'hall2',
+                name: 'The Hall 2'
+            } );
+
+            // GROUPS
+
+            defineRespond( 'GET', 200, '/groups/group1', {
+                _id: 'group1',
+                name: 'The Group 1'
+            } );
+
+            defineRespond( 'GET', 200, '/groups/group2', {
+                _id: 'group2',
+                name: 'The Group 2'
+            } );
+
+            Lessons.get( { id: 'lesson-correct' } ).$promise
+                .then( callback.success, callback.error, callback.notify );
+
+            $httpBackend.flush();
+
+            ///////////   INCORRECT   /////////////
+
+            defineRespond( 'GET', 200, '/lessons/lesson-incorrect', {
+                time: {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                },
+                coaches: [ 'coach1', 'coach3' ],
+                halls: [ 'hall1', 'hall3' ],
+                groups: [ 'group1', 'group3' ]
+            } );
+
+            defineRespond( 'GET', 404, '/lessons/lesson-nonexistent', {} );
+
+            defineRespond( 'GET', 404, '/coaches/coach3', {} );
+            defineRespond( 'GET', 404, '/halls/hall3', {} );
+            defineRespond( 'GET', 404, '/groups/group3', {} );
+
+        } );
+
+        it( 'should call only success callback', function () {
+
+            expect( callback.success ).toHaveBeenCalled();
+            expect( callback.error ).not.toHaveBeenCalled();
+            expect( callback.notify ).not.toHaveBeenCalled();
+
+        } );
+
+        it( 'should pass result data with success callback', function () {
+
+            expect( callback.success.calls.mostRecent().args[ 0 ].time ).toBeDefined();
+            expect( callback.success.calls.mostRecent().args[ 0 ].coaches ).toBeDefined();
+            expect( callback.success.calls.mostRecent().args[ 0 ].halls ).toBeDefined();
+            expect( callback.success.calls.mostRecent().args[ 0 ].groups ).toBeDefined();
+
+        } );
+
+        describe( 'should convert document to object', function () {
+
+            beforeEach( function () {
+
+                resultObject = callback.success.calls.mostRecent().args[ 0 ];
+
+            } );
+
+            it( 'time.date should = 08.05.2015', function () {
+
+                expect( resultObject.time.date.getFullYear() ).toEqual( 2015 );
+                expect( resultObject.time.date.getMonth() ).toEqual( 5 - 1 );
+                expect( resultObject.time.date.getDate() ).toEqual( 8 );
+
+            } );
+
+            it( 'time.epochStart should = 50400 (14:00)', function () {
+
+                expect( resultObject.time.epochStart ).toEqual( 50400 );
+
+            } );
+
+            it( 'time.duration should = 30', function () {
+
+                expect( resultObject.time.duration ).toEqual( 30 );
+
+            } );
+
+            it( 'coaches', function () {
+
+                expect( resultObject.coaches[ 0 ]._id ).toEqual( 'coach1' );
+                expect( resultObject.coaches[ 1 ]._id ).toEqual( 'coach2' );
+
+                expect( resultObject.coaches[ 0 ].name ).toEqual( 'The Coach 1' );
+                expect( resultObject.coaches[ 1 ].name ).toEqual( 'The Coach 2' );
+
+            } );
+
+            it( 'halls', function () {
+
+                expect( resultObject.halls[ 0 ]._id ).toEqual( 'hall1' );
+                expect( resultObject.halls[ 1 ]._id ).toEqual( 'hall2' );
+
+                expect( resultObject.halls[ 0 ].name ).toEqual( 'The Hall 1' );
+                expect( resultObject.halls[ 1 ].name ).toEqual( 'The Hall 2' );
+
+            } );
+
+            it( 'groups', function () {
+
+                expect( resultObject.groups[ 0 ]._id ).toEqual( 'group1' );
+                expect( resultObject.groups[ 1 ]._id ).toEqual( 'group2' );
+
+                expect( resultObject.groups[ 0 ].name ).toEqual( 'The Group 1' );
+                expect( resultObject.groups[ 1 ].name ).toEqual( 'The Group 2' );
+
+            } );
+
+        } );
+
+        it( 'should notify 3 times when some object cannot be populated', function () {
+
+            resetSpies();
+
+            Lessons.get( { id: 'lesson-incorrect' } ).$promise
+                .then( callback.success, callback.error, callback.notify );
+
+            $httpBackend.flush();
+
+            expect( callback.success ).toHaveBeenCalled();
+            expect( callback.notify ).toHaveBeenCalled();
+            expect( callback.error ).not.toHaveBeenCalled();
+
+            expect( callback.notify.calls.count() ).toEqual( 3 );
+
+        } );
+
+        it( 'should call callback.error when responding 404', function () {
+
+            resetSpies();
+
+            Lessons.get( { id: 'lesson-nonexistent' } ).$promise
+                .then( callback.success, callback.error, callback.notify );
+
+            $httpBackend.flush();
+
+            expect( callback.success ).not.toHaveBeenCalled();
+            expect( callback.error ).toHaveBeenCalled();
+
+        } );
+
+    } );
+
 } );
