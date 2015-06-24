@@ -40,7 +40,7 @@ fdescribe( 'Lessons resource', function () {
                 it( 'should return correct date', function () {
 
                     expect( resultTime.date.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.date.getMonth() ).toEqual( 5-1 );
+                    expect( resultTime.date.getMonth() ).toEqual( 5 - 1 );
                     expect( resultTime.date.getDate() ).toEqual( 8 );
 
                 } );
@@ -76,6 +76,49 @@ fdescribe( 'Lessons resource', function () {
                     resultTime = Lessons.getExtendedTimeBySimple( simpleTimeObject );
 
                     expect( resultTime.epochStart ).toEqual( 0 );
+
+                } );
+
+            } );
+
+            describe( 'duration', function () {
+
+                it( 'should return 0 if lesson ends when it starts', function () {
+
+                    simpleTimeObject = {
+                        start: new Date( 2015, 5 - 1, 8, 1, 0 ),
+                        end: new Date( 2015, 5 - 1, 8, 1, 0 )
+                    };
+
+                    resultTime = Lessons.getExtendedTimeBySimple( simpleTimeObject );
+
+                    expect( resultTime.duration ).toEqual( 0 );
+
+                } );
+
+                it( 'should return 30 if lesson starts at 14:00 and ends at 14:30', function () {
+
+                    simpleTimeObject = {
+                        start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                        end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                    };
+
+                    resultTime = Lessons.getExtendedTimeBySimple( simpleTimeObject );
+
+                    expect( resultTime.duration ).toEqual( 30 );
+
+                } );
+
+                it( 'should return 60 if lesson starts at 23:30 and ends at 0:30 on the next day', function () {
+
+                    simpleTimeObject = {
+                        start: new Date( 2015, 5 - 1, 8, 23, 30 ),
+                        end: new Date( 2015, 5 - 1, 9, 0, 30 )
+                    };
+
+                    resultTime = Lessons.getExtendedTimeBySimple( simpleTimeObject );
+
+                    expect( resultTime.duration ).toEqual( 60 );
 
                 } );
 

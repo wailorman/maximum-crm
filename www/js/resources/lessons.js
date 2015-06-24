@@ -25,7 +25,8 @@ angular.module( 'starter.api.lessons', [
          * @return {object} Extended time object
          */
         Lessons.getExtendedTimeBySimple = function ( timeObject ) {
-            var resultTime = {};
+            var resultTime = {},
+                durationInMs;
 
             resultTime.start = timeObject.start;
             resultTime.end = timeObject.end;
@@ -37,6 +38,15 @@ angular.module( 'starter.api.lessons', [
             );
 
             resultTime.epochStart = resultTime.start.getHours() * 3600 + resultTime.start.getMinutes();
+
+            durationInMs = resultTime.end.getTime() - resultTime.start.getTime();
+
+            resultTime.duration = Math.floor( durationInMs / 1000 / 60 );
+            //                                                 |     |
+            //                                                 |     |
+            //                                                 |     + to minutes
+            //                                                 |
+            //                                                 + to seconds
 
             return resultTime;
         };
