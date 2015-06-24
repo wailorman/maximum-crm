@@ -14,6 +14,16 @@ fdescribe( 'Lessons resource', function () {
             }
         };
 
+    beforeEach( function () {
+        spyOn( callback, 'error' );
+        spyOn( callback, 'success' );
+        spyOn( callback, 'notify' );
+    } );
+
+    beforeEach( function () {
+        resetSpies();
+    } );
+
     /**
      *
      * @param {string} method
@@ -37,6 +47,14 @@ fdescribe( 'Lessons resource', function () {
     var expectRequest = function ( method, path, data ) {
 
         $httpBackend.expect( method, apiUri + path, data );
+
+    };
+
+    var resetSpies = function () {
+
+        callback.success.calls.reset();
+        callback.error.calls.reset();
+        callback.notify.calls.reset();
 
     };
 
@@ -315,12 +333,6 @@ fdescribe( 'Lessons resource', function () {
 
         var arrayToPopulate,
             coachesResource;
-
-        beforeEach( function () {
-            spyOn( callback, 'error' );
-            spyOn( callback, 'success' );
-            spyOn( callback, 'notify' );
-        } );
 
         beforeEach( function () {
 
