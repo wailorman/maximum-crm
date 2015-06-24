@@ -22,11 +22,18 @@ angular.module( 'starter.api.lessons', [
          * @param {Date} timeObject.start
          * @param {Date} timeObject.end
          *
+         * @throws Error( 'Not enough params' )
+         *
          * @return {object} Extended time object
          */
         Lessons.getExtendedTimeBySimple = function ( timeObject ) {
             var resultTime = {},
                 durationInMs;
+
+            if ( !timeObject.start || !timeObject.end ) {
+                throw new Error( 'Not enough params' );
+                return undefined;
+            }
 
             resultTime.start = timeObject.start;
             resultTime.end = timeObject.end;
@@ -57,7 +64,9 @@ angular.module( 'starter.api.lessons', [
          * @param {object}  timeObject
          * @param {Date}    timeObject.date
          * @param {Number}  timeObject.epochStart
-         * @param {Number}  timeObject.duration
+         * @param {Number}  [timeObject.duration]
+         *
+         * @throws Error( 'Not enough params (date missing)' )
          *
          * @return {object} Extended time object
          */
@@ -65,11 +74,18 @@ angular.module( 'starter.api.lessons', [
 
             var resultTime = {};
 
+            if ( !timeObject.date ) {
+                throw new Error( 'Not enough params (date missing)' );
+                return undefined;
+            }
+
+            if ( !timeObject.epochStart ) timeObject.epochStart = 0;
+            if ( !timeObject.duration ) timeObject.duration = 0;
+
             resultTime.start = new Date( timeObject.date.getTime() + timeObject.epochStart * 1000 );
             resultTime.end = new Date( resultTime.start.getTime() + timeObject.duration * 60 * 1000 );
 
             return resultTime;
-
         };
 
         return Lessons;

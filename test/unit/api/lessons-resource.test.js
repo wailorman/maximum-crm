@@ -1,4 +1,4 @@
-describe( 'Lessons resource', function () {
+fdescribe( 'Lessons resource', function () {
 
     var Lessons;
 
@@ -173,6 +173,36 @@ describe( 'Lessons resource', function () {
 
                 } );
 
+                it( 'should works fine if epochStart=0', function () {
+
+                    extendedTimeObject = {
+                        date: new Date( 2015, 5-1, 8 ),
+                        epochStart: 0, // 00:00
+                        duration: 30 // minutes
+                    };
+
+                    resultTime = Lessons.getSimpleTimeByExtended( extendedTimeObject );
+
+                    expect( resultTime.start.getFullYear() ).toEqual( 2015 );
+                    expect( resultTime.start.getMonth() ).toEqual( 5-1 );
+                    expect( resultTime.start.getDate() ).toEqual( 8 );
+                    expect( resultTime.start.getHours() ).toEqual( 0 );
+                    expect( resultTime.start.getMinutes() ).toEqual( 0 );
+
+                } );
+
+                it( 'should return undefined and throw exception if we passed null', function () {
+
+                    simpleTimeObject = {};
+
+                    expect(
+                        function () {
+                            Lessons.getExtendedTimeBySimple( extendedTimeObject );
+                        }
+                    ).toThrow( new Error( "Not enough params" ) );
+
+                } );
+
             } );
 
             describe( 'time.end', function () {
@@ -204,6 +234,36 @@ describe( 'Lessons resource', function () {
                     expect( resultTime.end.getMinutes() ).toEqual( 0 );
 
                 } );
+
+                it( 'should works fine if duration=0', function () {
+
+                    extendedTimeObject = {
+                        date: new Date( 2015, 5-1, 8 ),
+                        epochStart: 50400, // 14:00
+                        duration: 0
+                    };
+
+                    resultTime = Lessons.getSimpleTimeByExtended( extendedTimeObject );
+
+                    expect( resultTime.end.getFullYear() ).toEqual( 2015 );
+                    expect( resultTime.end.getMonth() ).toEqual( 5-1 );
+                    expect( resultTime.end.getDate() ).toEqual( 8 );
+                    expect( resultTime.end.getHours() ).toEqual( 14 );
+                    expect( resultTime.end.getMinutes() ).toEqual( 0 );
+
+                } );
+
+            } );
+
+            it( 'should return undefined and throw exception if we passed null', function () {
+
+                extendedTimeObject = {};
+
+                expect(
+                    function () {
+                        Lessons.getSimpleTimeByExtended( extendedTimeObject );
+                    }
+                ).toThrow( new Error( "Not enough params (date missing)" ) );
 
             } );
 
