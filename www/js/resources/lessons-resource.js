@@ -1,5 +1,11 @@
 angular.module( 'starter.api.lessons', [
+
+    'starter.api.coaches',
+    'starter.api.halls',
+    'starter.api.groups',
+
     'ngResource'
+
 ] )
     .factory( 'Lessons', function ( $resource, $q ) {
 
