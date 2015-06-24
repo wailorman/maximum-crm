@@ -7,6 +7,7 @@ angular.module( 'starter.api.coaches', [
 
         return $resource( apiUrl + '/coaches/:id', null, {
             'get': { method: 'GET', timeout: 5000 },
+            '_get': { method: 'GET', timeout: 5000 },
             'query': { method: 'GET', isArray: true, timeout: 5000 },
             'update': { method: 'PUT', timeout: 5000 },
             'create': { method: 'POST', timeout: 5000 },
