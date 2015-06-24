@@ -15,7 +15,29 @@ angular.module( 'starter.api.lessons', [
 
         } );
 
+        /**
+         * Get extended time object by simple time object
+         *
+         * @param {object} timeObject
+         * @param {Date} timeObject.start
+         * @param {Date} timeObject.end
+         *
+         * @return {object} Extended time object
+         */
+        Lessons.getExtendedTimeBySimple = function ( timeObject ) {
+            var resultTime = {};
 
+            resultTime.start = timeObject.start;
+            resultTime.end = timeObject.end;
+
+            resultTime.date = new Date(
+                timeObject.start.getFullYear(),
+                timeObject.start.getMonth(),
+                timeObject.start.getDate()
+            );
+
+            return resultTime;
+        };
 
         return Lessons;
 

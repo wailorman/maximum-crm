@@ -493,7 +493,7 @@ describe( 'Api: Lessons', function () {
 
     } );
 
-    fdescribe( 'convert to document', function () {
+    describe( 'convert to document', function () {
 
         var document = {},
             object = {};
