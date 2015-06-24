@@ -361,6 +361,8 @@ fdescribe( 'Lessons resource', function () {
 
         it( 'should be called and requested two objects from Coaches resource', function () {
 
+            resetSpies();
+
             Lessons.populateArray( coachesResource, arrayToPopulate )
                 .then( callback.success, callback.error );
 
@@ -375,6 +377,8 @@ fdescribe( 'Lessons resource', function () {
         } );
 
         it( 'should call callback.success with array of populated coaches', function () {
+
+            resetSpies();
 
             Lessons.populateArray( coachesResource, arrayToPopulate )
                 .then( callback.success, callback.error );
@@ -395,6 +399,8 @@ fdescribe( 'Lessons resource', function () {
 
             arrayToPopulate = [ 'coach1', 'coach3' ];
 
+            resetSpies();
+
             Lessons.populateArray( coachesResource, arrayToPopulate )
                 .then( callback.success, callback.error, callback.notify );
 
@@ -414,6 +420,8 @@ fdescribe( 'Lessons resource', function () {
         it( 'should call callback.error and callback.notify if 2/2 objects responds with 404', function () {
 
             arrayToPopulate = [ 'coach3', 'coach4' ];
+
+            resetSpies();
 
             Lessons.populateArray( coachesResource, arrayToPopulate )
                 .then( callback.success, callback.error, callback.notify );
