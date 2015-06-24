@@ -7,7 +7,10 @@ angular.module( 'starter.api.lessons', [
     'ngResource'
 
 ] )
-    .factory( 'Lessons', function ( $resource, $q ) {
+    .factory( 'Lessons', function ( Coaches,
+                                    Halls,
+                                    Groups,
+                                    $resource, $q ) {
 
         var apiUrl = 'http://api.max-crm.wailorman.ru:21080';
 
