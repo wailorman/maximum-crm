@@ -51,6 +51,27 @@ angular.module( 'starter.api.lessons', [
             return resultTime;
         };
 
+        /**
+         * Get extended time object by simple time object
+         *
+         * @param {object}  timeObject
+         * @param {Date}    timeObject.date
+         * @param {Number}  timeObject.epochStart
+         * @param {Number}  timeObject.duration
+         *
+         * @return {object} Extended time object
+         */
+        Lessons.getSimpleTimeByExtended = function ( timeObject ) {
+
+            var resultTime = {};
+
+            resultTime.start = new Date( timeObject.date.getTime() + timeObject.epochStart * 1000 );
+            resultTime.end = new Date( resultTime.start.getTime() + timeObject.duration * 60 * 1000 );
+
+            return resultTime;
+
+        };
+
         return Lessons;
 
     } );
