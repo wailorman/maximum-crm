@@ -192,6 +192,8 @@ angular.module( 'starter.api.lessons', [
 
         /**
          *
+         * @todo Add __v property
+         *
          * @param {object} params
          * @param {string} params.id
          */
@@ -265,6 +267,50 @@ angular.module( 'starter.api.lessons', [
                 deferred.reject,
                 deferred.notify
             );
+
+            return { $promise: deferred.promise };
+        };
+
+        /**
+         * Getting Lesson object as argument and send document to the server.
+         * Throws an error if _id was not passed or extended time is invalid.
+         * Coaches/halls/groups array can be object (with _id property), string or integer array.
+         * If coaches/halls/groups array will not passed, method will use empty array as a value.
+         *
+         * @throws Error( 'Missing _id' )
+         * @throws Error( 'Invalid time' )
+         *
+         * @param {object}      data            Lesson object
+         * @param {string}      data._id
+         * @param {object}      data.time       Extended Lesson time
+         * @param {Array.<Object>|Array.<String>|Array.<Number>} data.coaches
+         * @param {Array.<Object>|Array.<String>|Array.<Number>} data.halls
+         * @param {Array.<Object>|Array.<String>|Array.<Number>} data.groups
+         */
+        Lessons.create = function ( data ) {
+            var deferred = $q.defer(),
+                resultDocument = {};
+
+            // id
+            if ( data._id )
+                resultDocument._id = data._id;
+            else
+                throw new Error( 'Missing _id' );
+
+            // time
+            try {
+                resultDocument.time = Lessons.getSimpleTimeByExtended( data.time );
+            } catch ( e ) {
+                throw new Error( 'Invalid time' );
+            }
+
+            resultDocument.coaches = Lessons.depopulateArray( data.coaches );
+            resultDocument.halls = Lessons.depopulateArray( data.halls );
+            resultDocument.groups = Lessons.depopulateArray( data.groups );
+
+
+            Lessons._create( resultDocument ).$promise
+                .then( deferred.resolve, deferred.reject );
 
             return { $promise: deferred.promise };
         };

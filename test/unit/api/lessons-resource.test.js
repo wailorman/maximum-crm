@@ -728,4 +728,133 @@ fdescribe( 'Lessons resource', function () {
 
     } );
 
+    describe( 'create', function () {
+
+        var objectToPost,
+            expected;
+
+        beforeEach( function () {
+
+            objectToPost = {
+                _id: 'new-lesson',
+                time: {
+                    date: new Date( 2015, 5 - 1, 8 ),
+                    epochStart: 50400,
+                    duration: 30
+                },
+                coaches: [
+                    { _id: 'coach1', name: 'The Coach 1' },
+                    { _id: 'coach2', name: 'The Coach 2' }
+                ],
+                halls: [
+                    { _id: 'hall1', name: 'The Hall 1' },
+                    { _id: 'hall2', name: 'The Hall 2' }
+                ],
+                groups: [
+                    { _id: 'group1', name: 'The Group 1' },
+                    { _id: 'group2', name: 'The Group 2' }
+                ]
+            };
+
+            expected = {
+                time: {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                },
+                coaches: ['coach1', 'coach2'],
+                halls: ['hall1', 'hall2'],
+                groups: ['group1', 'group2']
+            };
+
+            resetSpies();
+
+        } );
+
+        it( 'should correctly convert time to simple format', function () {
+
+            defineRespond( 'POST', 200, '/lessons', {} );
+
+            Lessons.create( objectToPost ).$promise
+                .then( callback.success, callback.error, callback.notify );
+
+            expectRequest( 'POST', '/lessons', {
+                _id: 'new-lesson',
+                time: expected.time,
+                coaches: expected.coaches,
+                halls: expected.halls,
+                groups: expected.groups
+            } );
+
+            $httpBackend.flush();
+
+            expect( callback.success ).toHaveBeenCalled();
+            expect( callback.error ).not.toHaveBeenCalled();
+            expect( callback.notify ).not.toHaveBeenCalled();
+
+        } );
+
+        it( 'should call reject if all data if correct but something went wrong on the server', function () {
+
+            defineRespond( 'POST', 409, '/lessons', {} );
+
+            Lessons.create( objectToPost ).$promise
+                .then( callback.success, callback.error, callback.notify );
+
+            $httpBackend.flush();
+
+            expect( callback.success ).not.toHaveBeenCalled();
+            expect( callback.error ).toHaveBeenCalled();
+            expect( callback.notify ).not.toHaveBeenCalled();
+
+            expect( callback.error.calls.mostRecent().args[0].status ).toEqual( 409 );
+
+        } );
+
+        it( 'should throw an error if _id was not passed', function () {
+
+            delete objectToPost._id;
+
+            expect( function () {
+                Lessons.create( objectToPost );
+            } ).toThrow( new Error( 'Missing _id' ) );
+
+        } );
+
+        it( 'should throw an error if time is invalid', function () {
+
+            delete objectToPost.time.date;
+
+            expect( function () {
+                Lessons.create( objectToPost );
+            } ).toThrow( new Error( 'Invalid time' ) );
+
+        } );
+
+        it( 'should set doc.coaches: [] if we did not passed coaches', function () {
+
+            delete objectToPost.coaches;
+
+            defineRespond( 'POST', 200, '/lessons', {} );
+
+            Lessons.create( objectToPost ).$promise
+                .then( callback.success, callback.error, callback.notify );
+
+            expectRequest( 'POST', '/lessons', {
+                _id: 'new-lesson',
+                time: expected.time,
+                coaches: [],
+                halls: expected.halls,
+                groups: expected.groups
+            } );
+
+            $httpBackend.flush();
+
+            expect( callback.success ).toHaveBeenCalled();
+            expect( callback.error ).not.toHaveBeenCalled();
+            expect( callback.notify ).not.toHaveBeenCalled();
+
+        } );
+
+    } );
+
 } );
