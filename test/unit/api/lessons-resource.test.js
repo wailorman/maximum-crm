@@ -9,7 +9,7 @@ fdescribe( 'Lessons resource', function () {
             success: function () {
 
             },
-            notify: function (  ) {
+            notify: function () {
 
             }
         };
@@ -192,7 +192,7 @@ fdescribe( 'Lessons resource', function () {
             beforeEach( function () {
 
                 extendedTimeObject = {
-                    date: new Date( 2015, 5-1, 8 ),
+                    date: new Date( 2015, 5 - 1, 8 ),
                     epochStart: 50400, // 14:00
                     duration: 30 // minutes
                 };
@@ -206,7 +206,7 @@ fdescribe( 'Lessons resource', function () {
                 it( 'should calculate time.start correctly', function () {
 
                     expect( resultTime.start.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.start.getMonth() ).toEqual( 5-1 );
+                    expect( resultTime.start.getMonth() ).toEqual( 5 - 1 );
                     expect( resultTime.start.getDate() ).toEqual( 8 );
                     expect( resultTime.start.getHours() ).toEqual( 14 );
                     expect( resultTime.start.getMinutes() ).toEqual( 0 );
@@ -216,7 +216,7 @@ fdescribe( 'Lessons resource', function () {
                 it( 'should works fine if epochStart >86400 (go to another day)', function () {
 
                     extendedTimeObject = {
-                        date: new Date( 2015, 5-1, 8 ),
+                        date: new Date( 2015, 5 - 1, 8 ),
                         epochStart: 90000, // 1:00 of the next day
                         duration: 30 // minutes
                     };
@@ -224,7 +224,7 @@ fdescribe( 'Lessons resource', function () {
                     resultTime = Lessons.getSimpleTimeByExtended( extendedTimeObject );
 
                     expect( resultTime.start.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.start.getMonth() ).toEqual( 5-1 );
+                    expect( resultTime.start.getMonth() ).toEqual( 5 - 1 );
                     expect( resultTime.start.getDate() ).toEqual( 9 );
                     expect( resultTime.start.getHours() ).toEqual( 1 );
                     expect( resultTime.start.getMinutes() ).toEqual( 0 );
@@ -234,7 +234,7 @@ fdescribe( 'Lessons resource', function () {
                 it( 'should works fine if epochStart=0', function () {
 
                     extendedTimeObject = {
-                        date: new Date( 2015, 5-1, 8 ),
+                        date: new Date( 2015, 5 - 1, 8 ),
                         epochStart: 0, // 00:00
                         duration: 30 // minutes
                     };
@@ -242,7 +242,7 @@ fdescribe( 'Lessons resource', function () {
                     resultTime = Lessons.getSimpleTimeByExtended( extendedTimeObject );
 
                     expect( resultTime.start.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.start.getMonth() ).toEqual( 5-1 );
+                    expect( resultTime.start.getMonth() ).toEqual( 5 - 1 );
                     expect( resultTime.start.getDate() ).toEqual( 8 );
                     expect( resultTime.start.getHours() ).toEqual( 0 );
                     expect( resultTime.start.getMinutes() ).toEqual( 0 );
@@ -268,7 +268,7 @@ fdescribe( 'Lessons resource', function () {
                 it( 'should calculate time.end correctly', function () {
 
                     expect( resultTime.end.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.end.getMonth() ).toEqual( 5-1 );
+                    expect( resultTime.end.getMonth() ).toEqual( 5 - 1 );
                     expect( resultTime.end.getDate() ).toEqual( 8 );
                     expect( resultTime.end.getHours() ).toEqual( 14 );
                     expect( resultTime.end.getMinutes() ).toEqual( 30 );
@@ -278,7 +278,7 @@ fdescribe( 'Lessons resource', function () {
                 it( 'should works fine if lesson duration is longer than a day (>1440)', function () {
 
                     extendedTimeObject = {
-                        date: new Date( 2015, 5-1, 8 ),
+                        date: new Date( 2015, 5 - 1, 8 ),
                         epochStart: 50400, // 14:00
                         duration: 1500 // 1 day + 1 hour
                     };
@@ -286,7 +286,7 @@ fdescribe( 'Lessons resource', function () {
                     resultTime = Lessons.getSimpleTimeByExtended( extendedTimeObject );
 
                     expect( resultTime.end.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.end.getMonth() ).toEqual( 5-1 );
+                    expect( resultTime.end.getMonth() ).toEqual( 5 - 1 );
                     expect( resultTime.end.getDate() ).toEqual( 9 );
                     expect( resultTime.end.getHours() ).toEqual( 15 );
                     expect( resultTime.end.getMinutes() ).toEqual( 0 );
@@ -296,7 +296,7 @@ fdescribe( 'Lessons resource', function () {
                 it( 'should works fine if duration=0', function () {
 
                     extendedTimeObject = {
-                        date: new Date( 2015, 5-1, 8 ),
+                        date: new Date( 2015, 5 - 1, 8 ),
                         epochStart: 50400, // 14:00
                         duration: 0
                     };
@@ -304,7 +304,7 @@ fdescribe( 'Lessons resource', function () {
                     resultTime = Lessons.getSimpleTimeByExtended( extendedTimeObject );
 
                     expect( resultTime.end.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.end.getMonth() ).toEqual( 5-1 );
+                    expect( resultTime.end.getMonth() ).toEqual( 5 - 1 );
                     expect( resultTime.end.getDate() ).toEqual( 8 );
                     expect( resultTime.end.getHours() ).toEqual( 14 );
                     expect( resultTime.end.getMinutes() ).toEqual( 0 );
@@ -397,7 +397,7 @@ fdescribe( 'Lessons resource', function () {
 
         it( 'should call callback.notify and callback.success too if one of two objects can not found', function () {
 
-            arrayToPopulate = [ 'coach1', 'coach3' ];
+            arrayToPopulate = ['coach1', 'coach3'];
 
             resetSpies();
 
@@ -419,7 +419,7 @@ fdescribe( 'Lessons resource', function () {
 
         it( 'should call callback.error and callback.notify if 2/2 objects responds with 404', function () {
 
-            arrayToPopulate = [ 'coach3', 'coach4' ];
+            arrayToPopulate = ['coach3', 'coach4'];
 
             resetSpies();
 
@@ -461,9 +461,9 @@ fdescribe( 'Lessons resource', function () {
                     start: new Date( 2015, 5 - 1, 8, 14, 0 ),
                     end: new Date( 2015, 5 - 1, 8, 14, 30 )
                 },
-                coaches: [ 'coach1', 'coach2' ],
-                halls: [ 'hall1', 'hall2' ],
-                groups: [ 'group1', 'group2' ]
+                coaches: ['coach1', 'coach2'],
+                halls: ['hall1', 'hall2'],
+                groups: ['group1', 'group2']
             } );
 
             // COACHES
@@ -514,9 +514,9 @@ fdescribe( 'Lessons resource', function () {
                     start: new Date( 2015, 5 - 1, 8, 14, 0 ),
                     end: new Date( 2015, 5 - 1, 8, 14, 30 )
                 },
-                coaches: [ 'coach1', 'coach3' ],
-                halls: [ 'hall1', 'hall3' ],
-                groups: [ 'group1', 'group3' ]
+                coaches: ['coach1', 'coach3'],
+                halls: ['hall1', 'hall3'],
+                groups: ['group1', 'group3']
             } );
 
             defineRespond( 'GET', 404, '/lessons/lesson-nonexistent', {} );
@@ -537,10 +537,10 @@ fdescribe( 'Lessons resource', function () {
 
         it( 'should pass result data with success callback', function () {
 
-            expect( callback.success.calls.mostRecent().args[ 0 ].time ).toBeDefined();
-            expect( callback.success.calls.mostRecent().args[ 0 ].coaches ).toBeDefined();
-            expect( callback.success.calls.mostRecent().args[ 0 ].halls ).toBeDefined();
-            expect( callback.success.calls.mostRecent().args[ 0 ].groups ).toBeDefined();
+            expect( callback.success.calls.mostRecent().args[0].time ).toBeDefined();
+            expect( callback.success.calls.mostRecent().args[0].coaches ).toBeDefined();
+            expect( callback.success.calls.mostRecent().args[0].halls ).toBeDefined();
+            expect( callback.success.calls.mostRecent().args[0].groups ).toBeDefined();
 
         } );
 
@@ -548,7 +548,7 @@ fdescribe( 'Lessons resource', function () {
 
             beforeEach( function () {
 
-                resultObject = callback.success.calls.mostRecent().args[ 0 ];
+                resultObject = callback.success.calls.mostRecent().args[0];
 
             } );
 
@@ -574,31 +574,31 @@ fdescribe( 'Lessons resource', function () {
 
             it( 'coaches', function () {
 
-                expect( resultObject.coaches[ 0 ]._id ).toEqual( 'coach1' );
-                expect( resultObject.coaches[ 1 ]._id ).toEqual( 'coach2' );
+                expect( resultObject.coaches[0]._id ).toEqual( 'coach1' );
+                expect( resultObject.coaches[1]._id ).toEqual( 'coach2' );
 
-                expect( resultObject.coaches[ 0 ].name ).toEqual( 'The Coach 1' );
-                expect( resultObject.coaches[ 1 ].name ).toEqual( 'The Coach 2' );
+                expect( resultObject.coaches[0].name ).toEqual( 'The Coach 1' );
+                expect( resultObject.coaches[1].name ).toEqual( 'The Coach 2' );
 
             } );
 
             it( 'halls', function () {
 
-                expect( resultObject.halls[ 0 ]._id ).toEqual( 'hall1' );
-                expect( resultObject.halls[ 1 ]._id ).toEqual( 'hall2' );
+                expect( resultObject.halls[0]._id ).toEqual( 'hall1' );
+                expect( resultObject.halls[1]._id ).toEqual( 'hall2' );
 
-                expect( resultObject.halls[ 0 ].name ).toEqual( 'The Hall 1' );
-                expect( resultObject.halls[ 1 ].name ).toEqual( 'The Hall 2' );
+                expect( resultObject.halls[0].name ).toEqual( 'The Hall 1' );
+                expect( resultObject.halls[1].name ).toEqual( 'The Hall 2' );
 
             } );
 
             it( 'groups', function () {
 
-                expect( resultObject.groups[ 0 ]._id ).toEqual( 'group1' );
-                expect( resultObject.groups[ 1 ]._id ).toEqual( 'group2' );
+                expect( resultObject.groups[0]._id ).toEqual( 'group1' );
+                expect( resultObject.groups[1]._id ).toEqual( 'group2' );
 
-                expect( resultObject.groups[ 0 ].name ).toEqual( 'The Group 1' );
-                expect( resultObject.groups[ 1 ].name ).toEqual( 'The Group 2' );
+                expect( resultObject.groups[0].name ).toEqual( 'The Group 1' );
+                expect( resultObject.groups[1].name ).toEqual( 'The Group 2' );
 
             } );
 
@@ -632,6 +632,112 @@ fdescribe( 'Lessons resource', function () {
 
             expect( callback.success ).not.toHaveBeenCalled();
             expect( callback.error ).toHaveBeenCalled();
+
+        } );
+
+    } );
+
+    describe( 'depopulateArray', function () {
+
+        var arrayOfObjects;
+
+        it( 'should throw the exception and return empty array if we passing to him null', function () {
+
+            expect(
+                function () {
+                    var result = Lessons.depopulateArray( null );
+                    expect( result ).toEqual( [] );
+                }
+            ).toThrow( new Error( 'Missing argument' ) );
+
+        } );
+
+        it( 'should convert array of objects with _id property to plane array', function () {
+
+            arrayOfObjects = [
+                { _id: 'coach1', name: 'The Coach 1' },
+                { _id: 'coach2', name: 'The Coach 2' }
+            ];
+
+            var result = Lessons.depopulateArray( arrayOfObjects );
+
+            expect( result.length ).toEqual( 2 );
+            expect( result[0] ).toEqual( 'coach1' );
+            expect( result[1] ).toEqual( 'coach2' );
+
+        } );
+
+        it( 'should throw exception if some element is object and it does not have _id property', function () {
+
+            arrayOfObjects = [
+                { _id: 'coach1', name: 'The Coach 1' },
+                { name: 'The Coach 2' }
+            ];
+
+            expect( function () {
+                expect( Lessons.depopulateArray( arrayOfObjects ) ).toEqual( ['coach1'] );
+            } ).toThrow( new Error( 'Some object in array does not have _id property' ) );
+
+        } );
+
+        it( 'should works fine if we will pass array with objects which have only _id property', function () {
+
+            arrayOfObjects = [
+                { _id: 'coach1' },
+                { _id: 'coach2' }
+            ];
+
+            expect( Lessons.depopulateArray( arrayOfObjects ) ).toEqual( ['coach1', 'coach2'] );
+
+        } );
+
+        it( 'should return [] if we will pass empty array to arguments and should not throw any exceptions', function () {
+
+            arrayOfObjects = [];
+
+            expect( function () {
+                expect( Lessons.depopulateArray( arrayOfObjects ) ).toEqual( [] );
+            } ).not.toThrow( new Error( 'Missing argument' ) );
+
+        } );
+
+        it( 'should works fine if some elem of array is object and some elem is string', function () {
+
+            arrayOfObjects = [
+                { _id: 'coach1', name: 'The Coach 1' },
+                'coach2'
+            ];
+
+            expect( function () {
+
+                var result = Lessons.depopulateArray( arrayOfObjects );
+
+                expect( result.length ).toEqual( 2 );
+                expect( result[0] ).toEqual( 'coach1' );
+                expect( result[1] ).toEqual( 'coach2' );
+
+            } ).not.toThrow();
+
+        } );
+
+        it( 'should works with numbers too', function () {
+
+            arrayOfObjects = [
+                { _id: 'coach1' },
+                'coach2',
+                345
+            ];
+
+            expect( function () {
+
+                var result = Lessons.depopulateArray( arrayOfObjects );
+
+                expect( result.length ).toEqual( 3 );
+                expect( result[0] ).toEqual( 'coach1' );
+                expect( result[1] ).toEqual( 'coach2' );
+                expect( result[2] ).toEqual( 345 );
+
+            } ).not.toThrow();
 
         } );
 

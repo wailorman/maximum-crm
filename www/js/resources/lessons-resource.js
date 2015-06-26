@@ -8,9 +8,9 @@ angular.module( 'starter.api.lessons', [
 
 ] )
     .factory( 'Lessons', function ( Coaches,
-                                    Halls,
-                                    Groups,
-                                    $resource, $q ) {
+        Halls,
+        Groups,
+        $resource, $q ) {
 
         var apiUrl = 'http://api.max-crm.wailorman.ru:21080';
 
@@ -150,12 +150,55 @@ angular.module( 'starter.api.lessons', [
         };
 
         /**
+         * Depopulate array.
+         * Converting array of objects to plane array.
+         *
+         * @param {array|Array} arrayOfObjects Elements of this array can be objects (with _id property!), strings and numbers
+         *
+         * @throws Error( 'Missing argument' )
+         * @throws Error( 'Some object in array does not have _id property' )
+         *
+         * @return {array|Array}
+         */
+        Lessons.depopulateArray = function ( arrayOfObjects ) {
+
+            var resultArray = [];
+
+            if ( !arrayOfObjects ) {
+                throw new Error( 'Missing argument' );
+            } else {
+
+                arrayOfObjects.forEach( function ( elem ) {
+
+                    if ( typeof elem === 'object' ) {
+
+                        if ( elem._id ) {
+                            resultArray.push( elem._id );
+                        } else {
+                            throw new Error( 'Some object in array does not have _id property' );
+                        }
+
+                    } else if ( typeof elem === 'string' || typeof elem === 'number' ) {
+
+                        resultArray.push( elem );
+
+                    }
+
+                } );
+
+            }
+
+            return resultArray;
+
+        };
+
+        /**
          *
          * @param {object} params
          * @param {string} params.id
          */
         Lessons.get = function ( params ) {
-            var deferred     = $q.defer(),
+            var deferred = $q.defer(),
                 resultObject = {};
 
             Lessons._get( params ).$promise
