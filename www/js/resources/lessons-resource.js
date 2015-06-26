@@ -10,7 +10,7 @@ angular.module( 'starter.api.lessons', [
     .factory( 'Lessons', function ( Coaches,
         Halls,
         Groups,
-        $resource, $q ) {
+        $resource, $q, $log ) {
 
         var apiUrl = 'http://api.max-crm.wailorman.ru:21080';
 
@@ -19,7 +19,7 @@ angular.module( 'starter.api.lessons', [
             '_get': { method: 'GET', timeout: 5000 },
             '_query': { method: 'GET', isArray: true, timeout: 5000 },
             'update': { method: 'PUT', timeout: 5000 },
-            'create': { method: 'POST', timeout: 5000 },
+            '_create': { method: 'POST', timeout: 5000 },
             'remove': { method: 'DELETE', timeout: 5000 }
 
         } );
@@ -72,8 +72,8 @@ angular.module( 'starter.api.lessons', [
          *
          * @param {object}  timeObject
          * @param {Date}    timeObject.date
-         * @param {Number}  timeObject.epochStart
-         * @param {Number}  [timeObject.duration]
+         * @param {Number}  [timeObject.epochStart]     Default = 0
+         * @param {Number}  [timeObject.duration]       Default = 0
          *
          * @throws Error( 'Not enough params (date missing)' )
          *
@@ -152,11 +152,9 @@ angular.module( 'starter.api.lessons', [
         /**
          * Depopulate array.
          * Converting array of objects to plane array.
+         * Sync function
          *
          * @param {array|Array} arrayOfObjects Elements of this array can be objects (with _id property!), strings and numbers
-         *
-         * @throws Error( 'Missing argument' )
-         * @throws Error( 'Some object in array does not have _id property' )
          *
          * @return {array|Array}
          */
@@ -165,7 +163,7 @@ angular.module( 'starter.api.lessons', [
             var resultArray = [];
 
             if ( !arrayOfObjects ) {
-                throw new Error( 'Missing argument' );
+                $log.error( 'Missing array' );
             } else {
 
                 arrayOfObjects.forEach( function ( elem ) {
@@ -175,7 +173,7 @@ angular.module( 'starter.api.lessons', [
                         if ( elem._id ) {
                             resultArray.push( elem._id );
                         } else {
-                            throw new Error( 'Some object in array does not have _id property' );
+                            $log.error( 'Some object in array does not have _id property' );
                         }
 
                     } else if ( typeof elem === 'string' || typeof elem === 'number' ) {

@@ -641,14 +641,11 @@ fdescribe( 'Lessons resource', function () {
 
         var arrayOfObjects;
 
-        it( 'should throw the exception and return empty array if we passing to him null', function () {
+        it( 'should return empty array if we passing to him null', function () {
 
-            expect(
-                function () {
-                    var result = Lessons.depopulateArray( null );
-                    expect( result ).toEqual( [] );
-                }
-            ).toThrow( new Error( 'Missing argument' ) );
+            var result = Lessons.depopulateArray( null );
+            expect( result instanceof Array ).toBeTruthy();
+            expect( result ).toEqual( [] );
 
         } );
 
@@ -667,16 +664,14 @@ fdescribe( 'Lessons resource', function () {
 
         } );
 
-        it( 'should throw exception if some element is object and it does not have _id property', function () {
+        it( 'should ignore element if object does not have _id property', function () {
 
             arrayOfObjects = [
                 { _id: 'coach1', name: 'The Coach 1' },
                 { name: 'The Coach 2' }
             ];
 
-            expect( function () {
-                expect( Lessons.depopulateArray( arrayOfObjects ) ).toEqual( ['coach1'] );
-            } ).toThrow( new Error( 'Some object in array does not have _id property' ) );
+            expect( Lessons.depopulateArray( arrayOfObjects ) ).toEqual( ['coach1'] );
 
         } );
 
@@ -691,13 +686,11 @@ fdescribe( 'Lessons resource', function () {
 
         } );
 
-        it( 'should return [] if we will pass empty array to arguments and should not throw any exceptions', function () {
+        it( 'should return [] if we will pass empty array to arguments', function () {
 
             arrayOfObjects = [];
 
-            expect( function () {
-                expect( Lessons.depopulateArray( arrayOfObjects ) ).toEqual( [] );
-            } ).not.toThrow( new Error( 'Missing argument' ) );
+            expect( Lessons.depopulateArray( arrayOfObjects ) ).toEqual( [] );
 
         } );
 
@@ -708,15 +701,11 @@ fdescribe( 'Lessons resource', function () {
                 'coach2'
             ];
 
-            expect( function () {
+            var result = Lessons.depopulateArray( arrayOfObjects );
 
-                var result = Lessons.depopulateArray( arrayOfObjects );
-
-                expect( result.length ).toEqual( 2 );
-                expect( result[0] ).toEqual( 'coach1' );
-                expect( result[1] ).toEqual( 'coach2' );
-
-            } ).not.toThrow();
+            expect( result.length ).toEqual( 2 );
+            expect( result[0] ).toEqual( 'coach1' );
+            expect( result[1] ).toEqual( 'coach2' );
 
         } );
 
@@ -728,16 +717,12 @@ fdescribe( 'Lessons resource', function () {
                 345
             ];
 
-            expect( function () {
+            var result = Lessons.depopulateArray( arrayOfObjects );
 
-                var result = Lessons.depopulateArray( arrayOfObjects );
-
-                expect( result.length ).toEqual( 3 );
-                expect( result[0] ).toEqual( 'coach1' );
-                expect( result[1] ).toEqual( 'coach2' );
-                expect( result[2] ).toEqual( 345 );
-
-            } ).not.toThrow();
+            expect( result.length ).toEqual( 3 );
+            expect( result[0] ).toEqual( 'coach1' );
+            expect( result[1] ).toEqual( 'coach2' );
+            expect( result[2] ).toEqual( 345 );
 
         } );
 
