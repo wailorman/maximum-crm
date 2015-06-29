@@ -85,7 +85,6 @@ angular.module( 'starter.api.lessons', [
 
             if ( !timeObject.date ) {
                 throw new Error( 'Not enough params (date missing)' );
-                return undefined;
             }
 
             if ( !timeObject.epochStart ) timeObject.epochStart = 0;
