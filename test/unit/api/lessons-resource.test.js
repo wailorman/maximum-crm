@@ -1,6 +1,6 @@
 fdescribe( 'Lessons resource', function () {
 
-    var Lessons, $httpBackend, $resource,
+    var Lessons, $httpBackend, $resource, $q,
         apiUri = 'http://api.max-crm.wailorman.ru:21080',
         callback = {
             error: function () {
@@ -60,11 +60,12 @@ fdescribe( 'Lessons resource', function () {
 
     beforeEach( module( 'starter.api.lessons' ) );
 
-    beforeEach( inject( function ( _Lessons_, _$httpBackend_, _$resource_ ) {
+    beforeEach( inject( function ( _Lessons_, _$httpBackend_, _$resource_, _$q_ ) {
 
         Lessons = _Lessons_;
         $httpBackend = _$httpBackend_;
         $resource = _$resource_;
+        $q = _$q_;
 
     } ) );
 
@@ -852,6 +853,276 @@ fdescribe( 'Lessons resource', function () {
             expect( callback.success ).toHaveBeenCalled();
             expect( callback.error ).not.toHaveBeenCalled();
             expect( callback.notify ).not.toHaveBeenCalled();
+
+        } );
+
+    } );
+
+    describe( 'addObjectToArrayById()', function () {
+
+        var resourceObject,
+            expectedObjectToReceive = {
+                coach1: {
+                    _id: 'coach1',
+                    name: 'The Coach 1'
+                },
+                coach2: {
+                    _id: 'coach2',
+                    name: 'The Coach 2'
+                }
+            };
+
+        var resetResourceMethodsSpies = function () {
+
+            resourceObject.get.calls.reset();
+            resourceObject._get.calls.reset();
+
+        };
+
+        beforeEach( function () {
+
+            resourceObject = {
+                _get: function () {
+                    var deferred = $q.defer();
+                    return { $promise: deferred.promise };
+                },
+                get: function () {
+                    var deferred = $q.defer();
+                    return { $promise: deferred.promise };
+                }
+            };
+
+            spyOn( resourceObject, '_get' ).and.callThrough();
+            spyOn( resourceObject, 'get' ).and.callThrough();
+
+            resetResourceMethodsSpies();
+
+        } );
+
+        describe( 'Resource argument', function () {
+
+            it( 'should throw exception if we did not passed Resource', function () {
+
+                expect( function () {
+
+                    Lessons.addObjectToArrayById( null, [], '1' );
+
+                } ).toThrow( new Error( 'Invalid Resource. Expect object or function' ) );
+
+            } );
+
+            it( 'should throw exception if Resource object does not have _get() or get() method', function () {
+
+                delete resourceObject.get;
+                delete resourceObject._get;
+
+                expect( function () {
+
+                    Lessons.addObjectToArrayById( resourceObject, [], '1' );
+
+                } ).toThrow( new Error( 'Invalid Resource. Expect _get() or get() method in Resource object' ) );
+
+            } );
+
+            it( 'should use get() method if it only exist in Resource object', function () {
+
+                delete resourceObject._get;
+
+                expect( function () {
+
+                    Lessons.addObjectToArrayById( resourceObject, [], '1' );
+
+                    expect( resourceObject.get ).toHaveBeenCalled();
+
+                } ).not.toThrow();
+
+            } );
+
+            it( 'should use _get() method if there are get() and _get() methods in Resource object', function () {
+
+                // get() and _get() methods was passed in beforeEach block
+
+                expect( function () {
+
+                    Lessons.addObjectToArrayById( resourceObject, [], '1' );
+
+                    expect( resourceObject._get ).toHaveBeenCalled();
+
+                } ).not.toThrow();
+
+            } );
+
+            it( 'should call _get() with object { id: objectId } argument', function () {
+
+                Lessons.addObjectToArrayById( resourceObject, [], '1' );
+
+                expect( resourceObject._get.calls.mostRecent().args[0] ).toEqual( { id: '1' } );
+
+            } );
+
+            it( 'should call get() with object { id: objectId } argument', function () {
+
+                delete resourceObject._get;
+
+                Lessons.addObjectToArrayById( resourceObject, [], '1' );
+
+                expect( resourceObject.get.calls.mostRecent().args[0] ).toEqual( { id: '1' } );
+
+            } );
+
+        } );
+
+        describe( 'array argument', function () {
+
+            it( 'should throw exception if array was not passed', function () {
+
+                expect( function () {
+
+                    Lessons.addObjectToArrayById( resourceObject, null, '1' );
+
+                } ).toThrow( new Error( 'Missing array' ) );
+
+            } );
+
+            it( 'should throw exception if array argument is not an array', function () {
+
+                expect( function () {
+
+                    Lessons.addObjectToArrayById( resourceObject, "some str", '1' );
+
+                } ).toThrow( new Error( 'Invalid array. Expect array, but got string' ) );
+
+            } );
+
+            it( 'should not throw exception if array argument is valid', function () {
+
+                expect( function () {
+
+                    Lessons.addObjectToArrayById( resourceObject, [], '1' );
+
+                } ).not.toThrow();
+
+            } );
+
+        } );
+
+        describe( 'objectId argument', function () {
+
+            it( 'should throw exception if objectId was not passed', function () {
+
+                expect( function () {
+
+                    Lessons.addObjectToArrayById( resourceObject, [], null );
+
+                } ).toThrow( new Error( 'Missing objectId' ) );
+
+            } );
+
+            it( 'should throw exception if objectId has object type', function () {
+
+                expect( function () {
+
+                    Lessons.addObjectToArrayById( resourceObject, [], {} );
+
+                } ).toThrow( new Error( 'Invalid objectId. Expect string or number, but got object' ) );
+
+            } );
+
+            it( 'should works fine if number was passed to objectId', function () {
+
+                expect( function () {
+
+                    Lessons.addObjectToArrayById( resourceObject, [], 123 );
+
+                } ).not.toThrow();
+
+            } );
+
+            it( 'should works fine if string was passed to objectId', function () {
+
+                expect( function () {
+
+                    Lessons.addObjectToArrayById( resourceObject, [], '123' );
+
+                } ).not.toThrow();
+
+            } );
+
+        } );
+
+        describe( 'common calling', function () {
+
+            var testArray;
+
+            beforeEach( function () {
+
+                defineRespond( 'GET', 200, '/coaches/coach1', expectedObjectToReceive.coach1 );
+
+                resourceObject = $resource( apiUri + '/coaches/:id' );
+
+                testArray = [];
+
+            } );
+
+            it( 'should call /coaches/coach1', function () {
+
+                expectRequest( 'GET', '/coaches/coach1' );
+
+                Lessons.addObjectToArrayById( resourceObject, testArray, 'coach1' )
+                    .then( callback.success, callback.error, callback.notify );
+
+                $httpBackend.flush();
+
+            } );
+
+            it( 'should call resolve on success', function () {
+
+                Lessons.addObjectToArrayById( resourceObject, testArray, 'coach1' )
+                    .then( callback.success, callback.error, callback.notify );
+
+                $httpBackend.flush();
+
+                expect( callback.success ).toHaveBeenCalled();
+                expect( callback.error ).not.toHaveBeenCalled();
+                expect( callback.notify ).not.toHaveBeenCalled();
+
+            } );
+
+            it( 'should push object to passed !empty! array', function () {
+
+                Lessons.addObjectToArrayById( resourceObject, testArray, 'coach1' )
+                    .then( callback.success, callback.error, callback.notify );
+
+                $httpBackend.flush();
+
+                expect( callback.success.calls.mostRecent().args[0] instanceof Array ).toBeTruthy();
+                expect( callback.success.calls.mostRecent().args[0].length ).toEqual( 1 );
+                expect( callback.success.calls.mostRecent().args[0][0]._id ).toEqual( 'coach1' );
+                expect( callback.success.calls.mostRecent().args[0][0].name ).toEqual( 'The Coach 1' );
+
+            } );
+
+            it( 'should correctly push new object to existent nonempty array', function () {
+
+                testArray = [{
+                    _id: 'coach0',
+                    name: 'The Coach 0'
+                }];
+
+                Lessons.addObjectToArrayById( resourceObject, testArray, 'coach1' )
+                    .then( callback.success, callback.error, callback.notify );
+
+                $httpBackend.flush();
+
+                expect( callback.success.calls.mostRecent().args[0] instanceof Array ).toBeTruthy();
+                expect( callback.success.calls.mostRecent().args[0].length ).toEqual( 2 );
+                expect( callback.success.calls.mostRecent().args[0][0]._id ).toEqual( 'coach0' );
+                expect( callback.success.calls.mostRecent().args[0][0].name ).toEqual( 'The Coach 0' );
+                expect( callback.success.calls.mostRecent().args[0][1]._id ).toEqual( 'coach1' );
+                expect( callback.success.calls.mostRecent().args[0][1].name ).toEqual( 'The Coach 1' );
+
+
+            } );
 
         } );
 
