@@ -267,6 +267,8 @@ angular.module( 'starter.api.lessons', [
                 .then(
                 function ( document ) {
 
+                    resultObject._id = document._id;
+
                     // time
                     resultObject.time = Lessons.getExtendedTimeBySimple( document.time );
 

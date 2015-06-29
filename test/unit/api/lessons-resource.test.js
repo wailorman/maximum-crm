@@ -458,6 +458,7 @@ fdescribe( 'Lessons resource', function () {
             // LESSONS
 
             defineRespond( 'GET', 200, '/lessons/lesson-correct', {
+                _id: 'lesson-correct',
                 time: {
                     start: new Date( 2015, 5 - 1, 8, 14, 0 ),
                     end: new Date( 2015, 5 - 1, 8, 14, 30 )
@@ -538,6 +539,7 @@ fdescribe( 'Lessons resource', function () {
 
         it( 'should pass result data with success callback', function () {
 
+            expect( callback.success.calls.mostRecent().args[0]._id ).toBeDefined();
             expect( callback.success.calls.mostRecent().args[0].time ).toBeDefined();
             expect( callback.success.calls.mostRecent().args[0].coaches ).toBeDefined();
             expect( callback.success.calls.mostRecent().args[0].halls ).toBeDefined();
@@ -855,6 +857,12 @@ fdescribe( 'Lessons resource', function () {
             expect( callback.notify ).not.toHaveBeenCalled();
 
         } );
+
+    } );
+
+    describe( 'update', function () {
+
+
 
     } );
 
