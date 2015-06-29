@@ -849,7 +849,199 @@ fdescribe( 'Lessons resource', function () {
 
     describe( 'update', function () {
 
+        var documentsToRespond = {},
+            originalObject;
 
+        beforeEach( function () {
+
+            resetSpies();
+
+            documentsToRespond.lesson1 = {
+                _id: 'lesson1',
+                time: {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                },
+                coaches: ['coach1', 'coach2'],
+                halls: ['hall1', 'hall2'],
+                groups: ['group1', 'group2']
+            };
+
+            defineRespond( 'GET', 200, '/lessons/lesson1', documentsToRespond.lesson1 );
+
+            // COACHES
+
+            defineRespond( 'GET', 200, '/coaches/coach1', {
+                _id: 'coach1',
+                name: 'The Coach 1'
+            } );
+
+            defineRespond( 'GET', 200, '/coaches/coach2', {
+                _id: 'coach2',
+                name: 'The Coach 2'
+            } );
+
+            // HALLS
+
+            defineRespond( 'GET', 200, '/halls/hall1', {
+                _id: 'hall1',
+                name: 'The Hall 1'
+            } );
+
+            defineRespond( 'GET', 200, '/halls/hall2', {
+                _id: 'hall2',
+                name: 'The Hall 2'
+            } );
+
+            // GROUPS
+
+            defineRespond( 'GET', 200, '/groups/group1', {
+                _id: 'group1',
+                name: 'The Group 1'
+            } );
+
+            defineRespond( 'GET', 200, '/groups/group2', {
+                _id: 'group2',
+                name: 'The Group 2'
+            } );
+
+            Lessons.get( { id: 'lesson1' } ).$promise
+                .then( function ( object ) {
+                    originalObject = object;
+                } );
+
+            $httpBackend.flush();
+
+        } );
+
+        describe( 'should send correct update request if I change', function () {
+
+            var expectingDocument;
+
+            beforeEach( function () {
+
+                expectingDocument = documentsToRespond.lesson1;
+
+            } );
+
+            it( 'time', function () {
+
+                expectingDocument.time.start.setDate( 9 );
+                expectingDocument.time.end.setDate( 9 );
+
+                expectingDocument.time.start.setHours( 15 );
+                expectingDocument.time.end.setHours( 15 );
+
+                expectingDocument.time.end.setMinutes( 40 );
+
+
+                originalObject.time.date.setDate( 9 );
+                originalObject.time.epochStart = 54000; // 15:00
+                originalObject.time.duration = 40;
+
+
+                defineRespond( 'PUT', 200, '/lessons/lesson1', expectingDocument );
+                expectRequest( 'PUT', '/lessons/lesson1', expectingDocument );
+
+                Lessons.update( { id: 'lesson1' }, originalObject );
+
+                $httpBackend.flush();
+
+            } );
+
+            it( 'coaches', function () {
+
+                expectingDocument.coaches = ['coach1', 'coach3'];
+
+                originalObject.coaches = [
+                    {
+                        _id: 'coach1',
+                        name: 'The Coach 1'
+                    },
+                    {
+                        _id: 'coach3',
+                        name: 'The Coach 3'
+                    }
+                ];
+
+
+                defineRespond( 'PUT', 200, '/lessons/lesson1', expectingDocument );
+                expectRequest( 'PUT', '/lessons/lesson1', expectingDocument );
+
+                Lessons.update( { id: 'lesson1' }, originalObject );
+
+                $httpBackend.flush();
+
+            } );
+
+        } );
+
+        it( 'should call resolve with response data object as argument if all goes ok', function () {
+
+            var objectToUpdate = {
+                _id: 'lesson1',
+                time: {
+                    date: new Date( 2015, 5 - 1, 8 ),
+                    epochStart: 50400,
+                    duration: 30
+                }
+            };
+
+            var expectedResponse = {
+                _id: 'lesson1',
+                time: {
+                    start: new Date( 2015, 5-1, 8, 14, 0 ),
+                    end: new Date( 2015, 5-1, 8, 14, 30 )
+                },
+                coaches: [],
+                halls: [],
+                groups: []
+            };
+
+            defineRespond( 'PUT', 200, '/lessons/lesson1', expectedResponse );
+
+            Lessons.update( { id: 'lesson1' }, objectToUpdate ).$promise
+                .then( callback.success, callback.error, callback.notify );
+
+            $httpBackend.flush();
+
+            expect( callback.success ).toHaveBeenCalled();
+            expect( callback.error ).not.toHaveBeenCalled();
+            expect( callback.notify ).not.toHaveBeenCalled();
+
+            expect( callback.success.calls.mostRecent().args[0]._id ).toEqual( 'lesson1' );
+
+        } );
+
+        it( 'should call reject with error data object as argument if something goes wrong', function () {
+
+            var objectToUpdate = {
+                _id: 'lesson1',
+                time: {
+                    date: new Date( 2015, 5 - 1, 8 ),
+                    epochStart: 50400,
+                    duration: 30
+                }
+            };
+
+            var errorObject = {
+                statusText: 'some error message'
+            };
+
+            defineRespond( 'PUT', 500, '/lessons/lesson1', errorObject );
+
+            Lessons.update( { id: 'lesson1' }, objectToUpdate ).$promise
+                .then( callback.success, callback.error, callback.notify );
+
+            $httpBackend.flush();
+
+            expect( callback.success ).not.toHaveBeenCalled();
+            expect( callback.error ).toHaveBeenCalled();
+            expect( callback.notify ).not.toHaveBeenCalled();
+
+            expect( callback.error.calls.mostRecent().args[0].status ).toEqual( 500 );
+
+        } );
 
     } );
 

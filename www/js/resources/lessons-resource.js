@@ -18,7 +18,7 @@ angular.module( 'starter.api.lessons', [
 
             '_get': { method: 'GET', timeout: 5000 },
             '_query': { method: 'GET', isArray: true, timeout: 5000 },
-            'update': { method: 'PUT', timeout: 5000 },
+            '_update': { method: 'PUT', timeout: 5000 },
             '_create': { method: 'POST', timeout: 5000 },
             'remove': { method: 'DELETE', timeout: 5000 }
 
@@ -371,6 +371,31 @@ angular.module( 'starter.api.lessons', [
                 .then( deferred.resolve, deferred.reject );
 
             return { $promise: deferred.promise };
+        };
+
+
+        /**
+         * Update lesson
+         *
+         * @param {object} params Id of object to upload updates. As default you should pass object with id property to this argument
+         * @param {object} object New object to upload
+         */
+        Lessons.update = function ( params, object ) {
+            var deferred = $q.defer(),
+                resultDocument = {};
+
+            resultDocument._id = object._id;
+            resultDocument.time = Lessons.getSimpleTimeByExtended( object.time );
+
+            resultDocument.coaches = Lessons.depopulateArray( object.coaches );
+            resultDocument.halls = Lessons.depopulateArray( object.halls );
+            resultDocument.groups = Lessons.depopulateArray( object.groups );
+
+            Lessons._update( params, resultDocument ).$promise
+                .then( deferred.resolve, deferred.reject );
+
+            return { $promise: deferred.promise };
+
         };
 
         return Lessons;
