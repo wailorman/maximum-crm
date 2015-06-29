@@ -739,7 +739,6 @@ fdescribe( 'Lessons resource', function () {
         beforeEach( function () {
 
             objectToPost = {
-                _id: 'new-lesson',
                 time: {
                     date: new Date( 2015, 5 - 1, 8 ),
                     epochStart: 50400,
@@ -781,7 +780,6 @@ fdescribe( 'Lessons resource', function () {
                 .then( callback.success, callback.error, callback.notify );
 
             expectRequest( 'POST', '/lessons', {
-                _id: 'new-lesson',
                 time: expected.time,
                 coaches: expected.coaches,
                 halls: expected.halls,
@@ -813,16 +811,6 @@ fdescribe( 'Lessons resource', function () {
 
         } );
 
-        it( 'should throw an error if _id was not passed', function () {
-
-            delete objectToPost._id;
-
-            expect( function () {
-                Lessons.create( objectToPost );
-            } ).toThrow( new Error( 'Missing _id' ) );
-
-        } );
-
         it( 'should throw an error if time is invalid', function () {
 
             delete objectToPost.time.date;
@@ -843,7 +831,6 @@ fdescribe( 'Lessons resource', function () {
                 .then( callback.success, callback.error, callback.notify );
 
             expectRequest( 'POST', '/lessons', {
-                _id: 'new-lesson',
                 time: expected.time,
                 coaches: [],
                 halls: expected.halls,

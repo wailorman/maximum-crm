@@ -355,12 +355,6 @@ angular.module( 'starter.api.lessons', [
             var deferred = $q.defer(),
                 resultDocument = {};
 
-            // id
-            if ( data._id )
-                resultDocument._id = data._id;
-            else
-                throw new Error( 'Missing _id' );
-
             // time
             try {
                 resultDocument.time = Lessons.getSimpleTimeByExtended( data.time );
