@@ -14,16 +14,6 @@ fdescribe( 'Lessons resource', function () {
             }
         };
 
-    beforeEach( function () {
-        spyOn( callback, 'error' );
-        spyOn( callback, 'success' );
-        spyOn( callback, 'notify' );
-    } );
-
-    beforeEach( function () {
-        resetSpies();
-    } );
-
     /**
      *
      * @param {string} method
@@ -60,6 +50,19 @@ fdescribe( 'Lessons resource', function () {
 
     beforeEach( module( 'starter.api.lessons' ) );
 
+    // define spies on callbacks
+    beforeEach( function () {
+        spyOn( callback, 'error' );
+        spyOn( callback, 'success' );
+        spyOn( callback, 'notify' );
+    } );
+
+    // reset callback spies
+    beforeEach( function () {
+        resetSpies();
+    } );
+
+    // injector
     beforeEach( inject( function ( _Lessons_, _$httpBackend_, _$resource_, _$q_ ) {
 
         Lessons = _Lessons_;
