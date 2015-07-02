@@ -607,6 +607,62 @@ fdescribe( 'Lessons resource', function () {
 
         } );
 
+        describe( 'should find required properties in result object', function () {
+
+            var resultObject;
+
+            beforeEach( function () {
+                resultObject = callback.success.calls.mostRecent().args[0];
+            } );
+
+            it( '_id', function () {
+
+                expect( resultObject.hasOwnProperty( '_id' ) ).toBeTruthy();
+                expect( typeof resultObject._id ).toEqual( 'string' );
+
+            } );
+
+            it( 'time', function () {
+
+                expect( resultObject.hasOwnProperty( 'time' ) ).toBeTruthy();
+                expect( resultObject.time.hasOwnProperty( 'date' ) ).toBeTruthy();
+                expect( resultObject.time.hasOwnProperty( 'epochStart' ) ).toBeTruthy();
+                expect( resultObject.time.hasOwnProperty( 'duration' ) ).toBeTruthy();
+                expect( resultObject.time.hasOwnProperty( 'start' ) ).toBeTruthy();
+                expect( resultObject.time.hasOwnProperty( 'end' ) ).toBeTruthy();
+
+                expect( typeof resultObject.time ).toEqual( 'object' );
+                expect( typeof resultObject.time.date ).toEqual( 'object' );
+                expect( typeof resultObject.time.epochStart ).toEqual( 'number' );
+                expect( typeof resultObject.time.duration ).toEqual( 'number' );
+                expect( typeof resultObject.time.start ).toEqual( 'object' );
+                expect( typeof resultObject.time.end ).toEqual( 'object' );
+
+            } );
+
+            it( 'coaches', function () {
+
+                expect( resultObject.hasOwnProperty( 'coaches' ) ).toBeTruthy();
+                expect( resultObject.coaches instanceof Array ).toBeTruthy();
+
+            } );
+
+            it( 'halls', function () {
+
+                expect( resultObject.hasOwnProperty( 'halls' ) ).toBeTruthy();
+                expect( resultObject.halls instanceof Array ).toBeTruthy();
+
+            } );
+
+            it( 'groups', function () {
+
+                expect( resultObject.hasOwnProperty( 'groups' ) ).toBeTruthy();
+                expect( resultObject.groups instanceof Array ).toBeTruthy();
+
+            } );
+
+        } );
+
         it( 'should notify 3 times when some object cannot be populated', function () {
 
             resetSpies();
