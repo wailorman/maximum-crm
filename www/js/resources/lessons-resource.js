@@ -1,5 +1,7 @@
 angular.module( 'starter.api.lessons', [
 
+    'starter.api.helper',
+    
     'starter.api.coaches',
     'starter.api.halls',
     'starter.api.groups',
@@ -10,7 +12,8 @@ angular.module( 'starter.api.lessons', [
     .factory( 'Lessons', function ( Coaches,
         Halls,
         Groups,
-        $resource, $q, $log ) {
+        ApiHelper,
+        $resource, $q ) {
 
         var apiUrl = 'http://api.max-crm.wailorman.ru:21080';
 
@@ -96,161 +99,6 @@ angular.module( 'starter.api.lessons', [
             return resultTime;
         };
 
-        /**
-         * Get populated array by array of IDs.
-         * Async function
-         *
-         * Method don't stop working if it can't find some of objects.
-         * On every error response (e.g. 404) it will call deferred.notify.
-         * So, if it can't find two objects, it will calls notify function twice.
-         * But! If method can't find all of requested objects it will call reject
-         *
-         * So
-         * notify -- calls on every error
-         * reject -- calls only if all requests respond an error
-         * resolve -- calls after all requests been responded. Args: resultArray (already populated)
-         *
-         * @param {Resource} resource Should have _get() func!
-         * @param {array|Array} arrayOfIds
-         */
-        Lessons.populateArray = function ( resource, arrayOfIds ) {
-            var deferred = $q.defer(),
-                resultArray = [],
-                numberOfErrorResponds = 0;
-
-            async.each(
-                arrayOfIds,
-                function ( objectId, ecb ) {
-
-                    resource._get( { id: objectId } ).$promise
-                        .then(
-                        function ( coach ) {
-                            resultArray.push( coach );
-                            ecb();
-                        },
-                        function () {
-                            numberOfErrorResponds++;
-                            deferred.notify( "Can't find " + objectId );
-                            ecb();
-                        }
-                    );
-
-                },
-                function () {
-                    if ( numberOfErrorResponds == arrayOfIds.length ) {
-                        deferred.reject( "Can't find any object" );
-                    } else if ( numberOfErrorResponds < arrayOfIds.length && resultArray ) {
-                        deferred.resolve( resultArray );
-                    }
-                }
-            );
-
-            return deferred.promise;
-        };
-
-        /**
-         * Depopulate array.
-         * Converting array of objects to plane array.
-         * Sync function
-         *
-         * @param {array|Array} arrayOfObjects Elements of this array can be objects (with _id property!), strings and numbers
-         *
-         * @return {array|Array}
-         */
-        Lessons.depopulateArray = function ( arrayOfObjects ) {
-
-            var resultArray = [];
-
-            if ( !arrayOfObjects ) {
-                $log.error( 'Missing array' );
-            } else {
-
-                arrayOfObjects.forEach( function ( elem ) {
-
-                    if ( typeof elem === 'object' ) {
-
-                        if ( elem._id ) {
-                            resultArray.push( elem._id );
-                        } else {
-                            $log.error( 'Some object in array does not have _id property' );
-                        }
-
-                    } else if ( typeof elem === 'string' || typeof elem === 'number' ) {
-
-                        resultArray.push( elem );
-
-                    }
-
-                } );
-
-            }
-
-            return resultArray;
-
-        };
-
-        /**
-         * Add object from Resource to array asynchronously.
-         *
-         * Call resolve after success get and push. Calling with resulted array as argument
-         * Call reject when Resource get receive with error. As argument -- response error data.
-         *
-         * @param {object|Resource} Resource    Angular Resource object. Should have _get() or get() method
-         * @param {array|Array} array
-         * @param {string|number} objectId
-         *
-         * @throws Error( 'Invalid Resource. Expect object or function' )
-         * @throws Error( 'Invalid Resource. Expect _get() or get() method in Resource object' )
-         * @throws Error( 'Missing array' )
-         * @throws Error( 'Invalid array. Expect array, but got <type>' )
-         * @throws Error( 'Missing objectId' )
-         * @throws Error( 'Invalid objectId. Expect string or number, but got <type>' )
-         */
-        Lessons.addObjectToArrayById = function ( Resource, array, objectId ) {
-
-            var resourceMethodToCall,
-                deferred = $q.defer();
-
-            if ( !Resource || ( typeof Resource !== 'object' && typeof Resource !== 'function' ) )
-                throw new Error( 'Invalid Resource. Expect object or function' );
-
-            if ( !Resource._get && !Resource.get )
-                throw new Error( 'Invalid Resource. Expect _get() or get() method in Resource object' );
-
-            if ( !array )
-                throw new Error( 'Missing array' );
-
-            if ( !( array instanceof Array ) )
-                throw new Error( 'Invalid array. Expect array, but got ' + typeof array );
-
-            if ( !objectId )
-                throw new Error( 'Missing objectId' );
-
-            if ( typeof objectId !== 'string' && typeof objectId !== 'number' )
-                throw new Error( 'Invalid objectId. Expect string or number, but got ' + typeof objectId );
-
-
-            if ( Resource._get && typeof Resource._get === 'function' ) {
-
-                resourceMethodToCall = Resource._get;
-
-            } else if ( Resource.get && typeof Resource.get === 'function' ) {
-
-                resourceMethodToCall = Resource.get;
-
-            }
-
-            resourceMethodToCall( { id: objectId } ).$promise
-                .then( function ( data ) {
-
-                    array.push( data );
-                    deferred.resolve( array );
-
-                }, deferred.reject );
-
-            return deferred.promise;
-
-        };
 
         /**
          *
@@ -278,7 +126,7 @@ angular.module( 'starter.api.lessons', [
                             // coaches
                             function ( pcb ) {
 
-                                Lessons.populateArray( Coaches, document.coaches )
+                                ApiHelper.populateArray( Coaches, document.coaches )
 
                                     .then( function ( populatedCoaches ) {
                                         resultObject.coaches = populatedCoaches;
@@ -293,7 +141,7 @@ angular.module( 'starter.api.lessons', [
                             // halls
                             function ( pcb ) {
 
-                                Lessons.populateArray( Halls, document.halls )
+                                ApiHelper.populateArray( Halls, document.halls )
 
                                     .then( function ( populatedHalls ) {
                                         resultObject.halls = populatedHalls;
@@ -309,7 +157,7 @@ angular.module( 'starter.api.lessons', [
                             // groups
                             function ( pcb ) {
 
-                                Lessons.populateArray( Groups, document.groups )
+                                ApiHelper.populateArray( Groups, document.groups )
 
                                     .then( function ( populatedGroups ) {
                                         resultObject.groups = populatedGroups;
@@ -362,9 +210,9 @@ angular.module( 'starter.api.lessons', [
                 throw new Error( 'Invalid time' );
             }
 
-            resultDocument.coaches = Lessons.depopulateArray( data.coaches );
-            resultDocument.halls = Lessons.depopulateArray( data.halls );
-            resultDocument.groups = Lessons.depopulateArray( data.groups );
+            resultDocument.coaches = ApiHelper.depopulateArray( data.coaches );
+            resultDocument.halls = ApiHelper.depopulateArray( data.halls );
+            resultDocument.groups = ApiHelper.depopulateArray( data.groups );
 
 
             Lessons._create( resultDocument ).$promise
@@ -387,9 +235,9 @@ angular.module( 'starter.api.lessons', [
             resultDocument._id = object._id;
             resultDocument.time = Lessons.getSimpleTimeByExtended( object.time );
 
-            resultDocument.coaches = Lessons.depopulateArray( object.coaches );
-            resultDocument.halls = Lessons.depopulateArray( object.halls );
-            resultDocument.groups = Lessons.depopulateArray( object.groups );
+            resultDocument.coaches = ApiHelper.depopulateArray( object.coaches );
+            resultDocument.halls = ApiHelper.depopulateArray( object.halls );
+            resultDocument.groups = ApiHelper.depopulateArray( object.groups );
 
             Lessons._update( params, resultDocument ).$promise
                 .then( deferred.resolve, deferred.reject );
