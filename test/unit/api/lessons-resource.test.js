@@ -1030,6 +1030,56 @@ fdescribe( 'Lessons resource', function () {
 
             } );
 
+            it( 'halls', function () {
+
+                expectingDocument.halls = ['hall1', 'hall3'];
+
+                originalObject.halls = [
+                    {
+                        _id: 'hall1',
+                        name: 'The Hall 1'
+                    },
+                    {
+                        _id: 'hall3',
+                        name: 'The Hall 3'
+                    }
+                ];
+
+
+                defineRespond( 'PUT', 200, '/lessons/lesson1', expectingDocument );
+                expectRequest( 'PUT', '/lessons/lesson1', expectingDocument );
+
+                Lessons.update( { id: 'lesson1' }, originalObject );
+
+                $httpBackend.flush();
+
+            } );
+
+            it( 'groups', function () {
+
+                expectingDocument.groups = ['group1', 'group3'];
+
+                originalObject.groups = [
+                    {
+                        _id: 'group1',
+                        name: 'The Group 1'
+                    },
+                    {
+                        _id: 'group3',
+                        name: 'The Group 3'
+                    }
+                ];
+
+
+                defineRespond( 'PUT', 200, '/lessons/lesson1', expectingDocument );
+                expectRequest( 'PUT', '/lessons/lesson1', expectingDocument );
+
+                Lessons.update( { id: 'lesson1' }, originalObject );
+
+                $httpBackend.flush();
+
+            } );
+
         } );
 
         it( 'should call resolve with response data object as argument if all goes ok', function () {
