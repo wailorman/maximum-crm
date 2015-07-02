@@ -100,4 +100,70 @@ angular.module( 'starter.api.helper', [
 
         };
 
+
+        /**
+         * Add object from Resource to array asynchronously.
+         *
+         * Call resolve after success get and push. Calling with resulted array as argument
+         * Call reject when Resource get receive with error. As argument -- response error data.
+         *
+         * @param {object|Resource} Resource    Angular Resource object. Should have _get() or get() method
+         * @param {function} [Resource.get]
+         * @param {function} [Resource._get]
+         * @param {array|Array} array
+         * @param {string|number} objectId
+         *
+         * @throws Error( 'Invalid Resource. Expect object or function' )
+         * @throws Error( 'Invalid Resource. Expect _get() or get() method in Resource object' )
+         * @throws Error( 'Missing array' )
+         * @throws Error( 'Invalid array. Expect array, but got <type>' )
+         * @throws Error( 'Missing objectId' )
+         * @throws Error( 'Invalid objectId. Expect string or number, but got <type>' )
+         */
+        ApiHelper.addObjectToArrayById = function ( Resource, array, objectId ) {
+
+            var resourceMethodToCall,
+                deferred = $q.defer();
+
+            if ( !Resource || ( typeof Resource !== 'object' && typeof Resource !== 'function' ) )
+                throw new Error( 'Invalid Resource. Expect object or function' );
+
+            if ( !Resource._get && !Resource.get )
+                throw new Error( 'Invalid Resource. Expect _get() or get() method in Resource object' );
+
+            if ( !array )
+                throw new Error( 'Missing array' );
+
+            if ( !( array instanceof Array ) )
+                throw new Error( 'Invalid array. Expect array, but got ' + typeof array );
+
+            if ( !objectId )
+                throw new Error( 'Missing objectId' );
+
+            if ( typeof objectId !== 'string' && typeof objectId !== 'number' )
+                throw new Error( 'Invalid objectId. Expect string or number, but got ' + typeof objectId );
+
+
+            if ( Resource._get && typeof Resource._get === 'function' ) {
+
+                resourceMethodToCall = Resource._get;
+
+            } else if ( Resource.get && typeof Resource.get === 'function' ) {
+
+                resourceMethodToCall = Resource.get;
+
+            }
+
+            resourceMethodToCall( { id: objectId } ).$promise
+                .then( function ( data ) {
+
+                    array.push( data );
+                    deferred.resolve( array );
+
+                }, deferred.reject );
+
+            return deferred.promise;
+
+        };
+
     } );
