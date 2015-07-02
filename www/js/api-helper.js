@@ -166,4 +166,70 @@ angular.module( 'starter.api.helper', [
 
         };
 
+        /**
+         * Helpful in developing Resource instance methods.
+         * Especially I've create this method for own $save instance method.
+         * It get Resource object which should have $resolved property. And if
+         * $resolved == true, it means that this object has been received from server
+         * and $save should send PUT request. Otherwise if $resolved == false it
+         * means that this object haven't been defined in server and we should
+         * create some new object by sending POST request.
+         *
+         * Resource object should have _create and _update method
+         * object should have $resolved property and _id property if $resolved == true
+         *
+         * @param {object|Resource}     Resource
+         * @param {function}            Resource._create
+         * @param {function}            Resource._update
+         * @param {object}              object
+         * @param {boolean}             object.$resolved
+         *
+         * @throws Invalid [arg_name] type. Expected [expected_type], but got a [real_type]
+         * @throws Missing $resolved property in object
+         * @throws Missing [method_name] property in Resource object
+         *
+         * @return {Function}
+         */
+        ApiHelper.getUploadMethodByObject = function ( Resource, object ) {
+
+            if ( typeof object !== 'object' )
+                throw new Error( 'Invalid object type. Expected object, but got a ' + typeof object );
+
+            if ( typeof Resource !== 'object' )
+                throw new Error( 'Invalid Resource type. Expected object, but got a ' + typeof Resource );
+
+
+            if ( !object.hasOwnProperty( '$resolved' ) )
+                throw new Error( 'Missing $resolved property in object' );
+
+            if ( typeof object.$resolved !== 'boolean' )
+                throw new Error( 'Invalid object.$resolved type. Expected boolean, but got a ' + typeof object.$resolved );
+
+            if ( object.$resolved === true && ! object.hasOwnProperty( '_id' ) )
+                throw new Error( 'Invalid object. Missing _id property since object is resolved' );
+
+
+            if ( !Resource._create )
+                throw new Error( 'Missing _create() method in Resource object' );
+
+            if ( !Resource._update )
+                throw new Error( 'Missing _update() method in Resource object' );
+
+
+            if ( object.$resolved === false ) { // _create
+
+                return function () {
+                    return Resource._create( object );
+                };
+
+            } else { // _update
+
+                return function () {
+                    return Resource._update( { id: object._id }, object );
+                };
+
+            }
+
+        };
+
     } );

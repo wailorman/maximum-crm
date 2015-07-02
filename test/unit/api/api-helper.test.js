@@ -554,4 +554,166 @@ fdescribe( 'ApiHelper class', function () {
 
     } );
 
+    describe( 'getUploadMethodByObject()', function () {
+
+        var getUploadMethodByObject,
+            mockedResource,
+            mockedObject,
+            uploadMethod;
+
+        var resetUploadMethodSpies = function () {
+
+            mockedResource._create.calls.reset();
+            mockedResource._update.calls.reset();
+
+        };
+
+        beforeEach( function () {
+
+            getUploadMethodByObject = ApiHelper.getUploadMethodByObject;
+
+            mockedResource = {
+                _create: function () {
+
+                },
+                _update: function () {
+
+                }
+            };
+
+            spyOn( mockedResource, '_create' ).and.callThrough();
+            spyOn( mockedResource, '_update' ).and.callThrough();
+
+            mockedObject = {
+                $resolved: true,
+                _id: 'some-id'
+            };
+
+            resetUploadMethodSpies();
+
+        } );
+
+        describe( 'should throw exception if', function () {
+
+            it( '$resolved is not defined', function () {
+
+                delete mockedObject.$resolved;
+
+                expect( function () {
+
+                    getUploadMethodByObject( mockedResource, mockedObject );
+
+                } ).toThrow( new Error( 'Missing $resolved property in object' ) );
+
+            } );
+
+            it( '$resolved is a string var (cause its not boolean)', function () {
+
+                mockedObject.$resolved = 'some string';
+
+                expect( function () {
+
+                    getUploadMethodByObject( mockedResource, mockedObject );
+
+                } ).toThrow( new Error( 'Invalid object.$resolved type. Expected boolean, but got a string' ) );
+
+            } );
+
+            it( 'Resource does not have _create method', function () {
+
+                delete mockedResource._create;
+
+                expect( function () {
+
+                    getUploadMethodByObject( mockedResource, mockedObject );
+
+                } ).toThrow( new Error( 'Missing _create() method in Resource object' ) );
+
+            } );
+
+            it( 'Resource does not have _update method', function () {
+
+                delete mockedResource._update;
+
+                expect( function () {
+
+                    getUploadMethodByObject( mockedResource, mockedObject );
+
+                } ).toThrow( new Error( 'Missing _update() method in Resource object' ) );
+
+            } );
+
+            it( 'Resource is a string var (cause its not object)', function () {
+
+                mockedResource = 'some string';
+
+                expect( function () {
+
+                    getUploadMethodByObject( mockedResource, mockedObject );
+
+                } ).toThrow( new Error( 'Invalid Resource type. Expected object, but got a string' ) );
+
+            } );
+
+            it( 'object is a string var (cause its not object)', function () {
+
+                mockedObject = 'some string';
+
+                expect( function () {
+
+                    getUploadMethodByObject( mockedResource, mockedObject );
+
+                } ).toThrow( new Error( 'Invalid object type. Expected object, but got a string' ) );
+
+            } );
+
+            it( 'this is resolved object and it has not _id property', function () {
+                // because we should have an _id property to build
+                // correct upload (PUT) request!
+
+                mockedObject.$resolved = true;
+                delete mockedObject._id;
+
+                expect( function () {
+
+                    getUploadMethodByObject( mockedResource, mockedObject );
+
+                } ).toThrow( new Error( 'Invalid object. Missing _id property since object is resolved' ) );
+
+            } );
+
+        } );
+
+        it( 'should call _create method if $resolved = false', function () {
+
+            mockedObject.$resolved = false;
+
+            uploadMethod = getUploadMethodByObject( mockedResource, mockedObject );
+
+            uploadMethod();
+
+            expect( mockedResource._create ).toHaveBeenCalled();
+            expect( mockedResource._update ).not.toHaveBeenCalled();
+
+            expect( mockedResource._create ).toHaveBeenCalledWith( mockedObject );
+
+        } );
+
+        it( 'should call _update method if $resolved = true with params', function () {
+
+            mockedObject.$resolved = true;
+
+            uploadMethod = getUploadMethodByObject( mockedResource, mockedObject );
+
+            uploadMethod();
+
+            expect( mockedResource._create ).not.toHaveBeenCalled();
+            expect( mockedResource._update ).toHaveBeenCalled();
+
+            expect( mockedResource._update ).toHaveBeenCalledWith( { id: mockedObject._id }, mockedObject );
+
+        } );
+
+    } );
+
 } );
