@@ -2,7 +2,7 @@ angular.module( 'starter.api.helper', [
     'ngResource'
 ] )
 
-    .service( 'ApiHelper', function ( $q ) {
+    .service( 'ApiHelper', function ( $q, $log ) {
 
         var ApiHelper = this;
 
@@ -56,6 +56,48 @@ angular.module( 'starter.api.helper', [
             );
 
             return deferred.promise;
+        };
+
+
+        /**
+         * Depopulate array.
+         * Converting array of objects to plane array.
+         * Sync function
+         *
+         * @param {array|Array} arrayOfObjects Elements of this array can be objects (with _id property!), strings and numbers
+         *
+         * @return {array|Array}
+         */
+        ApiHelper.depopulateArray = function ( arrayOfObjects ) {
+
+            var resultArray = [];
+
+            if ( !arrayOfObjects ) {
+                $log.error( 'Missing array' );
+            } else {
+
+                arrayOfObjects.forEach( function ( elem ) {
+
+                    if ( typeof elem === 'object' ) {
+
+                        if ( elem._id ) {
+                            resultArray.push( elem._id );
+                        } else {
+                            $log.error( 'Some object in array does not have _id property' );
+                        }
+
+                    } else if ( typeof elem === 'string' || typeof elem === 'number' ) {
+
+                        resultArray.push( elem );
+
+                    }
+
+                } );
+
+            }
+
+            return resultArray;
+
         };
 
     } );

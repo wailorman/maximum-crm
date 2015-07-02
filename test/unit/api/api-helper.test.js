@@ -193,4 +193,95 @@ fdescribe( 'ApiHelper class', function () {
 
     } );
 
+    describe( 'depopulateArray', function () {
+
+        var arrayOfObjects;
+
+        it( 'should return empty array if we passing to him null', function () {
+
+            var result = ApiHelper.depopulateArray( null );
+            expect( result instanceof Array ).toBeTruthy();
+            expect( result ).toEqual( [] );
+
+        } );
+
+        it( 'should convert array of objects with _id property to plane array', function () {
+
+            arrayOfObjects = [
+                { _id: 'coach1', name: 'The Coach 1' },
+                { _id: 'coach2', name: 'The Coach 2' }
+            ];
+
+            var result = ApiHelper.depopulateArray( arrayOfObjects );
+
+            expect( result.length ).toEqual( 2 );
+            expect( result[0] ).toEqual( 'coach1' );
+            expect( result[1] ).toEqual( 'coach2' );
+
+        } );
+
+        it( 'should ignore element if object does not have _id property', function () {
+
+            arrayOfObjects = [
+                { _id: 'coach1', name: 'The Coach 1' },
+                { name: 'The Coach 2' }
+            ];
+
+            expect( ApiHelper.depopulateArray( arrayOfObjects ) ).toEqual( ['coach1'] );
+
+        } );
+
+        it( 'should works fine if we will pass array with objects which have only _id property', function () {
+
+            arrayOfObjects = [
+                { _id: 'coach1' },
+                { _id: 'coach2' }
+            ];
+
+            expect( ApiHelper.depopulateArray( arrayOfObjects ) ).toEqual( ['coach1', 'coach2'] );
+
+        } );
+
+        it( 'should return [] if we will pass empty array to arguments', function () {
+
+            arrayOfObjects = [];
+
+            expect( ApiHelper.depopulateArray( arrayOfObjects ) ).toEqual( [] );
+
+        } );
+
+        it( 'should works fine if some elem of array is object and some elem is string', function () {
+
+            arrayOfObjects = [
+                { _id: 'coach1', name: 'The Coach 1' },
+                'coach2'
+            ];
+
+            var result = ApiHelper.depopulateArray( arrayOfObjects );
+
+            expect( result.length ).toEqual( 2 );
+            expect( result[0] ).toEqual( 'coach1' );
+            expect( result[1] ).toEqual( 'coach2' );
+
+        } );
+
+        it( 'should works with numbers too', function () {
+
+            arrayOfObjects = [
+                { _id: 'coach1' },
+                'coach2',
+                345
+            ];
+
+            var result = ApiHelper.depopulateArray( arrayOfObjects );
+
+            expect( result.length ).toEqual( 3 );
+            expect( result[0] ).toEqual( 'coach1' );
+            expect( result[1] ).toEqual( 'coach2' );
+            expect( result[2] ).toEqual( 345 );
+
+        } );
+
+    } );
+
 } );
