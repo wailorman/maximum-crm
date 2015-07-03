@@ -415,7 +415,6 @@ fdescribe( 'Lessons resource', function () {
 
     } );
 
-    // todo: Passing null to document
     describe( 'documentToObject()', function () {
 
         var mockedDocument;
@@ -459,6 +458,18 @@ fdescribe( 'Lessons resource', function () {
                 halls: ['hall1', 'hall2'],
                 groups: ['group1', 'group2']
             };
+
+        } );
+
+        it( 'should throw exception if we did not passed document', function () {
+
+            mockedDocument = null;
+
+            expect( function () {
+
+                convertDocumentToObject();
+
+            } ).toThrow( new Error( 'Missing document' ) );
 
         } );
 

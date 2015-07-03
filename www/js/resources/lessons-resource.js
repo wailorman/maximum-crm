@@ -100,12 +100,24 @@ angular.module( 'starter.api.lessons', [
         };
 
 
-        // todo: Write docs
+        /**
+         * Convert document from server to object.
+         * If some errors happened while executing, they will be $logged
+         * or notified by promise (see ApiHelper.populateArray).
+         *
+         * @throws see Lessons.getExtendedTimeBySimple
+         * @throws Error( 'Missing document' )
+         *
+         * @param {object} document
+         */
         Lessons.documentToObject = function ( document ) {
 
 
             var deferred = $q.defer(),
                 resultObject = {};
+
+            if ( !document )
+                throw new Error( 'Missing document' );
 
             if ( !document._id )
                 $log.error( 'Missing _id property in document' );
@@ -221,9 +233,13 @@ angular.module( 'starter.api.lessons', [
          * If $resolved == false or not defined, method will ignore _id property even
          * you passed it.
          *
+         * @throws Error( 'Missing object' )
+         * @throws Error( 'Missing _id property' )
+         *
          * @param {object|Resource}     object
          * @param {boolean}             [object.$resolved]
          * @param {string}              [object._id]
+         *
          * @return {{}} document
          */
         Lessons.objectToDocument = function ( object ) {
