@@ -1,4 +1,4 @@
-describe( 'ApiHelper class', function () {
+fdescribe( 'ApiHelper class', function () {
 
     var ApiHelper, $resource, $q, $httpBackend,
 
@@ -160,7 +160,8 @@ describe( 'ApiHelper class', function () {
             expect( callback.success ).toHaveBeenCalled();
 
             expect( callback.notify.calls.count() ).toEqual( 1 );
-            expect( callback.notify.calls.mostRecent().args[0] ).toEqual( "Can't find coach3" );
+            expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
+            expect( callback.notify.calls.mostRecent().args[0].message ).toEqual( "Can't find coach3" );
 
         } );
 
@@ -185,9 +186,10 @@ describe( 'ApiHelper class', function () {
             expect( callback.notify.calls.count() ).toEqual( 2 );
             expect( callback.error.calls.count() ).toEqual( 1 );
 
-            expect( callback.error.calls.mostRecent().args[0] ).toEqual( "Can't find any object" );
+            expect( callback.error.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
+            expect( callback.error.calls.mostRecent().args[0].message ).toEqual( "Can't find any object" );
 
-            // I wont check notify callback args bcz I made sure it calls correctly in previous test
+            // I wont check notify callback args bcz I've made sure it calls correctly in previous test
 
         } );
 

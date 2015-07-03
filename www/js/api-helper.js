@@ -40,7 +40,7 @@ angular.module( 'starter.api.helper', [
                         },
                         function () {
                             numberOfErrorResponds++;
-                            deferred.notify( "Can't find " + objectId );
+                            deferred.notify( new Error( "Can't find " + objectId ) );
                             ecb();
                         }
                     );
@@ -48,7 +48,7 @@ angular.module( 'starter.api.helper', [
                 },
                 function () {
                     if ( numberOfErrorResponds == arrayOfIds.length ) {
-                        deferred.reject( "Can't find any object" );
+                        deferred.reject( new Error( "Can't find any object" ) );
                     } else if ( numberOfErrorResponds < arrayOfIds.length && resultArray ) {
                         deferred.resolve( resultArray );
                     }
