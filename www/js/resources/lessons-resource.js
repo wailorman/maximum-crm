@@ -100,6 +100,7 @@ angular.module( 'starter.api.lessons', [
         };
 
 
+        // todo: Write docs
         Lessons.documentToObject = function ( document ) {
 
 
@@ -207,6 +208,44 @@ angular.module( 'starter.api.lessons', [
 
 
             return deferred.promise;
+
+        };
+
+        /**
+         * Converting object to document
+         * This method using $resolved property of passing Resource object.
+         *
+         * If $resolved == true, it will add _id property of object to result properties
+         * of document. If $resolved == true, but _id isn't defined, it will throw an Error.
+         *
+         * If $resolved == false or not defined, method will ignore _id property even
+         * you passed it.
+         *
+         * @param {object|Resource}     object
+         * @param {boolean}             [object.$resolved]
+         * @param {string}              [object._id]
+         * @return {{}} document
+         */
+        Lessons.objectToDocument = function ( object ) {
+
+            var resultDocument = {};
+
+            if ( !object )
+                throw new Error( 'Missing object' );
+
+            if ( object.$resolved && !object._id )
+                throw new Error( 'Missing _id property' );
+
+            if ( object.$resolved )
+                resultDocument._id = object._id;
+
+            resultDocument.time = Lessons.getSimpleTimeByExtended( object.time );
+
+            resultDocument.coaches = ApiHelper.depopulateArray( object.coaches );
+            resultDocument.halls = ApiHelper.depopulateArray( object.halls );
+            resultDocument.groups = ApiHelper.depopulateArray( object.groups );
+
+            return resultDocument;
 
         };
 

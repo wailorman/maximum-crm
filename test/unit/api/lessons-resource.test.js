@@ -1,6 +1,6 @@
 fdescribe( 'Lessons resource', function () {
 
-    var Lessons, $httpBackend, $resource, $q, $log,
+    var Lessons, $httpBackend, $resource, $q, $log, dependedObjects,
         apiUri = 'http://api.max-crm.wailorman.ru:21080',
         callback = {
             error: function () {
@@ -50,64 +50,75 @@ fdescribe( 'Lessons resource', function () {
 
     var defineDependentObjects = function () {
 
-        defineRespond( 'GET', 200, '/lessons/lesson-correct', {
-            _id: 'lesson-correct',
-            time: {
-                start: new Date( 2015, 5 - 1, 8, 14, 0 ),
-                end: new Date( 2015, 5 - 1, 8, 14, 30 )
+        dependedObjects = {
+            'lesson-correct': {
+                _id: 'lesson-correct',
+                time: {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                },
+                coaches: ['coach1', 'coach2'],
+                halls: ['hall1', 'hall2'],
+                groups: ['group1', 'group2']
             },
-            coaches: ['coach1', 'coach2'],
-            halls: ['hall1', 'hall2'],
-            groups: ['group1', 'group2']
-        } );
+            'lesson-incorrect': {
+                time: {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                },
+                coaches: ['coach1', 'coach3'],
+                halls: ['hall1', 'hall3'],
+                groups: ['group1', 'group3']
+            },
+            coach1: {
+                _id: 'coach1',
+                name: 'The Coach 1'
+            },
+            coach2: {
+                _id: 'coach2',
+                name: 'The Coach 2'
+            },
+            hall1: {
+                _id: 'hall1',
+                name: 'The Hall 1'
+            },
+            hall2: {
+                _id: 'hall2',
+                name: 'The Hall 2'
+            },
+            group1: {
+                _id: 'group1',
+                name: 'The Group 1'
+            },
+            group2: {
+                _id: 'group2',
+                name: 'The Group 2'
+            }
+        };
+
+        defineRespond( 'GET', 200, '/lessons/lesson-correct', dependedObjects['lesson-correct'] );
 
         // COACHES
 
-        defineRespond( 'GET', 200, '/coaches/coach1', {
-            _id: 'coach1',
-            name: 'The Coach 1'
-        } );
+        defineRespond( 'GET', 200, '/coaches/coach1', dependedObjects.coach1 );
 
-        defineRespond( 'GET', 200, '/coaches/coach2', {
-            _id: 'coach2',
-            name: 'The Coach 2'
-        } );
+        defineRespond( 'GET', 200, '/coaches/coach2', dependedObjects.coach2 );
 
         // HALLS
 
-        defineRespond( 'GET', 200, '/halls/hall1', {
-            _id: 'hall1',
-            name: 'The Hall 1'
-        } );
+        defineRespond( 'GET', 200, '/halls/hall1', dependedObjects.hall1 );
 
-        defineRespond( 'GET', 200, '/halls/hall2', {
-            _id: 'hall2',
-            name: 'The Hall 2'
-        } );
+        defineRespond( 'GET', 200, '/halls/hall2', dependedObjects.hall2 );
 
         // GROUPS
 
-        defineRespond( 'GET', 200, '/groups/group1', {
-            _id: 'group1',
-            name: 'The Group 1'
-        } );
+        defineRespond( 'GET', 200, '/groups/group1', dependedObjects.group1 );
 
-        defineRespond( 'GET', 200, '/groups/group2', {
-            _id: 'group2',
-            name: 'The Group 2'
-        } );
+        defineRespond( 'GET', 200, '/groups/group2', dependedObjects.group2 );
 
         ///////////   INCORRECT   /////////////
 
-        defineRespond( 'GET', 200, '/lessons/lesson-incorrect', {
-            time: {
-                start: new Date( 2015, 5 - 1, 8, 14, 0 ),
-                end: new Date( 2015, 5 - 1, 8, 14, 30 )
-            },
-            coaches: ['coach1', 'coach3'],
-            halls: ['hall1', 'hall3'],
-            groups: ['group1', 'group3']
-        } );
+        defineRespond( 'GET', 200, '/lessons/lesson-incorrect', dependedObjects['lesson-incorrect'] );
 
         defineRespond( 'GET', 404, '/lessons/lesson-nonexistent', {} );
 
@@ -404,6 +415,7 @@ fdescribe( 'Lessons resource', function () {
 
     } );
 
+    // todo: Passing null to document
     describe( 'documentToObject()', function () {
 
         var mockedDocument;
@@ -655,6 +667,155 @@ fdescribe( 'Lessons resource', function () {
             it( 'duration', function () {
 
                 expect( convertedObject.time.duration ).toEqual( 30 );
+
+            } );
+
+        } );
+
+    } );
+
+    describe( 'objectToDocument()', function () {
+
+        var mockedObject,
+            resultDocument;
+
+        var convertObject = function () {
+            resultDocument = Lessons.objectToDocument( mockedObject );
+        };
+
+        beforeEach( function () {
+
+            mockedObject = {
+                $resolved: true,
+                _id: 'lesson1',
+                time: {
+                    date: new Date( 2015, 5 - 1, 8 ),
+                    epochStart: 50400, // 14:00
+                    duration: 30
+                },
+                coaches: [dependedObjects.coach1, dependedObjects.coach2],
+                halls: [dependedObjects.hall1, dependedObjects.hall2],
+                groups: [dependedObjects.group1, dependedObjects.group2]
+            };
+
+        } );
+
+        it( 'should throw exception if we did not passed an object', function () {
+
+            mockedObject = null;
+
+            expect( function () {
+
+                convertObject();
+
+            } ).toThrow( new Error( 'Missing object' ) );
+
+        } );
+
+        describe( '_id', function () {
+
+            it( 'should ignore _id if $resolved not defined', function () {
+
+                delete mockedObject.$resolved;
+
+                convertObject();
+
+                expect( resultDocument._id ).not.toBeDefined();
+
+            } );
+
+            it( 'should ignore _id if $resolved == false', function () {
+
+                mockedObject.$resolved = false;
+
+                convertObject();
+
+                expect( resultDocument._id ).not.toBeDefined();
+
+            } );
+
+            it( 'should throw exception if $resolved == true and _id is not defined', function () {
+
+                delete mockedObject._id;
+
+                expect( function () {
+                    convertObject();
+                } ).toThrow( new Error( 'Missing _id property' ) );
+
+            } );
+
+            it( 'should add _id property if $resolved == true', function () {
+
+                convertObject();
+
+                expect( resultDocument._id ).toEqual( 'lesson1' );
+
+            } );
+
+        } );
+
+        describe( 'time', function () {
+
+            it( 'should throw exception if we did not passed time.date', function () {
+
+                delete mockedObject.time.date;
+
+                expect( function () {
+                    convertObject();
+                } ).toThrow();
+
+            } );
+
+            it( 'should convert time correctly', function () {
+
+                convertObject();
+
+                expect( resultDocument.time.start.getDate() ).toEqual( 8 );
+                expect( resultDocument.time.start.getMonth() ).toEqual( 5 - 1 );
+                expect( resultDocument.time.start.getFullYear() ).toEqual( 2015 );
+                expect( resultDocument.time.start.getHours() ).toEqual( 14 );
+                expect( resultDocument.time.start.getMinutes() ).toEqual( 0 );
+
+                expect( resultDocument.time.end.getDate() ).toEqual( 8 );
+                expect( resultDocument.time.end.getMonth() ).toEqual( 5 - 1 );
+                expect( resultDocument.time.end.getFullYear() ).toEqual( 2015 );
+                expect( resultDocument.time.end.getHours() ).toEqual( 14 );
+                expect( resultDocument.time.end.getMinutes() ).toEqual( 30 );
+
+            } );
+
+        } );
+
+        describe( 'depopulating', function () {
+
+            describe( 'should correctly depopulate', function () {
+
+                beforeEach( function () {
+
+                    convertObject();
+
+                } );
+
+                it( 'coaches', function () {
+
+                    expect( resultDocument.coaches[0] ).toEqual( dependedObjects.coach1._id );
+                    expect( resultDocument.coaches[1] ).toEqual( dependedObjects.coach2._id );
+
+                } );
+
+                it( 'halls', function () {
+
+                    expect( resultDocument.halls[0] ).toEqual( dependedObjects.hall1._id );
+                    expect( resultDocument.halls[1] ).toEqual( dependedObjects.hall2._id );
+
+                } );
+
+                it( 'groups', function () {
+
+                    expect( resultDocument.groups[0] ).toEqual( dependedObjects.group1._id );
+                    expect( resultDocument.groups[1] ).toEqual( dependedObjects.group2._id );
+
+                } );
 
             } );
 
