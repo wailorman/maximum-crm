@@ -40,7 +40,7 @@ fdescribe( 'Lessons resource', function () {
 
     };
 
-    var resetSpies = function () {
+    var resetCallbackSpies = function () {
 
         callback.success.calls.reset();
         callback.error.calls.reset();
@@ -128,7 +128,7 @@ fdescribe( 'Lessons resource', function () {
 
     // reset callback spies
     beforeEach( function () {
-        resetSpies(); // todo: rename to resetCallbackSpies()
+        resetCallbackSpies();
     } );
 
     // injector
@@ -880,7 +880,7 @@ fdescribe( 'Lessons resource', function () {
 
         it( 'should notify 3 times when some object cannot be populated', function () {
 
-            resetSpies();
+            resetCallbackSpies();
 
             Lessons.get( { id: 'lesson-incorrect' } ).$promise
                 .then( callback.success, callback.error, callback.notify );
@@ -897,7 +897,7 @@ fdescribe( 'Lessons resource', function () {
 
         it( 'should call callback.error when responding 404', function () {
 
-            resetSpies();
+            resetCallbackSpies();
 
             Lessons.get( { id: 'lesson-nonexistent' } ).$promise
                 .then( callback.success, callback.error, callback.notify );
@@ -948,7 +948,7 @@ fdescribe( 'Lessons resource', function () {
                 groups: ['group1', 'group2']
             };
 
-            resetSpies();
+            resetCallbackSpies();
 
         } );
 
@@ -1034,7 +1034,7 @@ fdescribe( 'Lessons resource', function () {
 
         beforeEach( function () {
 
-            resetSpies();
+            resetCallbackSpies();
 
             documentsToRespond.lesson1 = {
                 _id: 'lesson1',
