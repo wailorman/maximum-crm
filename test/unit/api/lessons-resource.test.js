@@ -1,6 +1,6 @@
 fdescribe( 'Lessons resource', function () {
 
-    var Lessons, $httpBackend, $resource, $q,
+    var Lessons, $httpBackend, $resource, $q, $log,
         apiUri = 'http://api.max-crm.wailorman.ru:21080',
         callback = {
             error: function () {
@@ -48,6 +48,75 @@ fdescribe( 'Lessons resource', function () {
 
     };
 
+    var defineDependentObjects = function () {
+
+        defineRespond( 'GET', 200, '/lessons/lesson-correct', {
+            _id: 'lesson-correct',
+            time: {
+                start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                end: new Date( 2015, 5 - 1, 8, 14, 30 )
+            },
+            coaches: ['coach1', 'coach2'],
+            halls: ['hall1', 'hall2'],
+            groups: ['group1', 'group2']
+        } );
+
+        // COACHES
+
+        defineRespond( 'GET', 200, '/coaches/coach1', {
+            _id: 'coach1',
+            name: 'The Coach 1'
+        } );
+
+        defineRespond( 'GET', 200, '/coaches/coach2', {
+            _id: 'coach2',
+            name: 'The Coach 2'
+        } );
+
+        // HALLS
+
+        defineRespond( 'GET', 200, '/halls/hall1', {
+            _id: 'hall1',
+            name: 'The Hall 1'
+        } );
+
+        defineRespond( 'GET', 200, '/halls/hall2', {
+            _id: 'hall2',
+            name: 'The Hall 2'
+        } );
+
+        // GROUPS
+
+        defineRespond( 'GET', 200, '/groups/group1', {
+            _id: 'group1',
+            name: 'The Group 1'
+        } );
+
+        defineRespond( 'GET', 200, '/groups/group2', {
+            _id: 'group2',
+            name: 'The Group 2'
+        } );
+
+        ///////////   INCORRECT   /////////////
+
+        defineRespond( 'GET', 200, '/lessons/lesson-incorrect', {
+            time: {
+                start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                end: new Date( 2015, 5 - 1, 8, 14, 30 )
+            },
+            coaches: ['coach1', 'coach3'],
+            halls: ['hall1', 'hall3'],
+            groups: ['group1', 'group3']
+        } );
+
+        defineRespond( 'GET', 404, '/lessons/lesson-nonexistent', {} );
+
+        defineRespond( 'GET', 404, '/coaches/coach3', {} );
+        defineRespond( 'GET', 404, '/halls/hall3', {} );
+        defineRespond( 'GET', 404, '/groups/group3', {} );
+
+    };
+
     beforeEach( module( 'starter.api.lessons' ) );
 
     // define spies on callbacks
@@ -59,16 +128,18 @@ fdescribe( 'Lessons resource', function () {
 
     // reset callback spies
     beforeEach( function () {
-        resetSpies();
+        resetSpies(); // todo: rename to resetCallbackSpies()
     } );
 
     // injector
-    beforeEach( inject( function ( _Lessons_, _$httpBackend_, _$resource_, _$q_ ) {
+    beforeEach( inject( function ( _Lessons_, _$httpBackend_, _$resource_,
+        _$q_, _$log_ ) {
 
         Lessons = _Lessons_;
         $httpBackend = _$httpBackend_;
         $resource = _$resource_;
         $q = _$q_;
+        $log = _$log_;
 
     } ) );
 
@@ -326,6 +397,264 @@ fdescribe( 'Lessons resource', function () {
                         Lessons.getSimpleTimeByExtended( extendedTimeObject );
                     }
                 ).toThrow( new Error( "Not enough params (date missing)" ) );
+
+            } );
+
+        } );
+
+    } );
+
+    describe( 'documentToObject()', function () {
+
+        var mockedDocument;
+        var convertedObject;
+
+        var resetLogSpy = function () {
+
+            $log.error.calls.reset();
+
+        };
+
+        var convertDocumentToObject = function () {
+            Lessons.documentToObject( mockedDocument )
+                .then( callback.success, callback.error, callback.notify );
+
+            $httpBackend.flush();
+
+            convertedObject = callback.success.calls.mostRecent().args[0];
+        };
+
+        // define objects
+        beforeEach( function () {
+            defineDependentObjects();
+        } );
+
+        beforeEach( function () {
+
+            // enable spies
+            spyOn( $log, 'error' );
+
+            resetLogSpy();
+
+            // redefine mocked objects
+            mockedDocument = {
+                _id: 'lesson1',
+                time: {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                },
+                coaches: ['coach1', 'coach2'],
+                halls: ['hall1', 'hall2'],
+                groups: ['group1', 'group2']
+            };
+
+        } );
+
+        describe( 'should log if did not passed', function () {
+
+            it( '_id', function () {
+
+                delete mockedDocument._id;
+
+                Lessons.documentToObject( mockedDocument );
+
+                expect( $log.error.calls.mostRecent().args[0] ).toEqual( 'Missing _id property in document' );
+
+            } );
+
+            it( 'time', function () {
+
+                delete mockedDocument.time;
+
+                Lessons.documentToObject( mockedDocument );
+
+                expect( $log.error.calls.first().args[0] ).toEqual( 'Missing time property in document' );
+
+            } );
+
+            it( 'time.start', function () {
+
+                delete mockedDocument.time.start;
+
+                Lessons.documentToObject( mockedDocument );
+
+                expect( $log.error.calls.first().args[0] ).toEqual( 'Missing time.start property in document' );
+
+            } );
+
+            it( 'time.end', function () {
+
+                delete mockedDocument.time.end;
+
+                Lessons.documentToObject( mockedDocument );
+
+                expect( $log.error.calls.first().args[0] ).toEqual( 'Missing time.end property in document' );
+
+            } );
+
+        } );
+
+        it( 'should return promise and call callback.success', function () {
+
+            convertDocumentToObject();
+
+            expect( callback.success ).toHaveBeenCalled();
+            expect( callback.error ).not.toHaveBeenCalled();
+            expect( callback.notify ).not.toHaveBeenCalled();
+
+        } );
+
+        describe( 'populating', function () {
+
+            beforeEach( function () {
+                convertDocumentToObject();
+            } );
+
+            it( 'coaches', function () {
+
+                expect( convertedObject.coaches ).toBeDefined();
+                expect( convertedObject.coaches instanceof Array ).toBeTruthy();
+                expect( convertedObject.coaches.length ).toEqual( 2 );
+
+                expect( convertedObject.coaches[0]._id ).toEqual( 'coach1' );
+                expect( convertedObject.coaches[0].name ).toEqual( 'The Coach 1' );
+
+                expect( convertedObject.coaches[1]._id ).toEqual( 'coach2' );
+                expect( convertedObject.coaches[1].name ).toEqual( 'The Coach 2' );
+
+            } );
+
+            it( 'halls', function () {
+
+                expect( convertedObject.halls ).toBeDefined();
+                expect( convertedObject.halls instanceof Array ).toBeTruthy();
+                expect( convertedObject.halls.length ).toEqual( 2 );
+
+                expect( convertedObject.halls[0]._id ).toEqual( 'hall1' );
+                expect( convertedObject.halls[0].name ).toEqual( 'The Hall 1' );
+
+                expect( convertedObject.halls[1]._id ).toEqual( 'hall2' );
+                expect( convertedObject.halls[1].name ).toEqual( 'The Hall 2' );
+
+            } );
+
+            it( 'groups', function () {
+
+                expect( convertedObject.groups ).toBeDefined();
+                expect( convertedObject.groups instanceof Array ).toBeTruthy();
+                expect( convertedObject.groups.length ).toEqual( 2 );
+
+                expect( convertedObject.groups[0]._id ).toEqual( 'group1' );
+                expect( convertedObject.groups[0].name ).toEqual( 'The Group 1' );
+
+                expect( convertedObject.groups[1]._id ).toEqual( 'group2' );
+                expect( convertedObject.groups[1].name ).toEqual( 'The Group 2' );
+
+            } );
+
+            describe( 'check populating correctness', function () {
+
+                describe( 'should return [] array if', function () {
+
+                    it( 'if we did not passed coaches prop in document', function () {
+
+                        delete mockedDocument.coaches;
+
+                        convertDocumentToObject();
+
+                        expect( convertedObject.coaches instanceof Array ).toBeTruthy();
+                        expect( convertedObject.coaches.length ).toEqual( 0 );
+
+                    } );
+
+                    it( 'if one coach only passed is not exists', function () {
+
+                        mockedDocument.coaches = ['coach3'];
+
+                        convertDocumentToObject();
+
+                        expect( convertedObject.coaches instanceof Array ).toBeTruthy();
+                        expect( convertedObject.coaches.length ).toEqual( 0 );
+
+                    } );
+
+                } );
+
+            } );
+
+            describe( 'should call notify on loading errors', function () {
+
+                it( 'coaches', function () {
+
+                    mockedDocument.coaches = ['coach3'];
+
+                    convertDocumentToObject();
+
+                    expect( callback.notify ).toHaveBeenCalled();
+                    expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
+
+                } );
+
+                it( 'halls', function () {
+
+                    mockedDocument.halls = ['hall3'];
+
+                    convertDocumentToObject();
+
+                    expect( callback.notify ).toHaveBeenCalled();
+                    expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
+
+                } );
+
+                it( 'groups', function () {
+
+                    mockedDocument.groups = ['group3'];
+
+                    convertDocumentToObject();
+
+                    expect( callback.notify ).toHaveBeenCalled();
+                    expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
+
+                } );
+
+            } );
+
+        } );
+
+        it( '_id', function () {
+
+            convertDocumentToObject();
+            expect( convertedObject._id ).toBeDefined();
+            expect( typeof convertedObject._id ).toEqual( 'string' );
+            expect( convertedObject._id ).toEqual( 'lesson1' );
+
+        } );
+
+        describe( 'time', function () {
+
+            beforeEach( function () {
+
+                convertDocumentToObject();
+
+            } );
+
+            it( 'date', function () {
+
+                expect( convertedObject.time.date.getDate() ).toEqual( 8 );
+                expect( convertedObject.time.date.getMonth() ).toEqual( 5 - 1 );
+                expect( convertedObject.time.date.getFullYear() ).toEqual( 2015 );
+
+            } );
+
+            it( 'epochStart', function () {
+
+                expect( convertedObject.time.epochStart ).toEqual( 50400 );
+
+            } );
+
+            it( 'duration', function () {
+
+                expect( convertedObject.time.duration ).toEqual( 30 );
 
             } );
 

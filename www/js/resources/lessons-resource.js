@@ -13,7 +13,7 @@ angular.module( 'starter.api.lessons', [
         Halls,
         Groups,
         ApiHelper,
-        $resource, $q ) {
+        $resource, $q, $log ) {
 
         var apiUrl = 'http://api.max-crm.wailorman.ru:21080';
 
@@ -99,6 +99,116 @@ angular.module( 'starter.api.lessons', [
             return resultTime;
         };
 
+
+        Lessons.documentToObject = function ( document ) {
+
+
+            var deferred = $q.defer(),
+                resultObject = {};
+
+            if ( !document._id )
+                $log.error( 'Missing _id property in document' );
+
+            if ( document.time ) {
+
+                if ( !document.time.start )
+                    $log.error( 'Missing time.start property in document' );
+
+                if ( !document.time.end )
+                    $log.error( 'Missing time.end property in document' );
+
+            } else
+                $log.error( 'Missing time property in document' );
+
+
+            /////////////////////////////////////////////////////
+
+
+            if ( document._id )
+                resultObject._id = document._id;
+
+            if ( document.time && document.time.start && document.time.end )
+                resultObject.time = Lessons.getExtendedTimeBySimple( document.time );
+
+
+            // populate arrays
+            async.parallel(
+                [
+                    // coaches
+                    function ( pcb ) {
+
+                        try {
+
+                            ApiHelper.populateArray( Coaches, document.coaches )
+
+                                .then( function ( populatedCoaches ) {
+                                    resultObject.coaches = populatedCoaches;
+                                }, function () {
+                                    resultObject.coaches = [];
+                                }, deferred.notify )
+
+                                .finally( pcb );
+
+                        } catch ( e ) {
+                            resultObject.coaches = [];
+                            pcb();
+                        }
+
+                    },
+
+                    // halls
+                    function ( pcb ) {
+
+                        try {
+
+                            ApiHelper.populateArray( Halls, document.halls )
+
+                                .then( function ( populatedHalls ) {
+                                    resultObject.halls = populatedHalls;
+                                }, function () {
+                                    resultObject.halls = [];
+                                }, deferred.notify )
+
+                                .finally( pcb );
+
+                        } catch ( e ) {
+                            resultObject.halls = [];
+                            pcb();
+                        }
+
+                    },
+
+                    // groups
+                    function ( pcb ) {
+
+                        try {
+
+                            ApiHelper.populateArray( Groups, document.groups )
+
+                                .then( function ( populatedGroups ) {
+                                    resultObject.groups = populatedGroups;
+                                }, function () {
+                                    resultObject.groups = [];
+                                }, deferred.notify )
+
+                                .finally( pcb );
+
+                        } catch ( e ) {
+                            resultObject.groups = [];
+                            pcb();
+                        }
+
+                    }
+                ],
+                function () {
+                    deferred.resolve( resultObject );
+                }
+            );
+
+
+            return deferred.promise;
+
+        };
 
         /**
          *
