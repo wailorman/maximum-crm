@@ -1,4 +1,4 @@
-fdescribe( 'ApiHelper class', function () {
+describe( 'ApiHelper class', function () {
 
     var ApiHelper, $resource, $q, $httpBackend,
 
