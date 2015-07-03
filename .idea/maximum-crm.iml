@@ -14,6 +14,8 @@
     <orderEntry type="library" name="angularjs-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="async-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="maximum-crm node_modules" level="project" />
+    <orderEntry type="library" name="jasmine-matchers-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="jasmine-DefinitelyTyped" level="application" />
+    <orderEntry type="library" name="jasmine-fixture-DefinitelyTyped" level="application" />
   </component>
 </module>
