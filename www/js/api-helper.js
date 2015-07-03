@@ -40,6 +40,7 @@ angular.module( 'starter.api.helper', [
                         },
                         function () {
                             numberOfErrorResponds++;
+                            $log.error( "populateArray: Can't find " + objectId );
                             deferred.notify( new Error( "Can't find " + objectId ) );
                             ecb();
                         }
