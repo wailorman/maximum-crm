@@ -41,11 +41,14 @@ function InvalidArgumentError ( message ) {
 }
 
 /**
- * @param {string} message
+ * Simple error object class which has no differences
+ * with std Error
+ *
+ * @param {string} [message]
  * @constructor
  * @extends Error
  */
-function ConvertTimeError ( message ) {
+function ConvertingError ( message ) {
     this.constructor.prototype.__proto__ = Error.prototype;
     Error.captureStackTrace( this, this.constructor );
     this.name = this.constructor.name;
