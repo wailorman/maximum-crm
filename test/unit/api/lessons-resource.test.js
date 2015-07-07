@@ -1,4 +1,4 @@
-fdescribe( 'Lessons resource', function () {
+describe( 'Lessons resource', function () {
 
     var Lessons, $httpBackend, $resource, $q, $log, dependedObjects,
         apiUri = 'http://api.max-crm.wailorman.ru:21080',
