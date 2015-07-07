@@ -24,3 +24,18 @@ function HttpError(status, statusText, config, data) {
     if ( this.status ) this.message += this.status + ' ';
     if ( this.statusText ) this.message += this.statusText;
 }
+
+/**
+ * Simple error object class which has no differences
+ * with std Error
+ *
+ * @param {string} message
+ * @constructor
+ * @extends Error
+ */
+function InvalidArgumentError ( message ) {
+    this.constructor.prototype.__proto__ = Error.prototype;
+    Error.captureStackTrace( this, this.constructor );
+    this.name = this.constructor.name;
+    this.message = (message || "");
+}
