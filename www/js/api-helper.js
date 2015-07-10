@@ -1,5 +1,6 @@
 angular.module( 'starter.api.helper', [
-    'ngResource'
+    'ngResource',
+    'starter.api.interceptors'
 ] )
 
     .service( 'ApiHelper', function ( $q, $log ) {

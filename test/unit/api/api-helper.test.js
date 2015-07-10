@@ -143,8 +143,6 @@ describe( 'ApiHelper class', function () {
 
         } );
 
-        // todo: change expectations when add interceptor which converts simple error obj to HttpError
-
         it( 'should call callback.notify and callback.success too if one of two objects can not found', function () {
 
             arrayToPopulate = ['coach1', 'coach3'];
@@ -161,7 +159,7 @@ describe( 'ApiHelper class', function () {
             expect( callback.success ).toHaveBeenCalled();
 
             expect( callback.notify.calls.count() ).toEqual( 1 );
-            expect( typeof callback.notify.calls.mostRecent().args[0] ).toEqual( 'object' );
+            expect( callback.notify.calls.mostRecent().args[0] instanceof HttpError ).toBeTruthy();
             expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
 
         } );
@@ -205,7 +203,7 @@ describe( 'ApiHelper class', function () {
             expectRequest( 'GET', '/coaches/coach4' );
 
             expect( callback.notify.calls.count() ).toEqual( 2 );
-            expect( typeof callback.notify.calls.mostRecent().args[0] ).toEqual( 'object' );
+            expect( callback.notify.calls.mostRecent().args[0] instanceof HttpError ).toBeTruthy();
             expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
 
         } );

@@ -1,6 +1,8 @@
 angular.module( 'starter.api.lessons', [
 
     'starter.api.helper',
+
+    'starter.api.interceptors',
     
     'starter.api.coaches',
     'starter.api.halls',
