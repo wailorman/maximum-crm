@@ -1,6 +1,7 @@
 /**
  * Custom Http Error.
  *
+ * @class
  * @param {number} [status]
  * @param {string} [statusText]
  * @param {object} [config]     Angular http config object
@@ -30,6 +31,7 @@ function HttpError(status, statusText, config, data) {
  * Simple error object class which has no differences
  * with std Error
  *
+ * @class
  * @param {string} message
  * @constructor
  * @extends Error
@@ -45,6 +47,7 @@ function InvalidArgumentError ( message ) {
  * Simple error object class which has no differences
  * with std Error
  *
+ * @class
  * @param {string} [message]
  * @constructor
  * @extends Error
