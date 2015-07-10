@@ -205,7 +205,8 @@ angular.module( 'starter.api.helper', [
          * @param {object|Resource}     Resource
          * @param {function}            Resource._create
          * @param {function}            Resource._update
-         * @param {object}              object
+         *
+         * @param {Object}              object
          * @param {boolean}             object.$resolved
          *
          * @throws Invalid [arg_name] type. Expected [expected_type], but got a [real_type]
@@ -217,27 +218,27 @@ angular.module( 'starter.api.helper', [
         ApiHelper.getUploadMethodByObject = function ( Resource, object ) {
 
             if ( typeof object !== 'object' )
-                throw new Error( 'Invalid object type. Expected object, but got a ' + typeof object );
+                throw new InvalidArgumentError( 'Invalid object type. Expected object, but got a ' + typeof object );
 
             if ( typeof Resource !== 'object' )
-                throw new Error( 'Invalid Resource type. Expected object, but got a ' + typeof Resource );
+                throw new InvalidArgumentError( 'Invalid Resource type. Expected object, but got a ' + typeof Resource );
 
 
             if ( !object.hasOwnProperty( '$resolved' ) )
-                throw new Error( 'Missing $resolved property in object' );
+                throw new InvalidArgumentError( 'Missing $resolved property in object' );
 
             if ( typeof object.$resolved !== 'boolean' )
-                throw new Error( 'Invalid object.$resolved type. Expected boolean, but got a ' + typeof object.$resolved );
+                throw new InvalidArgumentError( 'Invalid object.$resolved type. Expected boolean, but got a ' + typeof object.$resolved );
 
             if ( object.$resolved === true && ! object.hasOwnProperty( '_id' ) )
-                throw new Error( 'Invalid object. Missing _id property since object is resolved' );
+                throw new InvalidArgumentError( 'Invalid object. Missing _id property since object is resolved' );
 
 
             if ( !Resource._create )
-                throw new Error( 'Missing _create() method in Resource object' );
+                throw new InvalidArgumentError( 'Missing _create() method in Resource object' );
 
             if ( !Resource._update )
-                throw new Error( 'Missing _update() method in Resource object' );
+                throw new InvalidArgumentError( 'Missing _update() method in Resource object' );
 
 
             if ( object.$resolved === false ) { // _create

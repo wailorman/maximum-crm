@@ -670,7 +670,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Missing $resolved property in object' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing $resolved property in object' ) );
 
             } );
 
@@ -682,7 +682,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Invalid object.$resolved type. Expected boolean, but got a string' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid object.$resolved type. Expected boolean, but got a string' ) );
 
             } );
 
@@ -694,7 +694,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Missing _create() method in Resource object' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing _create() method in Resource object' ) );
 
             } );
 
@@ -706,7 +706,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Missing _update() method in Resource object' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing _update() method in Resource object' ) );
 
             } );
 
@@ -718,7 +718,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Invalid Resource type. Expected object, but got a string' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid Resource type. Expected object, but got a string' ) );
 
             } );
 
@@ -730,7 +730,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Invalid object type. Expected object, but got a string' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid object type. Expected object, but got a string' ) );
 
             } );
 
@@ -745,7 +745,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Invalid object. Missing _id property since object is resolved' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid object. Missing _id property since object is resolved' ) );
 
             } );
 
