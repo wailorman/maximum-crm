@@ -42,6 +42,8 @@ angular.module( 'starter.api.lessons', [
             var resultTime = {},
                 durationInMs;
 
+            // todo: Add checking time.start and time.end object type (should be Date)
+
             if ( !timeObject.start || !timeObject.end ) {
                 throw new Error( 'Not enough params' );
                 return undefined;
@@ -105,6 +107,9 @@ angular.module( 'starter.api.lessons', [
          * If some errors happened while executing, they will be $logged
          * or notified by promise (see ApiHelper.populateArray).
          *
+         * All errors can be only internal, because this method converting
+         * document from server, not from user.
+         *
          * @throws see Lessons.getExtendedTimeBySimple
          * @throws Error( 'Missing document' )
          *
@@ -117,21 +122,21 @@ angular.module( 'starter.api.lessons', [
                 resultObject = {};
 
             if ( !document )
-                throw new Error( 'Missing document' );
+                throw new InvalidArgumentError( 'Missing document' );
 
             if ( !document._id )
-                $log.error( 'Missing _id property in document' );
+                $log.error( new InvalidArgumentError( 'Missing _id property in document' ) );
 
             if ( document.time ) {
 
                 if ( !document.time.start )
-                    $log.error( 'Missing time.start property in document' );
+                    $log.error( new InvalidArgumentError( 'Missing time.start property in document' ) );
 
                 if ( !document.time.end )
-                    $log.error( 'Missing time.end property in document' );
+                    $log.error( new InvalidArgumentError( 'Missing time.end property in document' ) );
 
             } else
-                $log.error( 'Missing time property in document' );
+                $log.error( new InvalidArgumentError( 'Missing time property in document' ) );
 
 
             /////////////////////////////////////////////////////

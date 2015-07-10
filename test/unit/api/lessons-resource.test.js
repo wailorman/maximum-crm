@@ -481,7 +481,7 @@ describe( 'Lessons resource', function () {
 
                 Lessons.documentToObject( mockedDocument );
 
-                expect( $log.error.calls.mostRecent().args[0] ).toEqual( 'Missing _id property in document' );
+                expect( $log.error.calls.mostRecent().args[0].message ).toEqual( 'Missing _id property in document' );
 
             } );
 
@@ -491,7 +491,7 @@ describe( 'Lessons resource', function () {
 
                 Lessons.documentToObject( mockedDocument );
 
-                expect( $log.error.calls.first().args[0] ).toEqual( 'Missing time property in document' );
+                expect( $log.error.calls.first().args[0].message ).toEqual( 'Missing time property in document' );
 
             } );
 
@@ -501,7 +501,7 @@ describe( 'Lessons resource', function () {
 
                 Lessons.documentToObject( mockedDocument );
 
-                expect( $log.error.calls.first().args[0] ).toEqual( 'Missing time.start property in document' );
+                expect( $log.error.calls.first().args[0].message ).toEqual( 'Missing time.start property in document' );
 
             } );
 
@@ -511,7 +511,7 @@ describe( 'Lessons resource', function () {
 
                 Lessons.documentToObject( mockedDocument );
 
-                expect( $log.error.calls.first().args[0] ).toEqual( 'Missing time.end property in document' );
+                expect( $log.error.calls.first().args[0].message ).toEqual( 'Missing time.end property in document' );
 
             } );
 
