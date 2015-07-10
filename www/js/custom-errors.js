@@ -9,6 +9,9 @@
  * @extends Error
  */
 function HttpError(status, statusText, config, data) {
+
+    // todo: Add http interceptor which converts simple error obj to HttpError
+
     this.constructor.prototype.__proto__ = Error.prototype;
     Error.captureStackTrace(this, this.constructor);
     this.name = this.constructor.name;

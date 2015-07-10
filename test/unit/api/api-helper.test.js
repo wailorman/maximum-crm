@@ -143,11 +143,11 @@ describe( 'ApiHelper class', function () {
 
         } );
 
+        // todo: change expectations when add interceptor which converts simple error obj to HttpError
+
         it( 'should call callback.notify and callback.success too if one of two objects can not found', function () {
 
             arrayToPopulate = ['coach1', 'coach3'];
-
-            resetSpies();
 
             ApiHelper.populateArray( coachesResource, arrayToPopulate )
                 .then( callback.success, callback.error, callback.notify );
@@ -161,16 +161,14 @@ describe( 'ApiHelper class', function () {
             expect( callback.success ).toHaveBeenCalled();
 
             expect( callback.notify.calls.count() ).toEqual( 1 );
-            expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
-            expect( callback.notify.calls.mostRecent().args[0].message ).toEqual( "Can't find coach3" );
+            expect( typeof callback.notify.calls.mostRecent().args[0] ).toEqual( 'object' );
+            expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
 
         } );
 
         it( 'should call callback.error and callback.notify if 2/2 objects responds with 404', function () {
 
             arrayToPopulate = ['coach3', 'coach4'];
-
-            resetSpies();
 
             ApiHelper.populateArray( coachesResource, arrayToPopulate )
                 .then( callback.success, callback.error, callback.notify );
@@ -191,6 +189,24 @@ describe( 'ApiHelper class', function () {
             expect( callback.error.calls.mostRecent().args[0].message ).toEqual( "Can't find any object" );
 
             // I wont check notify callback args bcz I've made sure it calls correctly in previous test
+
+        } );
+
+        it( 'should call notify with http error', function () {
+
+            arrayToPopulate = ['coach3', 'coach4'];
+
+            ApiHelper.populateArray( coachesResource, arrayToPopulate )
+                .then( callback.success, callback.error, callback.notify );
+
+            $httpBackend.flush();
+
+            expectRequest( 'GET', '/coaches/coach3' );
+            expectRequest( 'GET', '/coaches/coach4' );
+
+            expect( callback.notify.calls.count() ).toEqual( 2 );
+            expect( typeof callback.notify.calls.mostRecent().args[0] ).toEqual( 'object' );
+            expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
 
         } );
 

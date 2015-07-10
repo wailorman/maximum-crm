@@ -692,6 +692,8 @@ describe( 'Lessons resource', function () {
 
             describe( 'should call notify on loading errors', function () {
 
+                // todo: change expectations when add interceptor which converts simple error obj to HttpError
+
                 it( 'coaches', function () {
 
                     mockedDocument.coaches = ['coach3'];
@@ -699,7 +701,7 @@ describe( 'Lessons resource', function () {
                     convertDocumentToObject();
 
                     expect( callback.notify ).toHaveBeenCalled();
-                    expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
+                    expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
 
                 } );
 
@@ -710,7 +712,7 @@ describe( 'Lessons resource', function () {
                     convertDocumentToObject();
 
                     expect( callback.notify ).toHaveBeenCalled();
-                    expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
+                    expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
 
                 } );
 
@@ -721,7 +723,7 @@ describe( 'Lessons resource', function () {
                     convertDocumentToObject();
 
                     expect( callback.notify ).toHaveBeenCalled();
-                    expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
+                    expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
 
                 } );
 
