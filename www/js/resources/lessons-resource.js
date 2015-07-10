@@ -42,12 +42,11 @@ angular.module( 'starter.api.lessons', [
             var resultTime = {},
                 durationInMs;
 
-            // todo: Add checking time.start and time.end object type (should be Date)
+            if ( !timeObject.start || !timeObject.end )
+                throw new InvalidArgumentError( 'Not enough params' );
 
-            if ( !timeObject.start || !timeObject.end ) {
-                throw new Error( 'Not enough params' );
-                return undefined;
-            }
+            if ( !(timeObject.start instanceof Date) || !(timeObject.end instanceof Date) )
+                throw new InvalidArgumentError( 'Invalid time object. start or end property are not instance of Date' );
 
             resultTime.start = timeObject.start;
             resultTime.end = timeObject.end;
@@ -85,6 +84,8 @@ angular.module( 'starter.api.lessons', [
          * @return {object} Extended time object
          */
         Lessons.getSimpleTimeByExtended = function ( timeObject ) {
+
+            // todo: check timeObject types
 
             var resultTime = {};
 

@@ -268,6 +268,49 @@ describe( 'Lessons resource', function () {
 
             } );
 
+            it( 'should throw exception if we passing not date to args', function () {
+
+                var invalidTimeObject;
+
+                invalidTimeObject = {
+                    time: {
+                        start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                        end: 100
+                    }
+                };
+
+                expect( function () {
+                    Lessons.getExtendedTimeBySimple( invalidTimeObject );
+                } ).toThrow();
+
+                /////////////////////////////////////////////////
+
+                invalidTimeObject = {
+                    time: {
+                        start: 100,
+                        end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                    }
+                };
+
+                expect( function () {
+                    Lessons.getExtendedTimeBySimple( invalidTimeObject );
+                } ).toThrow();
+
+                /////////////////////////////////////////////////
+
+                invalidTimeObject = {
+                    time: {
+                        start: 100,
+                        end: 100
+                    }
+                };
+
+                expect( function () {
+                    Lessons.getExtendedTimeBySimple( invalidTimeObject );
+                } ).toThrow();
+
+            } );
+
         } );
 
         describe( 'getSimpleTimeByExtended()', function () {
