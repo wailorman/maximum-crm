@@ -400,7 +400,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( null, [], '1' );
 
-                } ).toThrow( new Error( 'Invalid Resource. Expect object or function' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid Resource. Expect object or function' ) );
 
             } );
 
@@ -413,7 +413,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( resourceObject, [], '1' );
 
-                } ).toThrow( new Error( 'Invalid Resource. Expect _get() or get() method in Resource object' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid Resource. Expect _get() or get() method in Resource object' ) );
 
             } );
 
@@ -473,7 +473,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( resourceObject, null, '1' );
 
-                } ).toThrow( new Error( 'Missing array' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing array' ) );
 
             } );
 
@@ -483,7 +483,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( resourceObject, "some str", '1' );
 
-                } ).toThrow( new Error( 'Invalid array. Expect array, but got string' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid array. Expect array, but got string' ) );
 
             } );
 
@@ -507,7 +507,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( resourceObject, [], null );
 
-                } ).toThrow( new Error( 'Missing objectId' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing objectId' ) );
 
             } );
 
@@ -517,7 +517,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( resourceObject, [], {} );
 
-                } ).toThrow( new Error( 'Invalid objectId. Expect string or number, but got object' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid objectId. Expect string or number, but got object' ) );
 
             } );
 

@@ -137,12 +137,12 @@ angular.module( 'starter.api.helper', [
          * @param {array|Array} arrayToPush
          * @param {string|number} objectId      id for searching
          *
-         * @throws {Error} Invalid Resource. Expect object or function
-         * @throws {Error} Invalid Resource. Expect _get() or get() method in Resource object
-         * @throws {Error} Missing array
-         * @throws {Error} Invalid array. Expect array, but got [type]
-         * @throws {Error} Missing objectId
-         * @throws {Error} Invalid objectId. Expect string or number, but got [type]
+         * @throws {InvalidArgumentError} Invalid Resource. Expect object or function
+         * @throws {InvalidArgumentError} Invalid Resource. Expect _get() or get() method in Resource object
+         * @throws {InvalidArgumentError} Missing array
+         * @throws {InvalidArgumentError} Invalid array. Expect array, but got [type]
+         * @throws {InvalidArgumentError} Missing objectId
+         * @throws {InvalidArgumentError} Invalid objectId. Expect string or number, but got [type]
          */
         ApiHelper.addObjectToArrayById = function ( Resource, arrayToPush, objectId ) {
 
@@ -150,22 +150,22 @@ angular.module( 'starter.api.helper', [
                 deferred = $q.defer();
 
             if ( !Resource || ( typeof Resource !== 'object' && typeof Resource !== 'function' ) )
-                throw new Error( 'Invalid Resource. Expect object or function' );
+                throw new InvalidArgumentError( 'Invalid Resource. Expect object or function' );
 
             if ( !Resource._get && !Resource.get )
-                throw new Error( 'Invalid Resource. Expect _get() or get() method in Resource object' );
+                throw new InvalidArgumentError( 'Invalid Resource. Expect _get() or get() method in Resource object' );
 
             if ( !arrayToPush )
-                throw new Error( 'Missing array' );
+                throw new InvalidArgumentError( 'Missing array' );
 
             if ( !( arrayToPush instanceof Array ) )
-                throw new Error( 'Invalid array. Expect array, but got ' + typeof arrayToPush );
+                throw new InvalidArgumentError( 'Invalid array. Expect array, but got ' + typeof arrayToPush );
 
             if ( !objectId )
-                throw new Error( 'Missing objectId' );
+                throw new InvalidArgumentError( 'Missing objectId' );
 
             if ( typeof objectId !== 'string' && typeof objectId !== 'number' )
-                throw new Error( 'Invalid objectId. Expect string or number, but got ' + typeof objectId );
+                throw new InvalidArgumentError( 'Invalid objectId. Expect string or number, but got ' + typeof objectId );
 
 
             if ( Resource._get && typeof Resource._get === 'function' ) {
