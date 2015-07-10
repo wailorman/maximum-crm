@@ -454,6 +454,48 @@ describe( 'Lessons resource', function () {
 
             } );
 
+            it( 'should throw exception if date is not instance of Date', function () {
+
+                var invalidTimeObject = {
+                    date: 100,
+                    epochStart: 50400,
+                    duration: 30
+                };
+
+                expect( function () {
+                    Lessons.getSimpleTimeByExtended( invalidTimeObject );
+                } ).toThrow( new InvalidArgumentError('date property should be instance of Date') );
+
+            } );
+
+            it( 'should throw exception if epochStart is not number', function () {
+
+                var invalidTimeObject = {
+                    date: new Date( 2015, 5-1, 8 ),
+                    epochStart: '50400',
+                    duration: 30
+                };
+
+                expect( function () {
+                    Lessons.getSimpleTimeByExtended( invalidTimeObject );
+                } ).toThrow( new InvalidArgumentError('epochStart property should be number') );
+
+            } );
+
+            it( 'should throw exception if duration is not number', function () {
+
+                var invalidTimeObject = {
+                    date: new Date( 2015, 5-1, 8 ),
+                    epochStart: 50400,
+                    duration: '30'
+                };
+
+                expect( function () {
+                    Lessons.getSimpleTimeByExtended( invalidTimeObject );
+                } ).toThrow( new InvalidArgumentError('duration property should be number') );
+
+            } );
+
         } );
 
     } );

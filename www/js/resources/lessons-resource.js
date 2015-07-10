@@ -85,13 +85,19 @@ angular.module( 'starter.api.lessons', [
          */
         Lessons.getSimpleTimeByExtended = function ( timeObject ) {
 
-            // todo: check timeObject types
-
             var resultTime = {};
 
-            if ( !timeObject.date ) {
-                throw new Error( 'Not enough params (date missing)' );
-            }
+            if ( !timeObject.date )
+                throw new InvalidArgumentError( 'Not enough params (date missing)' );
+
+            if ( !(timeObject.date instanceof Date) )
+                throw new InvalidArgumentError( 'date property should be instance of Date' );
+
+            if ( typeof timeObject.epochStart !== 'number' )
+                throw new InvalidArgumentError( 'epochStart property should be number' );
+
+            if ( typeof timeObject.duration !== 'number' )
+                throw new InvalidArgumentError( 'duration property should be number' );
 
             if ( !timeObject.epochStart ) timeObject.epochStart = 0;
             if ( !timeObject.duration ) timeObject.duration = 0;
