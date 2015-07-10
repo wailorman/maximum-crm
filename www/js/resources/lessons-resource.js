@@ -36,9 +36,9 @@ angular.module( 'starter.api.lessons', [
          *
          * @property {string} _id
          * @property {LessonTimeSimple} time
-         * @property {Array<string>} coaches
-         * @property {Array<string>} halls
-         * @property {Array<string>} groups
+         * @property {Array.<string>} coaches
+         * @property {Array.<string>} halls
+         * @property {Array.<string>} groups
          * @property {boolean} [$resolved]
          */
 
@@ -49,9 +49,9 @@ angular.module( 'starter.api.lessons', [
          *
          * @property {string} _id
          * @property {LessonTimeExtended} time
-         * @property {Array<Object>} coaches
-         * @property {Array<Object>} halls
-         * @property {Array<Object>} groups
+         * @property {Array.<Object>} coaches
+         * @property {Array.<Object>} halls
+         * @property {Array.<Object>} groups
          * @property {boolean} [$resolved]
          */
 
@@ -174,8 +174,9 @@ angular.module( 'starter.api.lessons', [
          *
          * @param {LessonDocument} document
          *
-         * @return {Promise.<LessonObject,Error,HttpError>|*} Return converted object. Notice when
-         * populate iterator resolve with HttpError.
+         * @return {Promise.<LessonObject,,HttpError>|*}
+         * Resolve converted object.
+         * Notice every time when {@link populateArray} can't find some objects from array.
          */
         Lessons.documentToObject = function ( document ) {
 

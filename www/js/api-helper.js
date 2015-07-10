@@ -21,8 +21,20 @@ angular.module( 'starter.api.helper', [
          * reject -- calls only if all requests respond an error
          * resolve -- calls after all requests been responded. Args: resultArray (already populated)
          *
+         * @todo Get rid of rejecting
+         *
+         * @throws {InvalidArgumentError} Missing resource argument
+         * @throws {InvalidArgumentError} Missing resource._get method
+         * @throws {InvalidArgumentError} Invalid resource._get method. Expected function, but got a [type]
+         *
          * @param {Resource} resource Should have _get() func!
-         * @param {array|Array} arrayOfIds
+         * @param {function} resource._get
+         * @param {Array} arrayOfIds
+         *
+         * @return {Promise.<Array.<Object>,Error,HttpError>|*}
+         * Resolve populated array.
+         * Notice every time when method can't find some objects from array.
+         * Reject if no objects from array were found.
          */
         ApiHelper.populateArray = function ( resource, arrayOfIds ) {
             var deferred = $q.defer(),
@@ -39,7 +51,7 @@ angular.module( 'starter.api.helper', [
                 throw new InvalidArgumentError( 'Invalid resource._get method. Expected function, but got a ' + typeof resource._get );
 
             if ( !arrayOfIds ) {
-                deferred.resolve( [] );
+                deferred.resolve( [] ); // if we got an empty array, there is nothing to populate!
             } else {
                 async.each(
                     arrayOfIds,
@@ -78,17 +90,15 @@ angular.module( 'starter.api.helper', [
          * Converting array of objects to plane array.
          * Sync function
          *
-         * @param {array|Array} arrayOfObjects Elements of this array can be objects (with _id property!), strings and numbers
+         * @param {Array} arrayOfObjects Elements of this array can be objects (with _id property!), strings and numbers
          *
-         * @return {array|Array}
+         * @return {Array}
          */
         ApiHelper.depopulateArray = function ( arrayOfObjects ) {
 
             var resultArray = [];
 
-            if ( !arrayOfObjects ) {
-                $log.error( 'Missing array' );
-            } else {
+            if ( arrayOfObjects ) { // if we got an empty array, depopulate is complete! :)
 
                 arrayOfObjects.forEach( function ( elem ) {
 
@@ -97,7 +107,7 @@ angular.module( 'starter.api.helper', [
                         if ( elem._id ) {
                             resultArray.push( elem._id );
                         } else {
-                            $log.error( 'Some object in array does not have _id property' );
+                            $log.error( new InvalidArgumentError( 'Some object in array does not have _id property' ) );
                         }
 
                     } else if ( typeof elem === 'string' || typeof elem === 'number' ) {
@@ -124,17 +134,17 @@ angular.module( 'starter.api.helper', [
          * @param {object|Resource} Resource    Angular Resource object. Should have _get() or get() method
          * @param {function} [Resource.get]
          * @param {function} [Resource._get]
-         * @param {array|Array} array
-         * @param {string|number} objectId
+         * @param {array|Array} arrayToPush
+         * @param {string|number} objectId      id for searching
          *
-         * @throws Error( 'Invalid Resource. Expect object or function' )
-         * @throws Error( 'Invalid Resource. Expect _get() or get() method in Resource object' )
-         * @throws Error( 'Missing array' )
-         * @throws Error( 'Invalid array. Expect array, but got <type>' )
-         * @throws Error( 'Missing objectId' )
-         * @throws Error( 'Invalid objectId. Expect string or number, but got <type>' )
+         * @throws {Error} Invalid Resource. Expect object or function
+         * @throws {Error} Invalid Resource. Expect _get() or get() method in Resource object
+         * @throws {Error} Missing array
+         * @throws {Error} Invalid array. Expect array, but got [type]
+         * @throws {Error} Missing objectId
+         * @throws {Error} Invalid objectId. Expect string or number, but got [type]
          */
-        ApiHelper.addObjectToArrayById = function ( Resource, array, objectId ) {
+        ApiHelper.addObjectToArrayById = function ( Resource, arrayToPush, objectId ) {
 
             var resourceMethodToCall,
                 deferred = $q.defer();
@@ -145,11 +155,11 @@ angular.module( 'starter.api.helper', [
             if ( !Resource._get && !Resource.get )
                 throw new Error( 'Invalid Resource. Expect _get() or get() method in Resource object' );
 
-            if ( !array )
+            if ( !arrayToPush )
                 throw new Error( 'Missing array' );
 
-            if ( !( array instanceof Array ) )
-                throw new Error( 'Invalid array. Expect array, but got ' + typeof array );
+            if ( !( arrayToPush instanceof Array ) )
+                throw new Error( 'Invalid array. Expect array, but got ' + typeof arrayToPush );
 
             if ( !objectId )
                 throw new Error( 'Missing objectId' );
@@ -171,8 +181,8 @@ angular.module( 'starter.api.helper', [
             resourceMethodToCall( { id: objectId } ).$promise
                 .then( function ( data ) {
 
-                    array.push( data );
-                    deferred.resolve( array );
+                    arrayToPush.push( data );
+                    deferred.resolve( arrayToPush );
 
                 }, deferred.reject );
 
