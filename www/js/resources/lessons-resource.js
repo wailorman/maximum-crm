@@ -300,8 +300,8 @@ angular.module( 'starter.api.lessons', [
          * If $resolved == false or not defined, method will ignore _id property even
          * you passed it.
          *
-         * @throws Error( 'Missing object' )
-         * @throws Error( 'Missing _id property' )
+         * @throws {InvalidArgumentError} Missing object
+         * @throws {InvalidArgumentError} Missing _id property
          *
          * @param {LessonObject}        object
          *
@@ -312,10 +312,10 @@ angular.module( 'starter.api.lessons', [
             var resultDocument = {};
 
             if ( !object )
-                throw new Error( 'Missing object' );
+                throw new InvalidArgumentError( 'Missing object' );
 
             if ( object.$resolved && !object._id )
-                throw new Error( 'Missing _id property' );
+                throw new InvalidArgumentError( 'Missing _id property' );
 
             if ( object.$resolved )
                 resultDocument._id = object._id;

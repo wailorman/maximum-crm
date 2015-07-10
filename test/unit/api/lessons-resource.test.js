@@ -812,7 +812,7 @@ describe( 'Lessons resource', function () {
 
                 convertObject();
 
-            } ).toThrow( new Error( 'Missing object' ) );
+            } ).toThrow( new InvalidArgumentError( 'Missing object' ) );
 
         } );
 
@@ -844,7 +844,7 @@ describe( 'Lessons resource', function () {
 
                 expect( function () {
                     convertObject();
-                } ).toThrow( new Error( 'Missing _id property' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing _id property' ) );
 
             } );
 
