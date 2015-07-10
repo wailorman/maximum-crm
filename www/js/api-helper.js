@@ -28,33 +28,46 @@ angular.module( 'starter.api.helper', [
                 resultArray = [],
                 numberOfErrorResponds = 0;
 
-            async.each(
-                arrayOfIds,
-                function ( objectId, ecb ) {
+            if ( !resource )
+                throw new InvalidArgumentError( 'Missing resource argument' );
 
-                    resource._get( { id: objectId } ).$promise
-                        .then(
-                        function ( coach ) {
-                            resultArray.push( coach );
-                            ecb();
-                        },
-                        function () {
-                            numberOfErrorResponds++;
-                            $log.error( "populateArray: Can't find " + objectId );
-                            deferred.notify( new Error( "Can't find " + objectId ) );
-                            ecb();
+            if ( !resource._get )
+                throw new InvalidArgumentError( 'Missing resource._get method' );
+
+            if ( typeof resource._get !== 'function' )
+                throw new InvalidArgumentError( 'Invalid resource._get method. Expected function, but got a ' + typeof resource._get );
+
+            if ( !arrayOfIds ) {
+                deferred.resolve( [] );
+            } else {
+                async.each(
+                    arrayOfIds,
+                    function ( objectId, ecb ) {
+
+                        resource._get( { id: objectId } ).$promise
+                            .then(
+                            function ( coach ) {
+                                resultArray.push( coach );
+                                ecb();
+                            },
+                            function ( error ) {
+                                numberOfErrorResponds++;
+                                $log.error( "populateArray: Can't find " + objectId );
+                                deferred.notify( new Error( "Can't find " + objectId ) );
+                                ecb();
+                            }
+                        );
+
+                    },
+                    function () {
+                        if ( numberOfErrorResponds == arrayOfIds.length ) {
+                            deferred.reject( new Error( "Can't find any object" ) );
+                        } else if ( numberOfErrorResponds < arrayOfIds.length && resultArray ) {
+                            deferred.resolve( resultArray );
                         }
-                    );
-
-                },
-                function () {
-                    if ( numberOfErrorResponds == arrayOfIds.length ) {
-                        deferred.reject( new Error( "Can't find any object" ) );
-                    } else if ( numberOfErrorResponds < arrayOfIds.length && resultArray ) {
-                        deferred.resolve( resultArray );
                     }
-                }
-            );
+                );
+            }
 
             return deferred.promise;
         };

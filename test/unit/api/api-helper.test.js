@@ -1,6 +1,6 @@
 describe( 'ApiHelper class', function () {
 
-    var ApiHelper, $resource, $q, $httpBackend,
+    var ApiHelper, $resource, $q, $httpBackend, $timeout,
 
         apiUri = 'http://api.max-crm.wailorman.ru:21080',
 
@@ -55,12 +55,13 @@ describe( 'ApiHelper class', function () {
     beforeEach( module( 'starter.api.helper' ) );
 
     // injector
-    beforeEach( inject( function ( _ApiHelper_, _$resource_, _$q_, _$httpBackend_ ) {
+    beforeEach( inject( function ( _ApiHelper_, _$resource_, _$q_, _$httpBackend_, _$timeout_ ) {
 
         ApiHelper = _ApiHelper_;
         $resource = _$resource_;
         $q = _$q_;
         $httpBackend = _$httpBackend_;
+        $timeout = _$timeout_;
 
     } ) );
 
@@ -190,6 +191,56 @@ describe( 'ApiHelper class', function () {
             expect( callback.error.calls.mostRecent().args[0].message ).toEqual( "Can't find any object" );
 
             // I wont check notify callback args bcz I've made sure it calls correctly in previous test
+
+        } );
+
+        it( 'should throw exception if resource is undefined', function () {
+
+            expect( function () {
+
+                ApiHelper.populateArray( undefined, ['1'] );
+
+            } ).toThrow( new InvalidArgumentError( 'Missing resource argument' ) );
+
+        } );
+
+        it( 'should throw exception if resource._get does not exists', function () {
+
+            delete coachesResource._get;
+
+            expect( function () {
+
+                ApiHelper.populateArray( coachesResource, ['1'] );
+
+            } ).toThrow( new InvalidArgumentError( 'Missing resource._get method' ) );
+
+        } );
+
+        it( 'should throw exception if resource._get is not a function', function () {
+
+            coachesResource._get = 'some string!';
+
+            expect( function () {
+
+                ApiHelper.populateArray( coachesResource, ['1'] );
+
+            } ).toThrow( new InvalidArgumentError( 'Invalid resource._get method. Expected function, but got a string' ) );
+
+
+        } );
+
+        it( 'should call resolve with empty array if arrayOfIds is not defined', function () {
+
+            ApiHelper.populateArray( coachesResource, undefined )
+                .then( callback.success, callback.error, callback.notify );
+
+            $timeout.flush();
+
+            expect( callback.success ).toHaveBeenCalled();
+            expect( callback.error ).not.toHaveBeenCalled();
+            expect( callback.notify ).not.toHaveBeenCalled();
+
+            expect( callback.success.calls.mostRecent().args[0] ).toEqual( [] );
 
         } );
 
