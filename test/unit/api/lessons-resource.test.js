@@ -268,6 +268,49 @@ describe( 'Lessons resource', function () {
 
             } );
 
+            it( 'should throw exception if we passing not date to args', function () {
+
+                var invalidTimeObject;
+
+                invalidTimeObject = {
+                    time: {
+                        start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                        end: 100
+                    }
+                };
+
+                expect( function () {
+                    Lessons.getExtendedTimeBySimple( invalidTimeObject );
+                } ).toThrow();
+
+                /////////////////////////////////////////////////
+
+                invalidTimeObject = {
+                    time: {
+                        start: 100,
+                        end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                    }
+                };
+
+                expect( function () {
+                    Lessons.getExtendedTimeBySimple( invalidTimeObject );
+                } ).toThrow();
+
+                /////////////////////////////////////////////////
+
+                invalidTimeObject = {
+                    time: {
+                        start: 100,
+                        end: 100
+                    }
+                };
+
+                expect( function () {
+                    Lessons.getExtendedTimeBySimple( invalidTimeObject );
+                } ).toThrow();
+
+            } );
+
         } );
 
         describe( 'getSimpleTimeByExtended()', function () {
@@ -411,6 +454,48 @@ describe( 'Lessons resource', function () {
 
             } );
 
+            it( 'should throw exception if date is not instance of Date', function () {
+
+                var invalidTimeObject = {
+                    date: 100,
+                    epochStart: 50400,
+                    duration: 30
+                };
+
+                expect( function () {
+                    Lessons.getSimpleTimeByExtended( invalidTimeObject );
+                } ).toThrow( new InvalidArgumentError('date property should be instance of Date') );
+
+            } );
+
+            it( 'should throw exception if epochStart is not number', function () {
+
+                var invalidTimeObject = {
+                    date: new Date( 2015, 5-1, 8 ),
+                    epochStart: '50400',
+                    duration: 30
+                };
+
+                expect( function () {
+                    Lessons.getSimpleTimeByExtended( invalidTimeObject );
+                } ).toThrow( new InvalidArgumentError('epochStart property should be number') );
+
+            } );
+
+            it( 'should throw exception if duration is not number', function () {
+
+                var invalidTimeObject = {
+                    date: new Date( 2015, 5-1, 8 ),
+                    epochStart: 50400,
+                    duration: '30'
+                };
+
+                expect( function () {
+                    Lessons.getSimpleTimeByExtended( invalidTimeObject );
+                } ).toThrow( new InvalidArgumentError('duration property should be number') );
+
+            } );
+
         } );
 
     } );
@@ -481,7 +566,7 @@ describe( 'Lessons resource', function () {
 
                 Lessons.documentToObject( mockedDocument );
 
-                expect( $log.error.calls.mostRecent().args[0] ).toEqual( 'Missing _id property in document' );
+                expect( $log.error.calls.mostRecent().args[0].message ).toEqual( 'Missing _id property in document' );
 
             } );
 
@@ -489,9 +574,11 @@ describe( 'Lessons resource', function () {
 
                 delete mockedDocument.time;
 
-                Lessons.documentToObject( mockedDocument );
+                expect( function () {
 
-                expect( $log.error.calls.first().args[0] ).toEqual( 'Missing time property in document' );
+                    Lessons.documentToObject( mockedDocument );
+
+                } ).toThrow( new InvalidArgumentError( 'Missing time property in document' ) );
 
             } );
 
@@ -499,9 +586,11 @@ describe( 'Lessons resource', function () {
 
                 delete mockedDocument.time.start;
 
-                Lessons.documentToObject( mockedDocument );
+                expect( function () {
 
-                expect( $log.error.calls.first().args[0] ).toEqual( 'Missing time.start property in document' );
+                    Lessons.documentToObject( mockedDocument );
+
+                } ).toThrow( new InvalidArgumentError( 'Missing time.start property in document' ) );
 
             } );
 
@@ -509,9 +598,11 @@ describe( 'Lessons resource', function () {
 
                 delete mockedDocument.time.end;
 
-                Lessons.documentToObject( mockedDocument );
+                expect( function () {
 
-                expect( $log.error.calls.first().args[0] ).toEqual( 'Missing time.end property in document' );
+                    Lessons.documentToObject( mockedDocument );
+
+                } ).toThrow( new InvalidArgumentError( 'Missing time.end property in document' ) );
 
             } );
 
@@ -607,6 +698,8 @@ describe( 'Lessons resource', function () {
 
             describe( 'should call notify on loading errors', function () {
 
+                // todo: change expectations when add interceptor which converts simple error obj to HttpError
+
                 it( 'coaches', function () {
 
                     mockedDocument.coaches = ['coach3'];
@@ -614,7 +707,7 @@ describe( 'Lessons resource', function () {
                     convertDocumentToObject();
 
                     expect( callback.notify ).toHaveBeenCalled();
-                    expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
+                    expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
 
                 } );
 
@@ -625,7 +718,7 @@ describe( 'Lessons resource', function () {
                     convertDocumentToObject();
 
                     expect( callback.notify ).toHaveBeenCalled();
-                    expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
+                    expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
 
                 } );
 
@@ -636,7 +729,7 @@ describe( 'Lessons resource', function () {
                     convertDocumentToObject();
 
                     expect( callback.notify ).toHaveBeenCalled();
-                    expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
+                    expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
 
                 } );
 
@@ -719,7 +812,7 @@ describe( 'Lessons resource', function () {
 
                 convertObject();
 
-            } ).toThrow( new Error( 'Missing object' ) );
+            } ).toThrow( new InvalidArgumentError( 'Missing object' ) );
 
         } );
 
@@ -751,7 +844,7 @@ describe( 'Lessons resource', function () {
 
                 expect( function () {
                     convertObject();
-                } ).toThrow( new Error( 'Missing _id property' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing _id property' ) );
 
             } );
 

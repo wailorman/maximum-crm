@@ -1,6 +1,6 @@
 describe( 'ApiHelper class', function () {
 
-    var ApiHelper, $resource, $q, $httpBackend,
+    var ApiHelper, $resource, $q, $httpBackend, $timeout,
 
         apiUri = 'http://api.max-crm.wailorman.ru:21080',
 
@@ -55,12 +55,13 @@ describe( 'ApiHelper class', function () {
     beforeEach( module( 'starter.api.helper' ) );
 
     // injector
-    beforeEach( inject( function ( _ApiHelper_, _$resource_, _$q_, _$httpBackend_ ) {
+    beforeEach( inject( function ( _ApiHelper_, _$resource_, _$q_, _$httpBackend_, _$timeout_ ) {
 
         ApiHelper = _ApiHelper_;
         $resource = _$resource_;
         $q = _$q_;
         $httpBackend = _$httpBackend_;
+        $timeout = _$timeout_;
 
     } ) );
 
@@ -146,8 +147,6 @@ describe( 'ApiHelper class', function () {
 
             arrayToPopulate = ['coach1', 'coach3'];
 
-            resetSpies();
-
             ApiHelper.populateArray( coachesResource, arrayToPopulate )
                 .then( callback.success, callback.error, callback.notify );
 
@@ -160,16 +159,14 @@ describe( 'ApiHelper class', function () {
             expect( callback.success ).toHaveBeenCalled();
 
             expect( callback.notify.calls.count() ).toEqual( 1 );
-            expect( callback.notify.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
-            expect( callback.notify.calls.mostRecent().args[0].message ).toEqual( "Can't find coach3" );
+            expect( callback.notify.calls.mostRecent().args[0] instanceof HttpError ).toBeTruthy();
+            expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
 
         } );
 
         it( 'should call callback.error and callback.notify if 2/2 objects responds with 404', function () {
 
             arrayToPopulate = ['coach3', 'coach4'];
-
-            resetSpies();
 
             ApiHelper.populateArray( coachesResource, arrayToPopulate )
                 .then( callback.success, callback.error, callback.notify );
@@ -190,6 +187,74 @@ describe( 'ApiHelper class', function () {
             expect( callback.error.calls.mostRecent().args[0].message ).toEqual( "Can't find any object" );
 
             // I wont check notify callback args bcz I've made sure it calls correctly in previous test
+
+        } );
+
+        it( 'should call notify with http error', function () {
+
+            arrayToPopulate = ['coach3', 'coach4'];
+
+            ApiHelper.populateArray( coachesResource, arrayToPopulate )
+                .then( callback.success, callback.error, callback.notify );
+
+            $httpBackend.flush();
+
+            expectRequest( 'GET', '/coaches/coach3' );
+            expectRequest( 'GET', '/coaches/coach4' );
+
+            expect( callback.notify.calls.count() ).toEqual( 2 );
+            expect( callback.notify.calls.mostRecent().args[0] instanceof HttpError ).toBeTruthy();
+            expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
+
+        } );
+
+        it( 'should throw exception if resource is undefined', function () {
+
+            expect( function () {
+
+                ApiHelper.populateArray( undefined, ['1'] );
+
+            } ).toThrow( new InvalidArgumentError( 'Missing resource argument' ) );
+
+        } );
+
+        it( 'should throw exception if resource._get does not exists', function () {
+
+            delete coachesResource._get;
+
+            expect( function () {
+
+                ApiHelper.populateArray( coachesResource, ['1'] );
+
+            } ).toThrow( new InvalidArgumentError( 'Missing resource._get method' ) );
+
+        } );
+
+        it( 'should throw exception if resource._get is not a function', function () {
+
+            coachesResource._get = 'some string!';
+
+            expect( function () {
+
+                ApiHelper.populateArray( coachesResource, ['1'] );
+
+            } ).toThrow( new InvalidArgumentError( 'Invalid resource._get method. Expected function, but got a string' ) );
+
+
+        } );
+
+        it( 'should call resolve with empty array if arrayOfIds is not defined', function () {
+
+            ApiHelper.populateArray( coachesResource, undefined )
+                .then( callback.success, callback.error, callback.notify );
+
+            $timeout.flush();
+
+            expect( callback.success ).toHaveBeenCalled();
+            expect( callback.error ).not.toHaveBeenCalled();
+            expect( callback.notify ).not.toHaveBeenCalled();
+
+            expect( callback.success.calls.mostRecent().args[0] ).toEqual( [] );
 
         } );
 
@@ -335,7 +400,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( null, [], '1' );
 
-                } ).toThrow( new Error( 'Invalid Resource. Expect object or function' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid Resource. Expect object or function' ) );
 
             } );
 
@@ -348,7 +413,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( resourceObject, [], '1' );
 
-                } ).toThrow( new Error( 'Invalid Resource. Expect _get() or get() method in Resource object' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid Resource. Expect _get() or get() method in Resource object' ) );
 
             } );
 
@@ -408,7 +473,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( resourceObject, null, '1' );
 
-                } ).toThrow( new Error( 'Missing array' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing array' ) );
 
             } );
 
@@ -418,7 +483,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( resourceObject, "some str", '1' );
 
-                } ).toThrow( new Error( 'Invalid array. Expect array, but got string' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid array. Expect array, but got string' ) );
 
             } );
 
@@ -442,7 +507,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( resourceObject, [], null );
 
-                } ).toThrow( new Error( 'Missing objectId' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing objectId' ) );
 
             } );
 
@@ -452,7 +517,7 @@ describe( 'ApiHelper class', function () {
 
                     ApiHelper.addObjectToArrayById( resourceObject, [], {} );
 
-                } ).toThrow( new Error( 'Invalid objectId. Expect string or number, but got object' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid objectId. Expect string or number, but got object' ) );
 
             } );
 
@@ -605,7 +670,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Missing $resolved property in object' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing $resolved property in object' ) );
 
             } );
 
@@ -617,7 +682,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Invalid object.$resolved type. Expected boolean, but got a string' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid object.$resolved type. Expected boolean, but got a string' ) );
 
             } );
 
@@ -629,7 +694,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Missing _create() method in Resource object' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing _create() method in Resource object' ) );
 
             } );
 
@@ -641,7 +706,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Missing _update() method in Resource object' ) );
+                } ).toThrow( new InvalidArgumentError( 'Missing _update() method in Resource object' ) );
 
             } );
 
@@ -653,7 +718,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Invalid Resource type. Expected object, but got a string' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid Resource type. Expected object, but got a string' ) );
 
             } );
 
@@ -665,7 +730,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Invalid object type. Expected object, but got a string' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid object type. Expected object, but got a string' ) );
 
             } );
 
@@ -680,7 +745,7 @@ describe( 'ApiHelper class', function () {
 
                     getUploadMethodByObject( mockedResource, mockedObject );
 
-                } ).toThrow( new Error( 'Invalid object. Missing _id property since object is resolved' ) );
+                } ).toThrow( new InvalidArgumentError( 'Invalid object. Missing _id property since object is resolved' ) );
 
             } );
 

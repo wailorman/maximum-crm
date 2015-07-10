@@ -13,9 +13,10 @@
     <orderEntry type="library" name="angular-ui-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="angularjs-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="async-DefinitelyTyped" level="application" />
-    <orderEntry type="library" name="maximum-crm node_modules" level="project" />
     <orderEntry type="library" name="jasmine-matchers-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="jasmine-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="jasmine-fixture-DefinitelyTyped" level="application" />
+    <orderEntry type="library" name="angular-bootstrap-lightbox-DefinitelyTyped" level="application" />
+    <orderEntry type="library" name="www lib" level="project" />
   </component>
 </module>
