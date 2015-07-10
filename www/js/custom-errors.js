@@ -23,8 +23,8 @@ function HttpError(status, statusText, config, data) {
     this.message = "";
 
     if ( this.config.url ) this.message += this.config.url + ': ';
-    if ( this.status ) this.message += this.status + ' ';
-    if ( this.statusText ) this.message += this.statusText;
+    if ( this.status ) this.message += this.status;
+    if ( this.statusText ) this.message += ' ' + this.statusText;
 }
 
 /**
