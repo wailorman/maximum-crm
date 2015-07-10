@@ -139,13 +139,13 @@ angular.module( 'starter.api.lessons', [
             if ( document.time ) {
 
                 if ( !document.time.start )
-                    $log.error( new InvalidArgumentError( 'Missing time.start property in document' ) );
+                    throw new InvalidArgumentError( 'Missing time.start property in document' );
 
                 if ( !document.time.end )
-                    $log.error( new InvalidArgumentError( 'Missing time.end property in document' ) );
+                    throw new InvalidArgumentError( 'Missing time.end property in document' );
 
             } else
-                $log.error( new InvalidArgumentError( 'Missing time property in document' ) );
+                throw new InvalidArgumentError( 'Missing time property in document' );
 
 
             /////////////////////////////////////////////////////

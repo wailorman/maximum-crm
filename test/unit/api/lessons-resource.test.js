@@ -574,9 +574,11 @@ describe( 'Lessons resource', function () {
 
                 delete mockedDocument.time;
 
-                Lessons.documentToObject( mockedDocument );
+                expect( function () {
 
-                expect( $log.error.calls.first().args[0].message ).toEqual( 'Missing time property in document' );
+                    Lessons.documentToObject( mockedDocument );
+
+                } ).toThrow( new InvalidArgumentError( 'Missing time property in document' ) );
 
             } );
 
@@ -584,9 +586,11 @@ describe( 'Lessons resource', function () {
 
                 delete mockedDocument.time.start;
 
-                Lessons.documentToObject( mockedDocument );
+                expect( function () {
 
-                expect( $log.error.calls.first().args[0].message ).toEqual( 'Missing time.start property in document' );
+                    Lessons.documentToObject( mockedDocument );
+
+                } ).toThrow( new InvalidArgumentError( 'Missing time.start property in document' ) );
 
             } );
 
@@ -594,9 +598,11 @@ describe( 'Lessons resource', function () {
 
                 delete mockedDocument.time.end;
 
-                Lessons.documentToObject( mockedDocument );
+                expect( function () {
 
-                expect( $log.error.calls.first().args[0].message ).toEqual( 'Missing time.end property in document' );
+                    Lessons.documentToObject( mockedDocument );
+
+                } ).toThrow( new InvalidArgumentError( 'Missing time.end property in document' ) );
 
             } );
 
