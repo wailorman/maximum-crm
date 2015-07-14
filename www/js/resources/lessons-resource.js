@@ -15,12 +15,21 @@ angular.module( 'starter.api.lessons', [
         Halls,
         Groups,
         ApiHelper,
-        $resource, $q, $log ) {
+
+        LessonsTools,
+        LessonsGetInterceptor,
+
+        $resource ) {
 
         var apiUrl = 'http://api.max-crm.wailorman.ru:21080';
 
         var Lessons = $resource( apiUrl + '/lessons/:id', null, {
 
+            'get': {
+                method: 'GET',
+                timeout: 5000,
+                interceptor: LessonsGetInterceptor
+            },
             '_get': { method: 'GET', timeout: 5000 },
             '_query': { method: 'GET', isArray: true, timeout: 5000 },
             '_update': { method: 'PUT', timeout: 5000 },
@@ -55,6 +64,20 @@ angular.module( 'starter.api.lessons', [
          * @property {boolean} [$resolved]
          */
 
+        Lessons.getExtendedTimeBySimple = LessonsTools.getExtendedTimeBySimple;
+        Lessons.getSimpleTimeByExtended = LessonsTools.getSimpleTimeByExtended;
+        Lessons.objectToDocument = LessonsTools.objectToDocument;
+        Lessons.documentToObject = LessonsTools.documentToObject;
+
+        return Lessons;
+
+    } )
+    .factory( 'LessonsTools', function (
+        ApiHelper, Coaches, Halls, Groups,
+        $q, $log
+    ) {
+
+        var LessonsTools = {};
 
         /**
          * Extended lesson time
@@ -78,7 +101,7 @@ angular.module( 'starter.api.lessons', [
          *
          * @return {LessonTimeExtended|*} Extended time object
          */
-        Lessons.getExtendedTimeBySimple = function ( timeObject ) {
+        LessonsTools.getExtendedTimeBySimple = function ( timeObject ) {
             var resultTime = {},
                 durationInMs;
 
@@ -112,7 +135,7 @@ angular.module( 'starter.api.lessons', [
         };
 
         /**
-         * Extended lesson time
+         * Simple lesson time
          *
          * @typedef {Object} LessonTimeSimple
          *
@@ -123,6 +146,8 @@ angular.module( 'starter.api.lessons', [
         /**
          * Get extended time object by simple time object
          *
+         * @todo Add functionality to work with passed LessonTimeSimple instead of LessonTimeExtended to timeObject arg
+         *
          * @param {LessonTimeExtended}  timeObject
          *
          * @throws {InvalidArgumentError} Not enough params (date missing)
@@ -132,7 +157,7 @@ angular.module( 'starter.api.lessons', [
          *
          * @return {LessonTimeSimple|*} Simple time object
          */
-        Lessons.getSimpleTimeByExtended = function ( timeObject ) {
+        LessonsTools.getSimpleTimeByExtended = function ( timeObject ) {
 
             var resultTime = {};
 
@@ -157,6 +182,47 @@ angular.module( 'starter.api.lessons', [
             return resultTime;
         };
 
+        /**
+         * Converting object to document
+         * This method using $resolved property of passing Resource object.
+         *
+         * If $resolved == true, it will add _id property of object to result properties
+         * of document. If $resolved == true, but _id isn't defined, it will throw an Error.
+         *
+         * If $resolved == false or not defined, method will ignore _id property even
+         * you passed it.
+         *
+         * @todo Think about getting rid of checking _id together with $resolved because it is not critical. Resource#get caring about it (maybe)
+         *
+         * @throws {InvalidArgumentError} Missing object
+         * @throws {InvalidArgumentError} Missing _id property
+         *
+         * @param {LessonObject}        object
+         *
+         * @return {LessonDocument|*} document
+         */
+        LessonsTools.objectToDocument = function ( object ) {
+
+            var resultDocument = {};
+
+            if ( !object )
+                throw new InvalidArgumentError( 'Missing object' );
+
+            if ( object.$resolved && !object._id )
+                throw new InvalidArgumentError( 'Missing _id property' );
+
+            if ( object.$resolved )
+                resultDocument._id = object._id;
+
+            resultDocument.time = LessonsTools.getSimpleTimeByExtended( object.time );
+
+            resultDocument.coaches = ApiHelper.depopulateArray( object.coaches );
+            resultDocument.halls = ApiHelper.depopulateArray( object.halls );
+            resultDocument.groups = ApiHelper.depopulateArray( object.groups );
+
+            return resultDocument;
+
+        };
 
         /**
          * Convert document from server to object.
@@ -178,7 +244,7 @@ angular.module( 'starter.api.lessons', [
          * Resolve converted object.
          * Notice every time when {@link populateArray} can't find some objects from array.
          */
-        Lessons.documentToObject = function ( document ) {
+        LessonsTools.documentToObject = function ( document ) {
 
 
             var deferred = $q.defer(),
@@ -209,7 +275,7 @@ angular.module( 'starter.api.lessons', [
                 resultObject._id = document._id;
 
             if ( document.time && document.time.start && document.time.end )
-                resultObject.time = Lessons.getExtendedTimeBySimple( document.time );
+                resultObject.time = LessonsTools.getExtendedTimeBySimple( document.time );
 
 
             // populate arrays
@@ -291,192 +357,18 @@ angular.module( 'starter.api.lessons', [
 
         };
 
-        /**
-         * Converting object to document
-         * This method using $resolved property of passing Resource object.
-         *
-         * If $resolved == true, it will add _id property of object to result properties
-         * of document. If $resolved == true, but _id isn't defined, it will throw an Error.
-         *
-         * If $resolved == false or not defined, method will ignore _id property even
-         * you passed it.
-         *
-         * @throws {InvalidArgumentError} Missing object
-         * @throws {InvalidArgumentError} Missing _id property
-         *
-         * @param {LessonObject}        object
-         *
-         * @return {LessonDocument|*} document
-         */
-        Lessons.objectToDocument = function ( object ) {
 
-            var resultDocument = {};
+        return LessonsTools;
 
-            if ( !object )
-                throw new InvalidArgumentError( 'Missing object' );
+    } )
+    .factory( 'LessonsGetInterceptor', function ( $q, LessonsTools ) {
 
-            if ( object.$resolved && !object._id )
-                throw new InvalidArgumentError( 'Missing _id property' );
+        return {
+            response: function ( responseData ) {
+                var document = responseData.data;
 
-            if ( object.$resolved )
-                resultDocument._id = object._id;
-
-            resultDocument.time = Lessons.getSimpleTimeByExtended( object.time );
-
-            resultDocument.coaches = ApiHelper.depopulateArray( object.coaches );
-            resultDocument.halls = ApiHelper.depopulateArray( object.halls );
-            resultDocument.groups = ApiHelper.depopulateArray( object.groups );
-
-            return resultDocument;
-
-        };
-
-        /**
-         *
-         * @todo Add __v property
-         *
-         * @param {object} params
-         * @param {string} params.id
-         */
-        Lessons.get = function ( params ) {
-            var deferred = $q.defer(),
-                resultObject = {};
-
-            Lessons._get( params ).$promise
-                .then(
-                function ( document ) {
-
-                    resultObject._id = document._id;
-
-                    // time
-                    resultObject.time = Lessons.getExtendedTimeBySimple( document.time );
-
-                    // populate arrays
-                    async.parallel(
-                        [
-                            // coaches
-                            function ( pcb ) {
-
-                                ApiHelper.populateArray( Coaches, document.coaches )
-
-                                    .then( function ( populatedCoaches ) {
-                                        resultObject.coaches = populatedCoaches;
-                                    }, function () { //error. nothing to catch!
-
-                                    }, deferred.notify )
-
-                                    .finally( pcb );
-
-                            },
-
-                            // halls
-                            function ( pcb ) {
-
-                                ApiHelper.populateArray( Halls, document.halls )
-
-                                    .then( function ( populatedHalls ) {
-                                        resultObject.halls = populatedHalls;
-                                        pcb();
-                                    }, function () { //error. nothing to catch!
-
-                                    }, deferred.notify )
-
-                                    .finally( pcb );
-
-                            },
-
-                            // groups
-                            function ( pcb ) {
-
-                                ApiHelper.populateArray( Groups, document.groups )
-
-                                    .then( function ( populatedGroups ) {
-                                        resultObject.groups = populatedGroups;
-                                        pcb();
-                                    }, function () { //error. nothing to catch!
-
-                                    }, deferred.notify )
-
-                                    .finally( pcb );
-
-                            }
-                        ],
-                        function () {
-                            deferred.resolve( resultObject );
-                        }
-                    );
-
-                },
-                deferred.reject,
-                deferred.notify
-            );
-
-            return { $promise: deferred.promise };
-        };
-
-        /**
-         * Getting Lesson object as argument and send document to the server.
-         * Throws an error if _id was not passed or extended time is invalid.
-         * Coaches/halls/groups array can be object (with _id property), string or integer array.
-         * If coaches/halls/groups array will not passed, method will use empty array as a value.
-         *
-         * @throws Error( 'Missing _id' )
-         * @throws Error( 'Invalid time' )
-         *
-         * @param {object}      data            Lesson object
-         * @param {string}      data._id
-         * @param {object}      data.time       Extended Lesson time
-         * @param {Array.<Object>|Array.<String>|Array.<Number>} data.coaches
-         * @param {Array.<Object>|Array.<String>|Array.<Number>} data.halls
-         * @param {Array.<Object>|Array.<String>|Array.<Number>} data.groups
-         */
-        Lessons.create = function ( data ) {
-            var deferred = $q.defer(),
-                resultDocument = {};
-
-            // time
-            try {
-                resultDocument.time = Lessons.getSimpleTimeByExtended( data.time );
-            } catch ( e ) {
-                throw new Error( 'Invalid time' );
+                return LessonsTools.documentToObject( document );
             }
-
-            resultDocument.coaches = ApiHelper.depopulateArray( data.coaches );
-            resultDocument.halls = ApiHelper.depopulateArray( data.halls );
-            resultDocument.groups = ApiHelper.depopulateArray( data.groups );
-
-
-            Lessons._create( resultDocument ).$promise
-                .then( deferred.resolve, deferred.reject );
-
-            return { $promise: deferred.promise };
         };
-
-
-        /**
-         * Update lesson
-         *
-         * @param {object} params Id of object to upload updates. As default you should pass object with id property to this argument
-         * @param {object} object New object to upload
-         */
-        Lessons.update = function ( params, object ) {
-            var deferred = $q.defer(),
-                resultDocument = {};
-
-            resultDocument._id = object._id;
-            resultDocument.time = Lessons.getSimpleTimeByExtended( object.time );
-
-            resultDocument.coaches = ApiHelper.depopulateArray( object.coaches );
-            resultDocument.halls = ApiHelper.depopulateArray( object.halls );
-            resultDocument.groups = ApiHelper.depopulateArray( object.groups );
-
-            Lessons._update( params, resultDocument ).$promise
-                .then( deferred.resolve, deferred.reject );
-
-            return { $promise: deferred.promise };
-
-        };
-
-        return Lessons;
 
     } );
