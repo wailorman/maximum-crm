@@ -17,6 +17,7 @@ angular.module( 'starter.api.lessons', [
         ApiHelper,
 
         LessonsTools,
+        LessonsGetInterceptor,
 
         $resource ) {
 
@@ -24,6 +25,11 @@ angular.module( 'starter.api.lessons', [
 
         var Lessons = $resource( apiUrl + '/lessons/:id', null, {
 
+            'get': {
+                method: 'GET',
+                timeout: 5000,
+                interceptor: LessonsGetInterceptor
+            },
             '_get': { method: 'GET', timeout: 5000 },
             '_query': { method: 'GET', isArray: true, timeout: 5000 },
             '_update': { method: 'PUT', timeout: 5000 },
@@ -226,6 +232,9 @@ angular.module( 'starter.api.lessons', [
          * All errors can be only internal, because this method converting
          * document from server, not from user.
          *
+         * @todo Check behavior if some array hasn't passed
+         * @todo Check behavior if some array is empty
+         *
          * @throws see {@link Lessons.getExtendedTimeBySimple}
          * @throws {InvalidArgumentError} Missing document
          * @throws {InvalidArgumentError} Missing time.start property in document
@@ -353,5 +362,16 @@ angular.module( 'starter.api.lessons', [
 
 
         return LessonsTools;
+
+    } )
+    .factory( 'LessonsGetInterceptor', function ( $q, LessonsTools ) {
+
+        return {
+            response: function ( responseData ) {
+                var document = responseData.data;
+
+                return LessonsTools.documentToObject( document );
+            }
+        };
 
     } );

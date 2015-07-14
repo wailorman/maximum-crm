@@ -724,6 +724,17 @@ describe( 'Lessons resource', function () {
 
                     } );
 
+                    it( 'if we have passed empty coaches array in document', function () {
+
+                        mockedDocument.coaches = [];
+
+                        convertDocumentToObject();
+
+                        expect( convertedObject.coaches instanceof Array ).toBeTruthy();
+                        expect( convertedObject.coaches.length ).toEqual( 0 );
+
+                    } );
+
                     it( 'if one coach only passed is not exists', function () {
 
                         mockedDocument.coaches = ['coach3'];
@@ -741,8 +752,6 @@ describe( 'Lessons resource', function () {
 
             describe( 'should call notify on loading errors', function () {
 
-                // todo: change expectations when add interceptor which converts simple error obj to HttpError
-
                 it( 'coaches', function () {
 
                     mockedDocument.coaches = ['coach3'];
@@ -750,7 +759,7 @@ describe( 'Lessons resource', function () {
                     convertDocumentToObject();
 
                     expect( callback.notify ).toHaveBeenCalled();
-                    expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
+                    expect( callback.notify.calls.mostRecent().args[0] instanceof HttpError ).toBeTruthy();
 
                 } );
 
@@ -761,7 +770,7 @@ describe( 'Lessons resource', function () {
                     convertDocumentToObject();
 
                     expect( callback.notify ).toHaveBeenCalled();
-                    expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
+                    expect( callback.notify.calls.mostRecent().args[0] instanceof HttpError ).toBeTruthy();
 
                 } );
 
@@ -772,7 +781,7 @@ describe( 'Lessons resource', function () {
                     convertDocumentToObject();
 
                     expect( callback.notify ).toHaveBeenCalled();
-                    expect( callback.notify.calls.mostRecent().args[0].status ).toEqual( 404 );
+                    expect( callback.notify.calls.mostRecent().args[0] instanceof HttpError ).toBeTruthy();
 
                 } );
 
@@ -979,9 +988,11 @@ describe( 'Lessons resource', function () {
         } );
 
 
-        describe( 'time converting', function () {
+        describe( 'should resolve expected object', function () {
 
-            it( 'should be defined if time is correct', function () {
+            var successData;
+
+            beforeEach( function () {
 
                 expectRequest( 'GET', '/lessons/lesson-correct' );
 
@@ -994,10 +1005,17 @@ describe( 'Lessons resource', function () {
                 expect( callback.error ).not.toHaveBeenCalled();
                 expect( callback.notify ).not.toHaveBeenCalled();
 
-                var successData = callback.success.calls.mostRecent().args[0];
+                successData = callback.success.calls.mostRecent().args[0];
 
-                // todo: move to another it spec block
+            } );
+
+            it( 'should define _id', function () {
+
                 expect( successData._id ).toEqual( 'lesson-correct' );
+
+            } );
+
+            it( 'should define time', function () {
 
                 expect( successData.time ).toBeDefined();
 
@@ -1011,15 +1029,9 @@ describe( 'Lessons resource', function () {
 
             it( 'should correctly convert time', function () {
 
-                expectRequest( 'GET', '/lessons/lesson-correct' );
+                var successTime = successData.time;
 
-                Lessons.get( { id: 'lesson-correct' } ).$promise
-                    .then( callback.success, callback.error, callback.notify );
-
-                $httpBackend.flush();
-
-                var successData = callback.success.calls.mostRecent().args[0],
-                    successTime = successData.time;
+                // time.start
 
                 expect( successTime.start.getFullYear() ).toBe( 2015 );
                 expect( successTime.start.getMonth() ).toBe( 5 - 1 );
@@ -1027,17 +1039,47 @@ describe( 'Lessons resource', function () {
                 expect( successTime.start.getHours() ).toBe( 14 );
                 expect( successTime.start.getMinutes() ).toBe( 0 );
 
+                // time.end
+
                 expect( successTime.end.getFullYear() ).toBe( 2015 );
                 expect( successTime.end.getMonth() ).toBe( 5 - 1 );
                 expect( successTime.end.getDate() ).toBe( 8 );
                 expect( successTime.end.getHours() ).toBe( 14 );
                 expect( successTime.end.getMinutes() ).toBe( 30 );
 
+                // date
+
+                expect( successTime.date.getFullYear() ).toBe( 2015 );
+                expect( successTime.date.getMonth() ).toBe( 5 - 1 );
+                expect( successTime.date.getDate() ).toBe( 8 );
+
+                // epochStart
+
+                expect( successTime.epochStart ).toBe( 50400 );
+
+                // duration
+
+                expect( successTime.duration ).toBe( 30 );
+
+            } );
+
+            it( 'should populate coaches array', function () {
+
+                expect( successData.coaches instanceof Array ).toBeTruthy();
+
+                expect( typeof successData.coaches[0] ).toBe( 'object' );
+                expect( typeof successData.coaches[1] ).toBe( 'object' );
+
+                expect( successData.coaches[0]._id ).toBe( 'coach1' );
+                expect( successData.coaches[1]._id ).toBe( 'coach2' );
+
+                expect( successData.coaches[0].name ).toBe( 'The Coach 1' );
+                expect( successData.coaches[1].name ).toBe( 'The Coach 2' );
+
             } );
 
         } );
 
-        //describe( 'populating' );
 
     } );
 
