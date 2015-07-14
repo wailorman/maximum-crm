@@ -21,8 +21,6 @@ angular.module( 'starter.api.helper', [
          * reject -- calls only if all requests respond an error
          * resolve -- calls after all requests been responded. Args: resultArray (already populated)
          *
-         * @todo Get rid of rejecting
-         *
          * @throws {InvalidArgumentError} Missing resource argument
          * @throws {InvalidArgumentError} Missing resource._get method
          * @throws {InvalidArgumentError} Invalid resource._get method. Expected function, but got a [type]
@@ -31,10 +29,9 @@ angular.module( 'starter.api.helper', [
          * @param {function} resource._get
          * @param {Array} arrayOfIds
          *
-         * @return {Promise.<Array.<Object>,Error,HttpError>|*}
-         * Resolve populated array.
+         * @return {Promise.<Array.<Object>,,HttpError>|*}
+         * Resolve populated array (or empty array if no objects were found).
          * Notice every time when method can't find some objects from array.
-         * Reject if no objects from array were found.
          */
         ApiHelper.populateArray = function ( resource, arrayOfIds ) {
             var deferred = $q.defer(),
@@ -72,11 +69,7 @@ angular.module( 'starter.api.helper', [
 
                     },
                     function () {
-                        if ( numberOfErrorResponds == arrayOfIds.length ) {
-                            deferred.reject( new Error( "Can't find any object" ) );
-                        } else if ( numberOfErrorResponds < arrayOfIds.length && resultArray ) {
-                            deferred.resolve( resultArray );
-                        }
+                        deferred.resolve( resultArray );
                     }
                 );
             }

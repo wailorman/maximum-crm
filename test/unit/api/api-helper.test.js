@@ -164,7 +164,7 @@ describe( 'ApiHelper class', function () {
 
         } );
 
-        it( 'should call callback.error and callback.notify if 2/2 objects responds with 404', function () {
+        it( 'should call notify twice and success with empty array if 2/2 objects responded 404', function () {
 
             arrayToPopulate = ['coach3', 'coach4'];
 
@@ -176,15 +176,12 @@ describe( 'ApiHelper class', function () {
             expectRequest( 'GET', '/coaches/coach3' );
             expectRequest( 'GET', '/coaches/coach4' );
 
-            expect( callback.success ).not.toHaveBeenCalled();
-            expect( callback.error ).toHaveBeenCalled();
+            expect( callback.success ).toHaveBeenCalled();
+            expect( callback.error ).not.toHaveBeenCalled();
             expect( callback.notify ).toHaveBeenCalled();
 
             expect( callback.notify.calls.count() ).toEqual( 2 );
-            expect( callback.error.calls.count() ).toEqual( 1 );
-
-            expect( callback.error.calls.mostRecent().args[0] instanceof Error ).toBeTruthy();
-            expect( callback.error.calls.mostRecent().args[0].message ).toEqual( "Can't find any object" );
+            expect( callback.success.calls.mostRecent().args[0] ).toEqual( [] );
 
             // I wont check notify callback args bcz I've made sure it calls correctly in previous test
 
