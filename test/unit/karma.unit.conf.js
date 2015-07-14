@@ -10,14 +10,17 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: [
+        'jasmine',
+        'jasmine-matchers'
+    ],
 
 
     // list of files / patterns to load in the browser
     files: [
         '../../www/lib/angular/angular.js',
-        '../../www/lib/ionic/js/ionic.bundle.js',
-        '../../www/lib/ionic/js/ionic-angular.js',
+        //'../../www/lib/ionic/js/ionic.bundle.js',
+        //'../../www/lib/ionic/js/ionic-angular.js',
         //'../../www/lib/ng-cordova/dist/ng-cordova.js',
         //'../../www/lib/ngCordova/dist/ng-cordova.js',
         '../../www/lib/angular-mocks/angular-mocks.js',
@@ -33,6 +36,8 @@ module.exports = function(config) {
 
         '../../www/lib/angular-bootstrap/ui-bootstrap.min.js',
         '../../www/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
+
+        '../../node_modules/jasmine-expect/dist/jasmine-matchers.js',
 
         '../../www/js/**/*.js',
         './**/*.test.js'

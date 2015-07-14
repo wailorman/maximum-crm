@@ -61,6 +61,8 @@ describe( 'Lessons resource', function () {
                 halls: ['hall1', 'hall2'],
                 groups: ['group1', 'group2']
             },
+
+
             'lesson-incorrect': {
                 time: {
                     start: new Date( 2015, 5 - 1, 8, 14, 0 ),
@@ -70,6 +72,47 @@ describe( 'Lessons resource', function () {
                 halls: ['hall1', 'hall3'],
                 groups: ['group1', 'group3']
             },
+
+
+            'lesson-with-empty-coaches-array': {
+                _id: 'lesson-with-empty-coaches-array',
+                time: {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                },
+                coaches: [],
+                halls: ['hall1', 'hall2'],
+                groups: ['group1', 'group2']
+            },
+            'lesson-without-coaches-array': {
+                _id: 'lesson-without-coaches-array',
+                time: {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                },
+                halls: ['hall1', 'hall2'],
+                groups: ['group1', 'group2']
+            },
+            'lesson-without-time-start': {
+                _id: 'lesson-without-time-start',
+                time: {
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                },
+                coaches: ['coach1', 'coach2'],
+                halls: ['hall1', 'hall2'],
+                groups: ['group1', 'group2']
+            },
+            'lesson-without-time-end': {
+                _id: 'lesson-without-time-end',
+                time: {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 )
+                },
+                coaches: ['coach1', 'coach2'],
+                halls: ['hall1', 'hall2'],
+                groups: ['group1', 'group2']
+            },
+
+
             coach1: {
                 _id: 'coach1',
                 name: 'The Coach 1'
@@ -924,6 +967,77 @@ describe( 'Lessons resource', function () {
             } );
 
         } );
+
+    } );
+
+    describe( 'get interceptor', function () {
+
+        beforeEach( function () {
+
+            defineDependentObjects();
+
+        } );
+
+
+        describe( 'time converting', function () {
+
+            it( 'should be defined if time is correct', function () {
+
+                expectRequest( 'GET', '/lessons/lesson-correct' );
+
+                Lessons.get( { id: 'lesson-correct' } ).$promise
+                    .then( callback.success, callback.error, callback.notify );
+
+                $httpBackend.flush();
+
+                expect( callback.success ).toHaveBeenCalled();
+                expect( callback.error ).not.toHaveBeenCalled();
+                expect( callback.notify ).not.toHaveBeenCalled();
+
+                var successData = callback.success.calls.mostRecent().args[0];
+
+                // todo: move to another it spec block
+                expect( successData._id ).toEqual( 'lesson-correct' );
+
+                expect( successData.time ).toBeDefined();
+
+                // start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                // end: new Date( 2015, 5 - 1, 8, 14, 30 )
+
+                expect( successData.time.start ).toBeDate();
+                expect( successData.time.end ).toBeDate();
+
+            } );
+
+            it( 'should correctly convert time', function () {
+
+                expectRequest( 'GET', '/lessons/lesson-correct' );
+
+                Lessons.get( { id: 'lesson-correct' } ).$promise
+                    .then( callback.success, callback.error, callback.notify );
+
+                $httpBackend.flush();
+
+                var successData = callback.success.calls.mostRecent().args[0],
+                    successTime = successData.time;
+
+                expect( successTime.start.getFullYear() ).toBe( 2015 );
+                expect( successTime.start.getMonth() ).toBe( 5 - 1 );
+                expect( successTime.start.getDate() ).toBe( 8 );
+                expect( successTime.start.getHours() ).toBe( 14 );
+                expect( successTime.start.getMinutes() ).toBe( 0 );
+
+                expect( successTime.end.getFullYear() ).toBe( 2015 );
+                expect( successTime.end.getMonth() ).toBe( 5 - 1 );
+                expect( successTime.end.getDate() ).toBe( 8 );
+                expect( successTime.end.getHours() ).toBe( 14 );
+                expect( successTime.end.getMinutes() ).toBe( 30 );
+
+            } );
+
+        } );
+
+        //describe( 'populating' );
 
     } );
 
