@@ -232,9 +232,6 @@ angular.module( 'starter.api.lessons', [
          * All errors can be only internal, because this method converting
          * document from server, not from user.
          *
-         * @todo Check behavior if some array hasn't passed
-         * @todo Check behavior if some array is empty
-         *
          * @throws see {@link Lessons.getExtendedTimeBySimple}
          * @throws {InvalidArgumentError} Missing document
          * @throws {InvalidArgumentError} Missing time.start property in document
