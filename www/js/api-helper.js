@@ -21,13 +21,15 @@ angular.module( 'starter.api.helper', [
          * reject -- calls only if all requests respond an error
          * resolve -- calls after all requests been responded. Args: resultArray (already populated)
          *
+         * @todo Add ability to work with Resources which have only get() method
+         *
          * @throws {InvalidArgumentError} Missing resource argument
          * @throws {InvalidArgumentError} Missing resource._get method
          * @throws {InvalidArgumentError} Invalid resource._get method. Expected function, but got a [type]
          *
          * @param {Resource} resource Should have _get() func!
          * @param {function} resource._get
-         * @param {Array} arrayOfIds
+         * @param {Array} arrayOfIds    Might be empty array or undefined. Method will resolve with empty array in this case
          *
          * @return {Promise.<Array.<Object>,,HttpError>|*}
          * Resolve populated array (or empty array if no objects were found).
@@ -83,9 +85,10 @@ angular.module( 'starter.api.helper', [
          * Converting array of objects to plane array.
          * Sync function
          *
-         * @param {Array} arrayOfObjects Elements of this array can be objects (with _id property!), strings and numbers
+         * @param {(Array.<Object>|Array.<string>|Array.<number>)} arrayOfObjects
+         * Elements of this array can be objects (with _id property!), strings or numbers in chaos
          *
-         * @return {Array}
+         * @return {Array}  Depopulated array
          */
         ApiHelper.depopulateArray = function ( arrayOfObjects ) {
 
@@ -100,6 +103,7 @@ angular.module( 'starter.api.helper', [
                         if ( elem._id ) {
                             resultArray.push( elem._id );
                         } else {
+                            // fixme: It might be a critical error. Think... you've been added a new object and it has ONLY LOG SOME ERROR AND DON'T NOTIFY USER
                             $log.error( new InvalidArgumentError( 'Some object in array does not have _id property' ) );
                         }
 
