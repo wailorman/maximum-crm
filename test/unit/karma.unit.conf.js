@@ -46,6 +46,7 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
+        './edit-ctrl.test.js'
     ],
 
 

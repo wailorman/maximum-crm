@@ -1,4 +1,4 @@
-xdescribe( 'EditCtrl controller', function () {
+describe( 'EditCtrl controller', function () {
 
     var EditCtrlScope, EditCtrl, resourceType, mockedLessonData;
 
