@@ -41,6 +41,9 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
             if ( start.getTime() >= end.getTime() )
                 throw new InvalidArgumentError( 'Invalid time object. end time should be greater than start' );
 
+            this.start = start;
+            this.end = end;
+
         }
 
         return LessonTimeSimple;

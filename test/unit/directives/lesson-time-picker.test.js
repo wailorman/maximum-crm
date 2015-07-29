@@ -478,7 +478,25 @@ describe( 'lesson-time-picker directive', function () {
 
             } );
 
-            // todo: check object properties (start, end)
+            describe( 'should have', function () {
+
+                beforeEach( function () {
+                    constructingSimpleTime();
+                } );
+
+                it( 'start', function () {
+
+                    expect( constructedLessonTimeSimple.start.getTime() ).toEqual( simpleTime.start.getTime() );
+
+                } );
+
+                it( 'end', function () {
+
+                    expect( constructedLessonTimeSimple.end.getTime() ).toEqual( simpleTime.end.getTime() );
+
+                } );
+
+            } );
 
         } );
 
