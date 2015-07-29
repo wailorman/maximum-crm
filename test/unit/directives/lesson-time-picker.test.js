@@ -2,19 +2,17 @@ describe( 'lesson-time-picker directive', function () {
 
     beforeEach( module( 'starter.directives.lesson-time-picker' ) );
 
+    var LessonTimeTools,
+        LessonTimeSimple;
+
+    beforeEach( inject( function ( _LessonTimeTools_, _LessonTimeSimple_, _LessonTimeExtended_ ) {
+
+        LessonTimeTools  = _LessonTimeTools_;
+        LessonTimeSimple = _LessonTimeSimple_;
+
+    } ) );
+
     describe( 'LessonTimeTools', function () {
-
-        var LessonTimeTools;
-
-        beforeEach( inject( function ( _LessonTimeTools_ ) {
-            LessonTimeTools = _LessonTimeTools_;
-        } ) );
-
-        describe( 'checkEqualityOfSimpleAndExtendedTime', function () {
-
-
-
-        } );
 
         describe( 'getExtendedTimeBySimple()', function () {
 
@@ -359,6 +357,122 @@ describe( 'lesson-time-picker directive', function () {
                 expect( function () {
                     getSimpleTimeByExtended( invalidTimeObject );
                 } ).toThrow( new InvalidArgumentError('duration property should be number') );
+
+            } );
+
+        } );
+
+    } );
+
+    describe( 'LessonTimeSimple', function () {
+
+        var simpleTime,
+            constructingSimpleTime,
+            constructedLessonTimeSimple;
+
+        beforeEach( function () {
+
+            simpleTime = {
+                start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                end: new Date( 2015, 5 - 1, 8, 14, 30 )
+            };
+
+            constructingSimpleTime = function () {
+                constructedLessonTimeSimple = new LessonTimeSimple( simpleTime );
+            };
+
+        } );
+
+        describe( 'constructor', function () {
+
+            it( 'should successfully construct valid simple time object', function () {
+
+                expect( constructingSimpleTime ).not.toThrow();
+
+            } );
+
+            it( 'should throw error if time object is not undefined', function () {
+
+                simpleTime = undefined;
+
+                expect( constructingSimpleTime ).toThrow( new InvalidArgumentError( 'Missing time object' ) );
+
+            } );
+
+            it( 'should throw error if time object is not object', function () {
+
+                simpleTime = 'some text';
+
+                expect( constructingSimpleTime ).toThrow(
+                    new InvalidArgumentError( 'Invalid time object. Expected object, but got a string' )
+                );
+
+
+                simpleTime = 123;
+
+                expect( constructingSimpleTime ).toThrow(
+                    new InvalidArgumentError( 'Invalid time object. Expected object, but got a number' )
+                );
+
+            } );
+
+            it( 'should throw error if start property is not defined', function () {
+
+                delete simpleTime.start;
+
+                expect( constructingSimpleTime ).toThrow(
+                    new InvalidArgumentError( 'Invalid time object. Missing start property' )
+                );
+
+            } );
+
+            it( 'should throw error if end property is not defined', function () {
+
+                delete simpleTime.end;
+
+                expect( constructingSimpleTime ).toThrow(
+                    new InvalidArgumentError( 'Invalid time object. Missing end property' )
+                );
+
+            } );
+
+            it( 'should throw error if .start is not Date', function () {
+
+                simpleTime.start = 123;
+
+                expect( constructingSimpleTime ).toThrow(
+                    new InvalidArgumentError( 'Invalid time object. start property should be instance of Date' )
+                );
+
+            } );
+
+            it( 'should throw error if .end is not Date', function () {
+
+                simpleTime.end = 123;
+
+                expect( constructingSimpleTime ).toThrow(
+                    new InvalidArgumentError( 'Invalid time object. end property should be instance of Date' )
+                );
+
+            } );
+
+            it( 'should throw error if end time is earlier than start', function () {
+
+                simpleTime.end.setHours( 0 );
+
+                expect( constructingSimpleTime ).toThrow(
+                    new InvalidArgumentError( 'Invalid time object. end time should be greater than start' )
+                );
+
+            } );
+
+            it( 'should throw error if start is equal to end', function () {
+
+                simpleTime.end = simpleTime.start;
+
+                expect( constructingSimpleTime ).toThrow(
+                    new InvalidArgumentError( 'Invalid time object. end time should be greater than start' )
+                );
 
             } );
 

@@ -10,7 +10,42 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
 
     } )
     .controller( 'LessonTimePickerCtrl' )
-    .factory( 'LessonTimeSimple' )
+    .factory( 'LessonTimeSimple', function () {
+
+        function LessonTimeSimple( simpleTimeObject ) {
+
+            var start, end;
+
+            if ( !simpleTimeObject )
+                throw new InvalidArgumentError( 'Missing time object' );
+
+            if ( typeof simpleTimeObject != 'object' )
+                throw new InvalidArgumentError( 'Invalid time object. Expected object, but got a ' +
+                                                typeof simpleTimeObject );
+
+            start = simpleTimeObject.start;
+            end = simpleTimeObject.end;
+
+            if ( !start )
+                throw new InvalidArgumentError( 'Invalid time object. Missing start property' );
+
+            if ( !end )
+                throw new InvalidArgumentError( 'Invalid time object. Missing end property' );
+
+            if ( !(start instanceof Date) )
+                throw new InvalidArgumentError( 'Invalid time object. start property should be instance of Date' );
+
+            if ( !(end instanceof Date) )
+                throw new InvalidArgumentError( 'Invalid time object. end property should be instance of Date' );
+
+            if ( start.getTime() >= end.getTime() )
+                throw new InvalidArgumentError( 'Invalid time object. end time should be greater than start' );
+
+        }
+
+        return LessonTimeSimple;
+
+    } )
     .factory( 'LessonTimeExtended' )
     .service( 'LessonTimeTools', function () {
 
