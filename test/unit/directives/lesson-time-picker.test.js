@@ -368,9 +368,7 @@ describe( 'lesson-time-picker directive', function () {
 
     describe( 'LessonTimeSimple', function () {
 
-        var simpleTime,
-            constructingSimpleTime,
-            constructedLessonTimeSimple;
+        var simpleTime; // clear example of simple time object
 
         beforeEach( function () {
 
@@ -379,13 +377,20 @@ describe( 'lesson-time-picker directive', function () {
                 end: new Date( 2015, 5 - 1, 8, 14, 30 )
             };
 
-            constructingSimpleTime = function () {
-                constructedLessonTimeSimple = new LessonTimeSimple( simpleTime );
-            };
-
         } );
 
         describe( 'constructor', function () {
+
+            var constructingSimpleTime,
+                constructedLessonTimeSimple;
+
+            beforeEach( function () {
+
+                constructingSimpleTime = function () {
+                    constructedLessonTimeSimple = new LessonTimeSimple( simpleTime );
+                };
+
+            } );
 
             it( 'should successfully construct valid simple time object', function () {
 
@@ -508,9 +513,7 @@ describe( 'lesson-time-picker directive', function () {
 
     describe( 'LessonTimeExtended', function () {
 
-        var extendedTime,
-            constructingExtendedTime,
-            constructedLessonTimeExtended;
+        var extendedTime; // clear example of extended time object
 
         beforeEach( function () {
 
@@ -520,13 +523,20 @@ describe( 'lesson-time-picker directive', function () {
                 duration: 30
             };
 
-            constructingExtendedTime = function () {
-                constructedLessonTimeExtended = new LessonTimeExtended( extendedTime );
-            };
-
         } );
 
         describe( 'constructor', function () {
+
+            var constructingExtendedTime,
+                constructedLessonTimeExtended;
+
+            beforeEach( function () {
+
+                constructingExtendedTime = function () {
+                    constructedLessonTimeExtended = new LessonTimeExtended( extendedTime );
+                };
+
+            } );
 
             it( 'should successfully construct valid simple time object', function () {
 
