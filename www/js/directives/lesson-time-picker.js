@@ -46,7 +46,63 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
         return LessonTimeSimple;
 
     } )
-    .factory( 'LessonTimeExtended' )
+    .factory( 'LessonTimeExtended', function () {
+
+        function LessonTimeExtended( extendedTimeObject ) {
+
+            var date, epochStart, duration;
+
+            if ( !extendedTimeObject.date )
+                throw new InvalidArgumentError( 'Invalid time object. Missing date' );
+
+            if ( !extendedTimeObject.epochStart )
+                throw new InvalidArgumentError( 'Invalid time object. Missing epochStart' );
+
+            if ( !extendedTimeObject.duration )
+                throw new InvalidArgumentError( 'Invalid time object. Missing duration' );
+
+            date       = extendedTimeObject.date;
+            epochStart = extendedTimeObject.epochStart;
+            duration   = extendedTimeObject.duration;
+
+            if ( typeof date != 'object' )
+                throw new InvalidArgumentError( 'Invalid time object. Expected date as object, but got a ' +
+                                                typeof date );
+
+            if ( !( date instanceof Date ) )
+                throw new InvalidArgumentError( 'Invalid time object. Expected date as instance of Date' );
+
+            /////////////////////////////
+
+            if ( typeof epochStart != 'number' )
+                throw new InvalidArgumentError( 'Invalid time object. Expected epochStart as number, but got a ' +
+                                                typeof epochStart );
+
+            if ( epochStart > 86399 )
+                throw new InvalidArgumentError(
+                    'Invalid time object. Lesson Can\'t starts on the next day after .date (duration is >86399)' );
+
+            /////////////////////////////
+
+            if ( typeof duration != 'number' )
+                throw new InvalidArgumentError(
+                    'Invalid time object. Expected duration as number, but got a ' + typeof duration );
+
+            if ( duration < 1 )
+                throw new InvalidArgumentError( 'Invalid time object. Lesson should go on no less than 1 minute' );
+
+            /////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////
+
+            this.date = date;
+            this.epochStart = epochStart;
+            this.duration = duration;
+
+        }
+
+        return LessonTimeExtended;
+
+    } )
     .service( 'LessonTimeTools', function () {
 
         var LessonTimeTools = this;

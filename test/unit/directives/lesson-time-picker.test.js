@@ -3,12 +3,14 @@ describe( 'lesson-time-picker directive', function () {
     beforeEach( module( 'starter.directives.lesson-time-picker' ) );
 
     var LessonTimeTools,
-        LessonTimeSimple;
+        LessonTimeSimple,
+        LessonTimeExtended;
 
     beforeEach( inject( function ( _LessonTimeTools_, _LessonTimeSimple_, _LessonTimeExtended_ ) {
 
         LessonTimeTools  = _LessonTimeTools_;
         LessonTimeSimple = _LessonTimeSimple_;
+        LessonTimeExtended = _LessonTimeExtended_;
 
     } ) );
 
@@ -473,6 +475,164 @@ describe( 'lesson-time-picker directive', function () {
                 expect( constructingSimpleTime ).toThrow(
                     new InvalidArgumentError( 'Invalid time object. end time should be greater than start' )
                 );
+
+            } );
+
+            // todo: check object properties (start, end)
+
+        } );
+
+    } );
+
+    describe( 'LessonTimeExtended', function () {
+
+        var extendedTime,
+            constructingExtendedTime,
+            constructedLessonTimeExtended;
+
+        beforeEach( function () {
+
+            extendedTime = {
+                date: new Date( 2015, 5 - 1, 8 ),
+                epochStart: 14 * 3600,
+                duration: 30
+            };
+
+            constructingExtendedTime = function () {
+                constructedLessonTimeExtended = new LessonTimeExtended( extendedTime );
+            };
+
+        } );
+
+        describe( 'constructor', function () {
+
+            it( 'should successfully construct valid simple time object', function () {
+
+                expect( constructingExtendedTime ).not.toThrow();
+
+            } );
+
+            describe( 'should throw error if .date', function () {
+
+                it( 'not defined', function () {
+
+                    delete extendedTime.date;
+
+                    expect( constructingExtendedTime )
+                        .toThrow( new InvalidArgumentError( 'Invalid time object. Missing date' ) );
+
+                } );
+
+                it( 'not object', function () {
+
+                    extendedTime.date = 123;
+
+                    expect( constructingExtendedTime )
+                        .toThrow( new InvalidArgumentError(
+                            'Invalid time object. Expected date as object, but got a number' ) );
+
+                } );
+
+                it( 'not Date', function () {
+
+                    extendedTime.date = { ha: 'LOL' };
+
+                    expect( constructingExtendedTime )
+                        .toThrow( new InvalidArgumentError( 'Invalid time object. Expected date as instance of Date' ) );
+
+                } );
+
+            } );
+
+            describe( 'should throw error if .epochStart', function () {
+
+                it( 'not defined', function () {
+
+                    delete extendedTime.epochStart;
+
+                    expect( constructingExtendedTime )
+                        .toThrow( new InvalidArgumentError( 'Invalid time object. Missing epochStart' ) );
+
+                } );
+
+                it( 'not number', function () {
+
+                    extendedTime.epochStart = 'something very interesting';
+
+                    expect( constructingExtendedTime )
+                        .toThrow( new InvalidArgumentError(
+                            'Invalid time object. Expected epochStart as number, but got a string' ) );
+
+                } );
+
+                it( 'is greater than 86399 (a day)', function () {
+
+                    extendedTime.epochStart = 86400;
+
+                    expect( constructingExtendedTime )
+                        .toThrow( new InvalidArgumentError(
+                            'Invalid time object. Lesson Can\'t starts on the next day after .date (duration is >86399)' ) );
+
+                } );
+
+            } );
+
+            describe( 'should throw error if .duration', function () {
+
+                it( 'not defined', function () {
+
+                    delete extendedTime.duration;
+
+                    expect( constructingExtendedTime )
+                        .toThrow( new InvalidArgumentError( 'Invalid time object. Missing duration' ) );
+
+                } );
+
+                it( 'not number', function () {
+
+                    extendedTime.duration = 'something very interesting';
+
+                    expect( constructingExtendedTime )
+                        .toThrow( new InvalidArgumentError(
+                            'Invalid time object. Expected duration as number, but got a string' ) );
+
+                } );
+
+                it( 'less than 1', function () {
+
+                    extendedTime.duration = 0.5;
+
+                    expect( constructingExtendedTime )
+                        .toThrow( new InvalidArgumentError(
+                            'Invalid time object. Lesson should go on no less than 1 minute' ) );
+
+                } );
+
+            } );
+
+            describe( 'should have', function () {
+
+                beforeEach( function () {
+                    constructingExtendedTime();
+                } );
+
+                it( 'date', function () {
+
+                    expect( constructedLessonTimeExtended.date.getTime() ).toEqual( extendedTime.date.getTime() );
+
+                } );
+
+                it( 'epochStart', function () {
+
+                    expect( constructedLessonTimeExtended.epochStart ).toEqual( extendedTime.epochStart );
+
+                } );
+
+                it( 'duration', function () {
+
+                    expect( constructedLessonTimeExtended.duration ).toEqual( extendedTime.duration );
+
+                } );
 
             } );
 
