@@ -12,6 +12,32 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
     .controller( 'LessonTimePickerCtrl' )
     .factory( 'LessonTimeSimple', function () {
 
+        /**
+         * Simple lesson time
+         *
+         * @typedef {Object} LessonTimeSimple
+         *
+         * @property {Date} start
+         * @property {Date} end
+         */
+
+        /**
+         * @class LessonTimeSimple
+         *
+         * @param {object} simpleTimeObject
+         * @param {Date} simpleTimeObject.start
+         * @param {Date} simpleTimeObject.end
+         *
+         * @throws {InvalidArgumentError} Missing time object
+         * @throws {InvalidArgumentError} Invalid time object. Expected object, but got a ...
+         * @throws {InvalidArgumentError} Invalid time object. Missing start property
+         * @throws {InvalidArgumentError} Invalid time object. Missing end property
+         * @throws {InvalidArgumentError} Invalid time object. start property should be instance of Date
+         * @throws {InvalidArgumentError} Invalid time object. end property should be instance of Date
+         * @throws {InvalidArgumentError} Invalid time object. end time should be greater than start
+         *
+         * @constructor
+         */
         function LessonTimeSimple( simpleTimeObject ) {
 
             var start, end;
@@ -51,6 +77,43 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
     } )
     .factory( 'LessonTimeExtended', function () {
 
+        /**
+         * Extended lesson time
+         *
+         * @typedef {Object} LessonTimeExtended
+         *
+         * @property {Date} date            Date in which lessons is starting (only year, month and day)
+         * @property {number} epochStart    Seconds from start of day to start of lesson
+         * @property {number} duration      Duration of lesson (in minutes)
+         * @property {Date} start           Start time from source simple time
+         * @property {Date} end             End time from source simple time
+         */
+
+        /**
+         * @class LessonTimeExtended
+         *
+         * @param {object} extendedTimeObject
+         *
+         * @param {Date} extendedTimeObject.date            Date of Lesson.
+         *
+         * @param {number} extendedTimeObject.epochStart    Number of seconds from start of a day (date).
+         * Should be less than 86400
+         *
+         * @param {number} extendedTimeObject.duration      Lesson duration in minutes
+         * Should be equal or greater than 1
+         *
+         * @throws {InvalidArgumentError} Invalid time object. Missing date
+         * @throws {InvalidArgumentError} Invalid time object. Missing epochStart
+         * @throws {InvalidArgumentError} Invalid time object. Missing duration
+         * @throws {InvalidArgumentError} Invalid time object. Expected date as object, but got a ...
+         * @throws {InvalidArgumentError} Invalid time object. Expected date as instance of Date
+         * @throws {InvalidArgumentError} Invalid time object. Expected epochStart as number, but got a ...
+         * @throws {InvalidArgumentError} Invalid time object. Lesson Can\'t starts on the next day after .date (epochStart is >86399)
+         * @throws {InvalidArgumentError} Invalid time object. Expected duration as number, but got a ...
+         * @throws {InvalidArgumentError} Invalid time object. Lesson should go on no less than 1 minute
+         *
+         * @constructor
+         */
         function LessonTimeExtended( extendedTimeObject ) {
 
             var date, epochStart, duration;
@@ -83,7 +146,7 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
 
             if ( epochStart > 86399 )
                 throw new InvalidArgumentError(
-                    'Invalid time object. Lesson Can\'t starts on the next day after .date (duration is >86399)' );
+                    'Invalid time object. Lesson Can\'t starts on the next day after .date (epochStart is >86399)' );
 
             /////////////////////////////
 
@@ -109,18 +172,6 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
     .service( 'LessonTimeTools', function () {
 
         var LessonTimeTools = this;
-
-        /**
-         * Extended lesson time
-         *
-         * @typedef {Object} LessonTimeExtended
-         *
-         * @property {Date} date            Date in which lessons is starting (only year, month and day)
-         * @property {number} epochStart    Seconds from start of day to start of lesson
-         * @property {number} duration      Duration of lesson (in minutes)
-         * @property {Date} start           Start time from source simple time
-         * @property {Date} end             End time from source simple time
-         */
 
         /**
          * Get extended time object by simple time object
@@ -164,15 +215,6 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
 
             return resultTime;
         };
-
-        /**
-         * Simple lesson time
-         *
-         * @typedef {Object} LessonTimeSimple
-         *
-         * @property {Date} start
-         * @property {Date} end
-         */
 
         /**
          * Get extended time object by simple time object

@@ -593,7 +593,7 @@ describe( 'lesson-time-picker directive', function () {
 
                     expect( constructingExtendedTime )
                         .toThrow( new InvalidArgumentError(
-                            'Invalid time object. Lesson Can\'t starts on the next day after .date (duration is >86399)' ) );
+                            'Invalid time object. Lesson Can\'t starts on the next day after .date (epochStart is >86399)' ) );
 
                 } );
 
