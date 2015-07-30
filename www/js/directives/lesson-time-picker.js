@@ -248,6 +248,24 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
 
         };
 
+        /**
+         * @param {LessonTimeExtended} extendedTime
+         * @return {Boolean}
+         */
+        LessonTimeTools.LessonTimeSimple.prototype.isEqualToExtendedTime = function ( extendedTime ) {
+
+            var selfSimpleTimeInstance = this;
+
+            return LessonTimeTools.checkEqualityOfTwoTimes( selfSimpleTimeInstance, extendedTime );
+
+        };
+
+
+        /**
+         * @param simpleTime    LessonTimeSimple object
+         * @param extendedTime  LessonTimeExtended object
+         * @returns {boolean}
+         */
         LessonTimeTools.checkEqualityOfTwoTimes = function ( simpleTime, extendedTime ) {
 
             var extendedTimeInSimple, simpleTimeInUnixtime, extendedTimeInUnixtime;
@@ -274,11 +292,6 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
 
             return simpleTimeInUnixtime.start == extendedTimeInUnixtime.start &&
                    simpleTimeInUnixtime.end == extendedTimeInUnixtime.end;
-
-
-        };
-
-        LessonTimeTools.LessonTimeSimple.prototype.isEqualToExtendedTime = function ( extendedTime ) {
 
 
         };
