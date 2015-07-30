@@ -86,6 +86,7 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
             if ( !extendedTimeObject.duration )
                 throw new InvalidArgumentError( 'Invalid time object. Missing duration' );
 
+            // todo: Apply only year, month and date. Even passed something more than
             date       = extendedTimeObject.date;
             epochStart = extendedTimeObject.epochStart;
             duration   = extendedTimeObject.duration;
@@ -244,6 +245,41 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
             };
 
             return new LessonTimeTools.LessonTimeExtended( resultTime );
+
+        };
+
+        LessonTimeTools.checkEqualityOfTwoTimes = function ( simpleTime, extendedTime ) {
+
+            var extendedTimeInSimple, simpleTimeInUnixtime, extendedTimeInUnixtime;
+
+            if ( !(simpleTime instanceof LessonTimeTools.LessonTimeSimple) )
+                throw new InvalidArgumentError(
+                    'Invalid simple time object argument. Expecting instance of LessonTimeSimple' );
+
+            if ( !(extendedTime instanceof LessonTimeTools.LessonTimeExtended) )
+                throw new InvalidArgumentError(
+                    'Invalid extended time object argument. Expecting instance of LessonTimeExtended' );
+
+            extendedTimeInSimple = extendedTime.toSimpleTime();
+
+            simpleTimeInUnixtime = {
+                start: simpleTime.start.getTime(),
+                end: simpleTime.end.getTime()
+            };
+
+            extendedTimeInUnixtime = {
+                start: extendedTimeInSimple.start.getTime(),
+                end: extendedTimeInSimple.end.getTime()
+            };
+
+            return simpleTimeInUnixtime.start == extendedTimeInUnixtime.start &&
+                   simpleTimeInUnixtime.end == extendedTimeInUnixtime.end;
+
+
+        };
+
+        LessonTimeTools.LessonTimeSimple.prototype.isEqualToExtendedTime = function ( extendedTime ) {
+
 
         };
 

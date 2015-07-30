@@ -14,6 +14,114 @@ describe( 'lesson-time-picker directive', function () {
 
     } ) );
 
+    describe( 'LessonTimeTools', function () {
+
+        describe( 'checkEqualityOfTwoTimes()', function () {
+
+            var simpleTime, extendedTime, checkEquality;
+
+            beforeEach( function () {
+
+                simpleTime = new LessonTimeSimple( {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                } );
+
+                extendedTime = new LessonTimeExtended( {
+                    date: new Date( 2015, 5 - 1, 8 ),
+                    epochStart: 14 * 3600,
+                    duration: 30
+                } );
+
+                checkEquality = function () {
+                    return LessonTimeTools.checkEqualityOfTwoTimes( simpleTime, extendedTime )
+                };
+
+            } );
+
+            it( 'should be equal', function () {
+
+                expect( checkEquality() ).toBeTruthy();
+
+            } );
+
+            it( 'should throw error if passing simple object to simpleTime arg', function () {
+
+                simpleTime = {
+                    start: new Date(),
+                    end: new Date()
+                };
+
+                expect( function () {
+
+                    checkEquality();
+
+                } ).toThrow( new InvalidArgumentError(
+                    'Invalid simple time object argument. Expecting instance of LessonTimeSimple' ) );
+
+            } );
+
+            it( 'should throw error if passing simple object to extendedTime arg', function () {
+
+                extendedTime = {
+                    date: new Date(),
+                    epochStart: 0,
+                    duration: 0
+                };
+
+                expect( function () {
+
+                    checkEquality();
+
+                } ).toThrow( new InvalidArgumentError(
+                    'Invalid extended time object argument. Expecting instance of LessonTimeExtended' ) );
+
+            } );
+
+            describe( 'should be not equal', function () {
+
+                it( 'by date', function () {
+
+                    extendedTime = new LessonTimeExtended( {
+                        date: new Date( 2015, 5 - 1, 9 ),
+                        epochStart: 14 * 3600,
+                        duration: 30
+                    } );
+
+                    expect( checkEquality() ).toBeFalsy();
+
+                } );
+
+                it( 'by epochStart', function () {
+
+                    extendedTime = new LessonTimeExtended( {
+                        date: new Date( 2015, 5 - 1, 8 ),
+                        epochStart: 15 * 3600,
+                        duration: 30
+                    } );
+
+                    expect( checkEquality() ).toBeFalsy();
+
+                } );
+
+                it( 'by duration', function () {
+
+                    extendedTime = new LessonTimeExtended( {
+                        date: new Date( 2015, 5 - 1, 8 ),
+                        epochStart: 14 * 3600,
+                        duration: 31
+                    } );
+
+                    expect( checkEquality() ).toBeFalsy();
+
+                } );
+
+            } );
+
+        } );
+
+    } );
+
     describe( 'LessonTimeSimple', function () {
 
         var simpleTime; // clear example of simple time object
