@@ -45,63 +45,6 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
 
         var LessonTimeTools = this;
 
-        /**
-         * Get extended time object by simple time object
-         *
-         * @param {LessonTimeSimple} timeObject
-         *
-         * @throws {InvalidArgumentError} Not enough params
-         * @throws {InvalidArgumentError} Invalid time object. start or end property are not instance of Date
-         *
-         * @return {LessonTimeExtended|*} Extended time object
-         */
-        LessonTimeTools.getExtendedTimeBySimple = function ( timeObject ) {
-            var resultTime = {},
-                durationInMs;
-
-            if ( !timeObject.start || !timeObject.end )
-                throw new InvalidArgumentError( 'Not enough params' );
-
-            if ( !(timeObject.start instanceof Date) || !(timeObject.end instanceof Date) )
-                throw new InvalidArgumentError( 'Invalid time object. start or end property are not instance of Date' );
-
-            resultTime.start = timeObject.start;
-            resultTime.end = timeObject.end;
-
-            resultTime.date = new Date(
-                timeObject.start.getFullYear(),
-                timeObject.start.getMonth(),
-                timeObject.start.getDate()
-            );
-
-            resultTime.epochStart = resultTime.start.getHours() * 3600 + resultTime.start.getMinutes();
-
-            durationInMs = resultTime.end.getTime() - resultTime.start.getTime();
-
-            resultTime.duration = Math.floor( durationInMs / 1000 / 60 );
-            //                                                 |     |
-            //                                                 |     |
-            //                                                 |     + to minutes
-            //                                                 |
-            //                                                 + to seconds
-
-            return resultTime;
-        };
-
-        /**
-         * Get extended time object by simple time object
-         *
-         * @todo Add functionality to work with passed LessonTimeSimple instead of LessonTimeExtended to timeObject arg
-         *
-         * @param {LessonTimeExtended}  timeObject
-         *
-         * @throws {InvalidArgumentError} Not enough params (date missing)
-         * @throws {InvalidArgumentError} date property should be instance of Date
-         * @throws {InvalidArgumentError} epochStart property should be number
-         * @throws {InvalidArgumentError} duration property should be number
-         *
-         * @return {LessonTimeSimple|*} Simple time object
-         */
         LessonTimeTools.getSimpleTimeByExtended = function ( timeObject ) {
 
             var resultTime = {};
@@ -255,6 +198,43 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
 
             this.start = start;
             this.end   = end;
+
+        };
+
+        /**
+         * Get extended time object by simple time object
+         *
+         * @return {LessonTimeExtended|*} Extended time object
+         */
+        LessonTimeTools.LessonTimeSimple.prototype.toExtendedTime = function () {
+
+            var selfSimpleTimeInstance = this,
+                resultTime,
+                date, epochStart, duration,
+                durationInMs;
+
+            date = new Date(
+                selfSimpleTimeInstance.start.getFullYear(),
+                selfSimpleTimeInstance.start.getMonth(),
+                selfSimpleTimeInstance.start.getDate()
+            );
+
+            epochStart = selfSimpleTimeInstance.start.getHours() * 3600 +
+                                    selfSimpleTimeInstance.start.getMinutes();
+
+            durationInMs = selfSimpleTimeInstance.end.getTime() - selfSimpleTimeInstance.start.getTime();
+
+            duration = Math.floor( durationInMs / 1000 / 60 );
+            //                                           to minutes
+            //                                    to seconds
+
+            resultTime = {
+                date: date,
+                epochStart: epochStart,
+                duration: duration
+            };
+
+            return new LessonTimeTools.LessonTimeExtended( resultTime );
 
         };
 

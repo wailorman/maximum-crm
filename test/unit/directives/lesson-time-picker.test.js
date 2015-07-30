@@ -16,166 +16,6 @@ describe( 'lesson-time-picker directive', function () {
 
     describe( 'LessonTimeTools', function () {
 
-        describe( 'getExtendedTimeBySimple()', function () {
-
-            var getExtendedTimeBySimple,
-                simpleTimeObject,
-                resultTime;
-
-            beforeEach( function () {
-
-                getExtendedTimeBySimple = LessonTimeTools.getExtendedTimeBySimple;
-
-                simpleTimeObject = {
-                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
-                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
-                };
-
-                resultTime = getExtendedTimeBySimple( simpleTimeObject );
-
-            } );
-
-            it( 'should return simple time object data with extended', function () {
-
-                expect( resultTime.start.getTime() ).toEqual( simpleTimeObject.start.getTime() );
-                expect( resultTime.end.getTime() ).toEqual( simpleTimeObject.end.getTime() );
-
-            } );
-
-            describe( 'date', function () {
-
-                it( 'should return correct date', function () {
-
-                    expect( resultTime.date.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.date.getMonth() ).toEqual( 5 - 1 );
-                    expect( resultTime.date.getDate() ).toEqual( 8 );
-
-                } );
-
-                it( 'should get date property from time.start if lesson stretching for 2 days', function () {
-
-                    simpleTimeObject = {
-                        start: new Date( 2015, 5 - 1, 8, 23, 0 ),
-                        end: new Date( 2015, 5 - 1, 9, 0, 30 )
-                    };
-
-                    resultTime = getExtendedTimeBySimple( simpleTimeObject );
-
-                } );
-
-            } );
-
-            describe( 'epochStart', function () {
-
-                it( 'should return 50400 for 14:00', function () {
-
-                    expect( resultTime.epochStart ).toEqual( 50400 );
-
-                } );
-
-                it( 'should return 0 if lesson starts at 00:00', function () {
-
-                    simpleTimeObject = {
-                        start: new Date( 2015, 5 - 1, 8, 0, 0 ),
-                        end: new Date( 2015, 5 - 1, 8, 0, 30 )
-                    };
-
-                    resultTime = getExtendedTimeBySimple( simpleTimeObject );
-
-                    expect( resultTime.epochStart ).toEqual( 0 );
-
-                } );
-
-            } );
-
-            describe( 'duration', function () {
-
-                it( 'should return 0 if lesson ends when it starts', function () {
-
-                    simpleTimeObject = {
-                        start: new Date( 2015, 5 - 1, 8, 1, 0 ),
-                        end: new Date( 2015, 5 - 1, 8, 1, 0 )
-                    };
-
-                    resultTime = getExtendedTimeBySimple( simpleTimeObject );
-
-                    expect( resultTime.duration ).toEqual( 0 );
-
-                } );
-
-                it( 'should return 30 if lesson starts at 14:00 and ends at 14:30', function () {
-
-                    simpleTimeObject = {
-                        start: new Date( 2015, 5 - 1, 8, 14, 0 ),
-                        end: new Date( 2015, 5 - 1, 8, 14, 30 )
-                    };
-
-                    resultTime = getExtendedTimeBySimple( simpleTimeObject );
-
-                    expect( resultTime.duration ).toEqual( 30 );
-
-                } );
-
-                it( 'should return 60 if lesson starts at 23:30 and ends at 0:30 on the next day', function () {
-
-                    simpleTimeObject = {
-                        start: new Date( 2015, 5 - 1, 8, 23, 30 ),
-                        end: new Date( 2015, 5 - 1, 9, 0, 30 )
-                    };
-
-                    resultTime = getExtendedTimeBySimple( simpleTimeObject );
-
-                    expect( resultTime.duration ).toEqual( 60 );
-
-                } );
-
-            } );
-
-            it( 'should throw exception if we passing not date to args', function () {
-
-                var invalidTimeObject;
-
-                invalidTimeObject = {
-                    time: {
-                        start: new Date( 2015, 5 - 1, 8, 14, 0 ),
-                        end: 100
-                    }
-                };
-
-                expect( function () {
-                    getExtendedTimeBySimple( invalidTimeObject );
-                } ).toThrow();
-
-                /////////////////////////////////////////////////
-
-                invalidTimeObject = {
-                    time: {
-                        start: 100,
-                        end: new Date( 2015, 5 - 1, 8, 14, 30 )
-                    }
-                };
-
-                expect( function () {
-                    getExtendedTimeBySimple( invalidTimeObject );
-                } ).toThrow();
-
-                /////////////////////////////////////////////////
-
-                invalidTimeObject = {
-                    time: {
-                        start: 100,
-                        end: 100
-                    }
-                };
-
-                expect( function () {
-                    getExtendedTimeBySimple( invalidTimeObject );
-                } ).toThrow();
-
-            } );
-
-        } );
-
         describe( 'getSimpleTimeByExtended()', function () {
 
             var extendedTimeObject = {},
@@ -502,6 +342,111 @@ describe( 'lesson-time-picker directive', function () {
                 it( 'end', function () {
 
                     expect( constructedLessonTimeSimple.end.getTime() ).toEqual( simpleTime.end.getTime() );
+
+                } );
+
+            } );
+
+        } );
+
+        describe( 'toExtendedTime()', function () {
+
+            var getExtendedTimeBySimple,
+                simpleTimeObject,
+                resultTime;
+
+            beforeEach( function () {
+
+                getExtendedTimeBySimple = function ( simpleTimeObject ) {
+
+                    return (new LessonTimeSimple( simpleTimeObject )).toExtendedTime();
+
+                };
+
+                simpleTimeObject = {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                };
+
+                resultTime = getExtendedTimeBySimple( simpleTimeObject );
+
+            } );
+
+            describe( 'date', function () {
+
+                it( 'should return correct date', function () {
+
+                    expect( resultTime.date.getFullYear() ).toEqual( 2015 );
+                    expect( resultTime.date.getMonth() ).toEqual( 5 - 1 );
+                    expect( resultTime.date.getDate() ).toEqual( 8 );
+
+                } );
+
+                it( 'should get date property from time.start if lesson stretching for 2 days', function () {
+
+                    simpleTimeObject = {
+                        start: new Date( 2015, 5 - 1, 8, 23, 0 ),
+                        end: new Date( 2015, 5 - 1, 9, 0, 30 )
+                    };
+
+                    resultTime = getExtendedTimeBySimple( simpleTimeObject );
+
+                    expect( resultTime.date.getFullYear() ).toEqual( 2015 );
+                    expect( resultTime.date.getMonth() ).toEqual( 5 - 1 );
+                    expect( resultTime.date.getDate() ).toEqual( 8 );
+
+                } );
+
+            } );
+
+            describe( 'epochStart', function () {
+
+                it( 'should return 50400 for 14:00', function () {
+
+                    expect( resultTime.epochStart ).toEqual( 50400 );
+
+                } );
+
+                it( 'should return 0 if lesson starts at 00:00', function () {
+
+                    simpleTimeObject = {
+                        start: new Date( 2015, 5 - 1, 8, 0, 0 ),
+                        end: new Date( 2015, 5 - 1, 8, 0, 30 )
+                    };
+
+                    resultTime = getExtendedTimeBySimple( simpleTimeObject );
+
+                    expect( resultTime.epochStart ).toEqual( 0 );
+
+                } );
+
+            } );
+
+            describe( 'duration', function () {
+
+                it( 'should return 30 if lesson starts at 14:00 and ends at 14:30', function () {
+
+                    simpleTimeObject = {
+                        start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                        end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                    };
+
+                    resultTime = getExtendedTimeBySimple( simpleTimeObject );
+
+                    expect( resultTime.duration ).toEqual( 30 );
+
+                } );
+
+                it( 'should return 60 if lesson starts at 23:30 and ends at 0:30 on the next day', function () {
+
+                    simpleTimeObject = {
+                        start: new Date( 2015, 5 - 1, 8, 23, 30 ),
+                        end: new Date( 2015, 5 - 1, 9, 0, 30 )
+                    };
+
+                    resultTime = getExtendedTimeBySimple( simpleTimeObject );
+
+                    expect( resultTime.duration ).toEqual( 60 );
 
                 } );
 
