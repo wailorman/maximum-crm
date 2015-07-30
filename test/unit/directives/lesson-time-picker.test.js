@@ -729,7 +729,7 @@ describe( 'lesson-time-picker directive', function () {
             $scope = _$rootScope_.$new( true );
 
             LessonTimePickerCtrl = $controller( 'LessonTimePickerCtrl', {
-                $scope: $scope, // create isolated scope
+                $scope: $scope,
                 LessonTimeSimple: LessonTimeSimple,
                 LessonTimeExtended: LessonTimeExtended
             } );
@@ -754,6 +754,12 @@ describe( 'lesson-time-picker directive', function () {
                     start: new Date( 2015, 5-1, 8, 14, 0 ),
                     end: new Date( 2015, 5-1, 8, 14, 30 )
                 });
+
+            } );
+
+            it( 'should return false if new value is undefined', function () {
+
+                expect( timeObjectObserver( undefined ) ).toEqual( false );
 
             } );
 
@@ -820,6 +826,12 @@ describe( 'lesson-time-picker directive', function () {
 
             } );
 
+            it( 'should return false if new value is undefined', function () {
+
+                expect( extendedTimeObserver( undefined ) ).toEqual( false );
+
+            } );
+
             it( 'should throw error if passed extendedTime is not LessonTimeExtended instance', function () {
 
 
@@ -867,6 +879,91 @@ describe( 'lesson-time-picker directive', function () {
                     // because we calling toSimpleTime() when checking equality
                     return LessonTimeTools.LessonTimeExtended.prototype.toSimpleTime.calls.count() > 1;
                 }
+
+            } );
+
+        } );
+
+        describe( 'watchers behaviour', function () {
+
+            beforeEach( function () {
+
+                spyOn( LessonTimePickerCtrl, 'timeObjectObserver' ).and.callThrough();
+                spyOn( LessonTimePickerCtrl, 'extendedTimeObserver' ).and.callThrough();
+
+                LessonTimePickerCtrl.timeObjectObserver.calls.reset();
+                LessonTimePickerCtrl.extendedTimeObserver.calls.reset();
+
+            } );
+
+            describe( 'timeObject', function () {
+
+                beforeEach( function () {
+
+                    delete $scope.timeObject;
+                    delete $scope.extendedTime;
+
+                } );
+
+                it( 'should update extendedTime on $apply and changing timeObject', function () {
+
+                    $scope.timeObject = new LessonTimeSimple({
+                        start: new Date( 2015, 5-1, 8, 14, 0 ),
+                        end: new Date( 2015, 5-1, 8, 14, 30 )
+                    });
+
+                    $scope.$apply();
+
+                    expect( $scope.extendedTime instanceof LessonTimeExtended ).toBeTruthy();
+                    expect( $scope.extendedTime.epochStart ).toEqual( 14 * 3600 );
+
+                } );
+
+                it( 'should update if only .start has been changed', function () {
+
+                    $scope.timeObject = new LessonTimeSimple({
+                        start: new Date( 2015, 5-1, 7, 14, 0 ),
+                        end: new Date( 2015, 5-1, 8, 14, 30 )
+                    });
+
+                    $scope.$apply();
+
+                    expect( $scope.extendedTime.date.getDate() ).toEqual( 7 );
+
+                } );
+
+            } );
+
+            describe( 'extendedTime', function () {
+
+                it( 'should update extendedTime on $apply and changing timeObject', function () {
+
+                    $scope.extendedTime = new LessonTimeExtended({
+                        date: new Date( 2015, 5-1, 8 ),
+                        epochStart: 14 * 3600,
+                        duration: 30
+                    });
+
+                    $scope.$apply();
+
+                    expect( $scope.timeObject instanceof LessonTimeSimple ).toBeTruthy();
+                    expect( $scope.timeObject.start.getDate() ).toEqual( 8 );
+
+                } );
+
+                it( 'should update if only .duration has been changed', function () {
+
+                    $scope.extendedTime = new LessonTimeExtended({
+                        date: new Date( 2015, 5-1, 8 ),
+                        epochStart: 14 * 3600,
+                        duration: 40
+                    });
+
+                    $scope.$apply();
+
+                    expect( $scope.timeObject.end.getMinutes() ).toEqual( 40 );
+
+                } );
 
             } );
 

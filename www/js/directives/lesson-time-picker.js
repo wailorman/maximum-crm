@@ -13,14 +13,12 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
 
         var vm = this;
 
-        $scope.timeObject = {};
-        $scope.extendedTime = {};
-
         /**
-         *
          * @param {LessonTimeTools.LessonTimeSimple} newTimeObject
          */
         vm.timeObjectObserver = function ( newTimeObject ) {
+
+            if ( !newTimeObject ) return false;
 
             if ( !(newTimeObject instanceof LessonTimeSimple) )
                 throw new InvalidArgumentError( 'New time object is not instance of LessonTimeSimple' );
@@ -40,10 +38,11 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
         };
 
         /**
-         *
          * @param {LessonTimeTools.LessonTimeExtended} newExtendedTime
          */
         vm.extendedTimeObserver = function ( newExtendedTime ) {
+
+            if ( !newExtendedTime ) return false;
 
             if ( !( newExtendedTime instanceof LessonTimeExtended ) )
                 throw new InvalidArgumentError( 'New time object is not instance of LessonTimeExtended' );
@@ -60,6 +59,14 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
             }
 
         };
+
+        //////////////////////////////////////////////////////////////
+
+        // timeObject watcher
+        $scope.$watch( 'timeObject', vm.timeObjectObserver, true );
+        $scope.$watch( 'extendedTime', vm.extendedTimeObserver, true );
+
+        //////////////////////////////////////////////////////////////
 
     } )
     .factory( 'LessonTimeSimple', function ( LessonTimeTools ) {
