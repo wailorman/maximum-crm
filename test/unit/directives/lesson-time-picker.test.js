@@ -14,198 +14,6 @@ describe( 'lesson-time-picker directive', function () {
 
     } ) );
 
-    describe( 'LessonTimeTools', function () {
-
-        describe( 'getSimpleTimeByExtended()', function () {
-
-            var extendedTimeObject = {},
-                resultTime,
-                getSimpleTimeByExtended;
-
-            beforeEach( function () {
-
-                getSimpleTimeByExtended = LessonTimeTools.getSimpleTimeByExtended;
-
-                extendedTimeObject = {
-                    date: new Date( 2015, 5 - 1, 8 ),
-                    epochStart: 50400, // 14:00
-                    duration: 30 // minutes
-                };
-
-                resultTime = getSimpleTimeByExtended( extendedTimeObject );
-
-            } );
-
-            describe( 'time.start', function () {
-
-                it( 'time.start should be 8/5/2015 14:00', function () {
-
-                    expect( resultTime.start.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.start.getMonth() ).toEqual( 5 - 1 );
-                    expect( resultTime.start.getDate() ).toEqual( 8 );
-                    expect( resultTime.start.getHours() ).toEqual( 14 );
-                    expect( resultTime.start.getMinutes() ).toEqual( 0 );
-
-                } );
-
-                it( 'should works fine if epochStart >86400 (out of 24 hrs range)', function () {
-
-                    extendedTimeObject = {
-                        date: new Date( 2015, 5 - 1, 8 ),
-                        epochStart: 90000, // 1:00 of the next day
-                        duration: 30 // minutes
-                    };
-
-                    resultTime = getSimpleTimeByExtended( extendedTimeObject );
-
-                    expect( resultTime.start.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.start.getMonth() ).toEqual( 5 - 1 );
-                    expect( resultTime.start.getDate() ).toEqual( 9 );
-                    expect( resultTime.start.getHours() ).toEqual( 1 );
-                    expect( resultTime.start.getMinutes() ).toEqual( 0 );
-
-                } );
-
-                it( 'should works fine if epochStart=0', function () {
-
-                    extendedTimeObject = {
-                        date: new Date( 2015, 5 - 1, 8 ),
-                        epochStart: 0, // 00:00
-                        duration: 30 // minutes
-                    };
-
-                    resultTime = getSimpleTimeByExtended( extendedTimeObject );
-
-                    expect( resultTime.start.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.start.getMonth() ).toEqual( 5 - 1 );
-                    expect( resultTime.start.getDate() ).toEqual( 8 );
-                    expect( resultTime.start.getHours() ).toEqual( 0 );
-                    expect( resultTime.start.getMinutes() ).toEqual( 0 );
-
-                } );
-
-                it( 'should throw exception if extendedTime is null', function () {
-
-                    extendedTimeObject = null;
-
-                    expect(
-                        function () {
-                            getSimpleTimeByExtended( extendedTimeObject );
-                        }
-                    ).toThrow( new InvalidArgumentError( "Not enough params" ) );
-
-                } );
-
-            } );
-
-            describe( 'time.end', function () {
-
-                it( 'time.end should be 8/5/2015 14:30', function () {
-
-                    expect( resultTime.end.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.end.getMonth() ).toEqual( 5 - 1 );
-                    expect( resultTime.end.getDate() ).toEqual( 8 );
-                    expect( resultTime.end.getHours() ).toEqual( 14 );
-                    expect( resultTime.end.getMinutes() ).toEqual( 30 );
-
-                } );
-
-                it( 'should works fine if lesson duration is longer than a day (>1440 mins)', function () {
-
-                    extendedTimeObject = {
-                        date: new Date( 2015, 5 - 1, 8 ),
-                        epochStart: 50400, // 14:00
-                        duration: 1500 // 1 day + 1 hour
-                    };
-
-                    resultTime = getSimpleTimeByExtended( extendedTimeObject );
-
-                    expect( resultTime.end.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.end.getMonth() ).toEqual( 5 - 1 );
-                    expect( resultTime.end.getDate() ).toEqual( 9 );
-                    expect( resultTime.end.getHours() ).toEqual( 15 );
-                    expect( resultTime.end.getMinutes() ).toEqual( 0 );
-
-                } );
-
-                it( 'should works fine if duration=0', function () {
-
-                    extendedTimeObject = {
-                        date: new Date( 2015, 5 - 1, 8 ),
-                        epochStart: 50400, // 14:00
-                        duration: 0
-                    };
-
-                    resultTime = getSimpleTimeByExtended( extendedTimeObject );
-
-                    expect( resultTime.end.getFullYear() ).toEqual( 2015 );
-                    expect( resultTime.end.getMonth() ).toEqual( 5 - 1 );
-                    expect( resultTime.end.getDate() ).toEqual( 8 );
-                    expect( resultTime.end.getHours() ).toEqual( 14 );
-                    expect( resultTime.end.getMinutes() ).toEqual( 0 );
-
-                } );
-
-            } );
-
-            it( 'should throw exception if extended time is null', function () {
-
-                extendedTimeObject = {};
-
-                expect(
-                    function () {
-                        getSimpleTimeByExtended( extendedTimeObject );
-                    }
-                ).toThrow( new Error( "Not enough params (date missing)" ) );
-
-            } );
-
-            it( 'should throw exception if date is not Date', function () {
-
-                var invalidTimeObject = {
-                    date: 100,
-                    epochStart: 50400,
-                    duration: 30
-                };
-
-                expect( function () {
-                    getSimpleTimeByExtended( invalidTimeObject );
-                } ).toThrow( new InvalidArgumentError('date property should be instance of Date') );
-
-            } );
-
-            it( 'should throw exception if epochStart is not number', function () {
-
-                var invalidTimeObject = {
-                    date: new Date( 2015, 5-1, 8 ),
-                    epochStart: '50400',
-                    duration: 30
-                };
-
-                expect( function () {
-                    getSimpleTimeByExtended( invalidTimeObject );
-                } ).toThrow( new InvalidArgumentError('epochStart property should be number') );
-
-            } );
-
-            it( 'should throw exception if duration is not number', function () {
-
-                var invalidTimeObject = {
-                    date: new Date( 2015, 5-1, 8 ),
-                    epochStart: 50400,
-                    duration: '30'
-                };
-
-                expect( function () {
-                    getSimpleTimeByExtended( invalidTimeObject );
-                } ).toThrow( new InvalidArgumentError('duration property should be number') );
-
-            } );
-
-        } );
-
-    } );
-
     describe( 'LessonTimeSimple', function () {
 
         var simpleTime; // clear example of simple time object
@@ -628,6 +436,94 @@ describe( 'lesson-time-picker directive', function () {
 
                 expect( constructingExtendedTime )
                     .not.toThrow();
+
+            } );
+
+        } );
+
+        describe( 'toSimpleTime()', function () {
+
+            var extendedTimeObject = {},
+                resultTime,
+                getSimpleTimeByExtended;
+
+            beforeEach( function () {
+
+                getSimpleTimeByExtended = function ( extendedTimeObject ) {
+                    return (new LessonTimeTools.LessonTimeExtended( extendedTimeObject )).toSimpleTime();
+                };
+
+                extendedTimeObject = {
+                    date: new Date( 2015, 5 - 1, 8 ),
+                    epochStart: 50400, // 14:00
+                    duration: 30 // minutes
+                };
+
+                resultTime = getSimpleTimeByExtended( extendedTimeObject );
+
+            } );
+
+            describe( 'time.start', function () {
+
+                it( 'time.start should be 8/5/2015 14:00', function () {
+
+                    expect( resultTime.start.getFullYear() ).toEqual( 2015 );
+                    expect( resultTime.start.getMonth() ).toEqual( 5 - 1 );
+                    expect( resultTime.start.getDate() ).toEqual( 8 );
+                    expect( resultTime.start.getHours() ).toEqual( 14 );
+                    expect( resultTime.start.getMinutes() ).toEqual( 0 );
+
+                } );
+
+                it( 'should works fine if epochStart=0', function () {
+
+                    extendedTimeObject = {
+                        date: new Date( 2015, 5 - 1, 8 ),
+                        epochStart: 0, // 00:00
+                        duration: 30 // minutes
+                    };
+
+                    resultTime = getSimpleTimeByExtended( extendedTimeObject );
+
+                    expect( resultTime.start.getFullYear() ).toEqual( 2015 );
+                    expect( resultTime.start.getMonth() ).toEqual( 5 - 1 );
+                    expect( resultTime.start.getDate() ).toEqual( 8 );
+                    expect( resultTime.start.getHours() ).toEqual( 0 );
+                    expect( resultTime.start.getMinutes() ).toEqual( 0 );
+
+                } );
+
+            } );
+
+            describe( 'time.end', function () {
+
+                it( 'time.end should be 8/5/2015 14:30', function () {
+
+                    expect( resultTime.end.getFullYear() ).toEqual( 2015 );
+                    expect( resultTime.end.getMonth() ).toEqual( 5 - 1 );
+                    expect( resultTime.end.getDate() ).toEqual( 8 );
+                    expect( resultTime.end.getHours() ).toEqual( 14 );
+                    expect( resultTime.end.getMinutes() ).toEqual( 30 );
+
+                } );
+
+                it( 'should works fine if lesson duration is longer than a day (>1440 mins)', function () {
+
+                    extendedTimeObject = {
+                        date: new Date( 2015, 5 - 1, 8 ),
+                        epochStart: 50400, // 14:00
+                        duration: 1500 // 1 day + 1 hour
+                    };
+
+                    resultTime = getSimpleTimeByExtended( extendedTimeObject );
+
+                    expect( resultTime.end.getFullYear() ).toEqual( 2015 );
+                    expect( resultTime.end.getMonth() ).toEqual( 5 - 1 );
+                    expect( resultTime.end.getDate() ).toEqual( 9 );
+                    expect( resultTime.end.getHours() ).toEqual( 15 );
+                    expect( resultTime.end.getMinutes() ).toEqual( 0 );
+
+                } );
 
             } );
 

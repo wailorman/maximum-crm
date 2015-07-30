@@ -46,48 +46,6 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
         var LessonTimeTools = this;
 
         /**
-         * Get extended time object by simple time object
-         *
-         * @todo Add functionality to work with passed LessonTimeSimple instead of LessonTimeExtended to timeObject arg
-         *
-         * @param {LessonTimeExtended}  timeObject
-         *
-         * @throws {InvalidArgumentError} Not enough params (date missing)
-         * @throws {InvalidArgumentError} date property should be instance of Date
-         * @throws {InvalidArgumentError} epochStart property should be number
-         * @throws {InvalidArgumentError} duration property should be number
-         *
-         * @return {LessonTimeSimple|*} Simple time object
-         */
-        LessonTimeTools.getSimpleTimeByExtended = function ( timeObject ) {
-
-            var resultTime = {};
-
-            if ( !timeObject )
-                throw new InvalidArgumentError( 'Not enough params' );
-
-            if ( !timeObject.date )
-                throw new InvalidArgumentError( 'Not enough params (date missing)' );
-
-            if ( !(timeObject.date instanceof Date) )
-                throw new InvalidArgumentError( 'date property should be instance of Date' );
-
-            if ( typeof timeObject.epochStart !== 'number' )
-                throw new InvalidArgumentError( 'epochStart property should be number' );
-
-            if ( typeof timeObject.duration !== 'number' )
-                throw new InvalidArgumentError( 'duration property should be number' );
-
-            if ( !timeObject.epochStart ) timeObject.epochStart = 0;
-            if ( !timeObject.duration ) timeObject.duration = 0;
-
-            resultTime.start = new Date( timeObject.date.getTime() + timeObject.epochStart * 1000 );
-            resultTime.end = new Date( resultTime.start.getTime() + timeObject.duration * 60 * 1000 );
-
-            return resultTime;
-        };
-
-        /**
          * @class LessonTimeExtended
          *
          * @param {object} extendedTimeObject
@@ -168,6 +126,40 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
         };
 
         /**
+         * Convert instance of extended lesson time to simple time
+         *
+         * @name LessonTimeExtended#toSimpleTime
+         * @returns {LessonTimeTools.LessonTimeSimple}
+         */
+        LessonTimeTools.LessonTimeExtended.prototype.toSimpleTime = function () {
+
+            var selfExtendedTimeInstance = this,
+                resultTime;
+
+            if ( !selfExtendedTimeInstance )
+                throw new InvalidArgumentError( 'Not enough params' );
+
+            var date       = selfExtendedTimeInstance.date,
+                epochStart = selfExtendedTimeInstance.epochStart,
+                duration   = selfExtendedTimeInstance.duration,
+                start, end;
+
+            if ( !epochStart ) epochStart = 0;
+            if ( !duration ) duration = 0;
+
+            start = new Date( date.getTime() + epochStart * 1000 );
+            end   = new Date( start.getTime() + duration * 60 * 1000 );
+
+            resultTime = {
+                start: start,
+                end: end
+            };
+
+            return new LessonTimeTools.LessonTimeSimple( resultTime );
+
+        };
+
+        /**
          * @class LessonTimeSimple
          *
          * @param {object} simpleTimeObject
@@ -221,7 +213,7 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
         /**
          * Get extended time object by simple time object
          *
-         * @return {LessonTimeExtended|*} Extended time object
+         * @return {LessonTimeTools.LessonTimeExtended} Extended time object
          */
         LessonTimeTools.LessonTimeSimple.prototype.toExtendedTime = function () {
 
