@@ -160,6 +160,19 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
 
         };
 
+
+        /**
+         * @param {LessonTimeSimple} simpleTime
+         * @return {Boolean}
+         */
+        LessonTimeTools.LessonTimeExtended.prototype.isEqualToSimpleTime = function ( simpleTime ) {
+
+            var selfExtendedTimeInstance = this;
+
+            return LessonTimeTools.checkEqualityOfTwoTimes( simpleTime, selfExtendedTimeInstance );
+
+        };
+
         /**
          * @class LessonTimeSimple
          *

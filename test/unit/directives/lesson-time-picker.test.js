@@ -677,5 +677,45 @@ describe( 'lesson-time-picker directive', function () {
 
         } );
 
+        describe( 'isEqualToSimpleTime()', function () {
+
+            var simpleTime, extendedTime;
+
+            beforeEach( function () {
+
+                simpleTime = new LessonTimeSimple( {
+                    start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                    end: new Date( 2015, 5 - 1, 8, 14, 30 )
+                } );
+
+                extendedTime = new LessonTimeExtended( {
+                    date: new Date( 2015, 5 - 1, 8 ),
+                    epochStart: 14 * 3600,
+                    duration: 30
+                } );
+
+            } );
+
+            it( 'should be equal', function () {
+
+                expect( extendedTime.isEqualToSimpleTime( simpleTime ) ).toBeTruthy();
+
+            } );
+
+            it( 'should be not equal', function () {
+
+                extendedTime = new LessonTimeExtended( {
+                    date: new Date( 2015, 5 - 1, 8 ),
+                    epochStart: 14 * 3600,
+                    duration: 31
+                } );
+
+
+                expect( extendedTime.isEqualToSimpleTime( simpleTime ) ).toBeFalsy();
+
+            } );
+
+        } );
+
     } );
 } );
