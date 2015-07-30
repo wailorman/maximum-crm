@@ -718,4 +718,159 @@ describe( 'lesson-time-picker directive', function () {
         } );
 
     } );
+
+    describe( 'LessonTimePickerCtrl', function () {
+
+        var $controller, LessonTimePickerCtrl, $scope;
+
+        beforeEach( inject( function ( _$controller_, _$rootScope_ ) {
+
+            $controller = _$controller_;
+            $scope = _$rootScope_.$new( true );
+
+            LessonTimePickerCtrl = $controller( 'LessonTimePickerCtrl', {
+                $scope: $scope, // create isolated scope
+                LessonTimeSimple: LessonTimeSimple,
+                LessonTimeExtended: LessonTimeExtended
+            } );
+
+            spyOn( LessonTimeTools.LessonTimeSimple.prototype, 'toExtendedTime' ).and.callThrough();
+            spyOn( LessonTimeTools.LessonTimeExtended.prototype, 'toSimpleTime' ).and.callThrough();
+
+            LessonTimeTools.LessonTimeSimple.prototype.toExtendedTime.calls.reset();
+            LessonTimeTools.LessonTimeExtended.prototype.toSimpleTime.calls.reset();
+
+        } ) );
+
+        describe( 'timeObjectObserver()', function () {
+
+            var timeObjectObserver, timeObject;
+
+            beforeEach( function () {
+
+                timeObjectObserver = LessonTimePickerCtrl.timeObjectObserver;
+
+                timeObject = new LessonTimeSimple({
+                    start: new Date( 2015, 5-1, 8, 14, 0 ),
+                    end: new Date( 2015, 5-1, 8, 14, 30 )
+                });
+
+            } );
+
+            it( 'should throw error if passed timeObject is not LessonTimeSimple instance', function () {
+
+
+                expect( function () {
+                    timeObjectObserver( {} );
+                } ).toThrow( new InvalidArgumentError( 'New time object is not instance of LessonTimeSimple' ) );
+
+            } );
+
+            it( 'should convert new timeObject to extendedTime', function () {
+
+                timeObjectObserver( timeObject );
+
+                expect( LessonTimeTools.LessonTimeSimple.prototype.toExtendedTime ).toHaveBeenCalled();
+
+                expect( $scope.extendedTime instanceof LessonTimeExtended ).toBeTruthy();
+
+                expect( $scope.extendedTime.date.getFullYear() ).toEqual( 2015 );
+                expect( $scope.extendedTime.date.getMonth() ).toEqual( 5-1 );
+                expect( $scope.extendedTime.date.getDate() ).toEqual( 8 );
+
+                expect( $scope.extendedTime.epochStart ).toEqual( 14 * 3600 );
+                expect( $scope.extendedTime.duration ).toEqual( 30 );
+
+            } );
+
+            it( 'should not convert if new timeObject is equal to existing extendedTime', function () {
+
+                $scope.extendedTime = timeObject.toExtendedTime();
+
+                LessonTimeTools.LessonTimeSimple.prototype.toExtendedTime.calls.reset();
+
+                timeObjectObserver( timeObject );
+
+                expect( doesConverterWasCalled() ).toBeFalsy();
+
+                ////////
+
+                function doesConverterWasCalled() {
+                    // because we do not calling toSimpleTime() when checking equality
+                    return LessonTimeTools.LessonTimeSimple.prototype.toExtendedTime.calls.count() > 0;
+                }
+
+            } );
+
+        } );
+
+        describe( 'extendedTimeObserver()', function () {
+
+            var extendedTimeObserver, extendedTime;
+
+            beforeEach( function () {
+
+                extendedTimeObserver = LessonTimePickerCtrl.extendedTimeObserver;
+
+                extendedTime = new LessonTimeExtended({
+                    date: new Date( 2015, 5-1, 8 ),
+                    epochStart: 14 * 3600,
+                    duration: 30
+                });
+
+            } );
+
+            it( 'should throw error if passed extendedTime is not LessonTimeExtended instance', function () {
+
+
+                expect( function () {
+                    extendedTimeObserver( {} );
+                } ).toThrow( new InvalidArgumentError( 'New time object is not instance of LessonTimeExtended' ) );
+
+            } );
+
+            it( 'should convert new timeObject to extendedTime', function () {
+
+                extendedTimeObserver( extendedTime );
+
+                expect( LessonTimeTools.LessonTimeExtended.prototype.toSimpleTime ).toHaveBeenCalled();
+
+                expect( $scope.timeObject instanceof LessonTimeSimple ).toBeTruthy();
+
+                expect( $scope.timeObject.start.getFullYear() ).toEqual( 2015 );
+                expect( $scope.timeObject.start.getMonth() ).toEqual( 5-1 );
+                expect( $scope.timeObject.start.getDate() ).toEqual( 8 );
+                expect( $scope.timeObject.start.getHours() ).toEqual( 14 );
+                expect( $scope.timeObject.start.getMinutes() ).toEqual( 0 );
+
+                expect( $scope.timeObject.end.getFullYear() ).toEqual( 2015 );
+                expect( $scope.timeObject.end.getMonth() ).toEqual( 5-1 );
+                expect( $scope.timeObject.end.getDate() ).toEqual( 8 );
+                expect( $scope.timeObject.end.getHours() ).toEqual( 14 );
+                expect( $scope.timeObject.end.getMinutes() ).toEqual( 30 );
+
+            } );
+
+            it( 'should not convert if new extendedTime is equal to existing timeObject', function () {
+
+                $scope.timeObject = extendedTime.toSimpleTime();
+
+                LessonTimeTools.LessonTimeExtended.prototype.toSimpleTime.calls.reset();
+
+                extendedTimeObserver( extendedTime );
+
+                expect( doesConverterWasCalled() ).toBeFalsy();
+
+                /////
+
+                function doesConverterWasCalled() {
+                    // because we calling toSimpleTime() when checking equality
+                    return LessonTimeTools.LessonTimeExtended.prototype.toSimpleTime.calls.count() > 1;
+                }
+
+            } );
+
+        } );
+
+    } );
 } );

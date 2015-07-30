@@ -9,7 +9,59 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
         };
 
     } )
-    .controller( 'LessonTimePickerCtrl' )
+    .controller( 'LessonTimePickerCtrl', function ( $scope, LessonTimeSimple, LessonTimeExtended ) {
+
+        var vm = this;
+
+        $scope.timeObject = {};
+        $scope.extendedTime = {};
+
+        /**
+         *
+         * @param {LessonTimeTools.LessonTimeSimple} newTimeObject
+         */
+        vm.timeObjectObserver = function ( newTimeObject ) {
+
+            if ( !(newTimeObject instanceof LessonTimeSimple) )
+                throw new InvalidArgumentError( 'New time object is not instance of LessonTimeSimple' );
+
+
+            if ( areTimesEqual() == false ) {
+                $scope.extendedTime = newTimeObject.toExtendedTime();
+            }
+
+            //////////////////////
+
+            function areTimesEqual() {
+                return $scope.extendedTime instanceof LessonTimeExtended &&
+                       newTimeObject.isEqualToExtendedTime( $scope.extendedTime );
+            }
+
+        };
+
+        /**
+         *
+         * @param {LessonTimeTools.LessonTimeExtended} newExtendedTime
+         */
+        vm.extendedTimeObserver = function ( newExtendedTime ) {
+
+            if ( !( newExtendedTime instanceof LessonTimeExtended ) )
+                throw new InvalidArgumentError( 'New time object is not instance of LessonTimeExtended' );
+
+            if ( areTimesEqual() == false ) {
+                $scope.timeObject = newExtendedTime.toSimpleTime();
+            }
+
+            //////////////////////
+
+            function areTimesEqual() {
+                return $scope.timeObject instanceof LessonTimeSimple &&
+                       newExtendedTime.isEqualToSimpleTime( $scope.timeObject );
+            }
+
+        };
+
+    } )
     .factory( 'LessonTimeSimple', function ( LessonTimeTools ) {
 
         /**
@@ -129,7 +181,6 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
         /**
          * Convert instance of extended lesson time to simple time
          *
-         * @name LessonTimeExtended#toSimpleTime
          * @returns {LessonTimeTools.LessonTimeSimple}
          */
         LessonTimeTools.LessonTimeExtended.prototype.toSimpleTime = function () {
