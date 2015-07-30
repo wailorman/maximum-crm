@@ -45,6 +45,20 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
 
         var LessonTimeTools = this;
 
+        /**
+         * Get extended time object by simple time object
+         *
+         * @todo Add functionality to work with passed LessonTimeSimple instead of LessonTimeExtended to timeObject arg
+         *
+         * @param {LessonTimeExtended}  timeObject
+         *
+         * @throws {InvalidArgumentError} Not enough params (date missing)
+         * @throws {InvalidArgumentError} date property should be instance of Date
+         * @throws {InvalidArgumentError} epochStart property should be number
+         * @throws {InvalidArgumentError} duration property should be number
+         *
+         * @return {LessonTimeSimple|*} Simple time object
+         */
         LessonTimeTools.getSimpleTimeByExtended = function ( timeObject ) {
 
             var resultTime = {};
@@ -102,10 +116,13 @@ angular.module( 'starter.directives.lesson-time-picker', [] )
 
             var date, epochStart, duration;
 
+            if ( !extendedTimeObject )
+                throw new InvalidArgumentError( 'Missing time object' );
+
             if ( !extendedTimeObject.date )
                 throw new InvalidArgumentError( 'Invalid time object. Missing date' );
 
-            if ( !extendedTimeObject.epochStart )
+            if ( !extendedTimeObject.epochStart && extendedTimeObject.epochStart !== 0 )
                 throw new InvalidArgumentError( 'Invalid time object. Missing epochStart' );
 
             if ( !extendedTimeObject.duration )

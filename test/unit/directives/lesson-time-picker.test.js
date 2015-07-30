@@ -489,6 +489,15 @@ describe( 'lesson-time-picker directive', function () {
 
             } );
 
+            it( 'should throw error if time object is not defined', function () {
+
+                extendedTime = undefined;
+
+                expect( constructingExtendedTime )
+                    .toThrow( new InvalidArgumentError( 'Missing time object' ) );
+
+            } );
+
             describe( 'should throw error if .date', function () {
 
                 it( 'not defined', function () {
@@ -610,6 +619,15 @@ describe( 'lesson-time-picker directive', function () {
                     expect( constructedLessonTimeExtended.duration ).toEqual( extendedTime.duration );
 
                 } );
+
+            } );
+
+            it( 'should not throw anything if epochStart = 0', function () {
+
+                extendedTime.epochStart = 0;
+
+                expect( constructingExtendedTime )
+                    .not.toThrow();
 
             } );
 
