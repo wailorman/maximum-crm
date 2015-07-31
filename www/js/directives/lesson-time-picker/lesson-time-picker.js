@@ -1,11 +1,17 @@
-angular.module( 'starter.directives.lesson-time-picker', [] )
+angular.module( 'starter.directives.lesson-time-picker', [
+    'ionic-timepicker',
+    'ionic-datepicker'
+] )
     .directive( 'lessonTimePicker', function () {
 
         return {
             restrict: 'E',
             scope: {
-
-            }
+                timeObject: '='
+            },
+            template: '<div><ionic-datepicker idate="vm.date"><button class="button button-block button-outline button-balanced">{{ vm.date ? $filter("date")( vm.date, "dd.MM.yyyy" ) : "Дата проведения" }}</button></ionic-datepicker></div><div><ionic-timepicker etime="vm.epochStart" format="24" step="15"></ionic-timepicker><input placeholder="продлится (минут)" ng-model="vm.duration"/></div>',
+            controller: 'LessonTimePickerCtrl',
+            controllerAs: 'vm'
         };
 
     } )

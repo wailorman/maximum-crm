@@ -970,4 +970,56 @@ describe( 'lesson-time-picker directive', function () {
         } );
 
     } );
+
+    describe( 'compiling', function () {
+
+        var $compile, $scope, $controller, $rootScope, compileElement, element, resultElem, isolateScope;
+
+        beforeEach( inject( function ( _$compile_, _$rootScope_, _$controller_ ) {
+
+            $compile    = _$compile_;
+            $scope      = _$rootScope_.$new();
+            $controller = _$controller_;
+            $rootScope  = _$rootScope_;
+
+            compileElement = function ( html ) {
+
+                var element = $compile( html )( $scope );
+
+                $rootScope.$apply();
+
+                return element;
+
+            };
+
+            $scope.mockTime = new LessonTimeSimple( {
+                start: new Date( 2015, 5 - 1, 8, 14, 0 ),
+                end: new Date( 2015, 5 - 1, 8, 14, 30 )
+            } );
+            resultElem      = compileElement( '<lesson-time-picker time-object="mockTime"></lesson-time-picker>' );
+
+            isolateScope = resultElem.isolateScope();
+
+        } ) );
+
+        it( 'should compile directive', function () {
+
+            expect( resultElem.html() ).toContain( 'ionic-datepicker' );
+
+        } );
+
+        it( 'should create isolated extended time object', function () {
+
+            var extendedTime = isolateScope.extendedTime;
+
+            expect( extendedTime instanceof LessonTimeExtended ).toBeTruthy();
+            expect( extendedTime.date.getDate() ).toBe( 8 );
+            expect( extendedTime.epochStart ).toBe( 14 * 3600 );
+            expect( extendedTime.duration ).toBe( 30 );
+
+        } );
+
+        // todo: check behavior when changing timeObject and extendedTime
+
+    } );
 } );

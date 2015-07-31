@@ -1,0 +1,7 @@
+div
+    ionic-datepicker( idate='vm.date' )
+        button.button.button-block.button-outline.button-balanced.
+            {{ vm.date ? $filter('date')( vm.date, 'dd.MM.yyyy' ) : 'Дата проведения' }}
+div
+    ionic-timepicker( etime='vm.epochStart', format=24, step=15)
+    input( type=number, placeholder='продлится (минут)', ng-model='vm.duration' )
